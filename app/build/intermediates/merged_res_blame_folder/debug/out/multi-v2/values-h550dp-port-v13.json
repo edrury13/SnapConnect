@@ -1,16 +1,16 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.snapconnect.app-mergeDebugResources-27:/values-h550dp-port-v13/values-h550dp-port-v13.xml",
+            "outputFile": "com.example.snapconnect.app-mergeDebugResources-2:/values-h550dp-port-v13/values-h550dp-port-v13.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\drury\\.gradle\\caches\\8.12\\transforms\\4c24f489b145af34a748dd16a8dd9b31\\transformed\\material-1.8.0\\res\\values-h550dp-port-v13\\values-h550dp-port-v13.xml",
+                    "source": "C:\\Users\\drury\\Documents\\Gradle\\caches\\transforms-3\\870fd22741f9baec316e3cbcc9e31385\\transformed\\material-1.11.0\\res\\values-h550dp-port-v13\\values-h550dp-port-v13.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
                         "startOffsets": "55",
-                        "endColumns": "76",
-                        "endOffsets": "127"
+                        "endColumns": "64",
+                        "endOffsets": "115"
                     }
                 }
             ]

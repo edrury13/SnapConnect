@@ -32,8 +32,26 @@
     <style name="Theme.MaterialComponents.DayNight.DialogWhenLarge" parent="Theme.MaterialComponents.DialogWhenLarge"/>
     <style name="Theme.MaterialComponents.DayNight.NoActionBar" parent="Theme.MaterialComponents.NoActionBar"/>
     <style name="Theme.MaterialComponents.DayNight.NoActionBar.Bridge" parent="Theme.MaterialComponents.NoActionBar.Bridge"/>
-    <style name="Theme.SnapConnect" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        
+    <style name="Theme.SnapConnect" parent="Theme.Material3.Dark">
+        <item name="colorPrimary">@color/snap_yellow</item>
+        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorPrimaryContainer">@color/snap_yellow_dark</item>
+        <item name="colorOnPrimaryContainer">@color/snap_light_gray</item>
+        <item name="colorSecondary">@color/snap_blue</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorSecondaryContainer">@color/snap_blue_dark</item>
+        <item name="colorOnSecondaryContainer">@color/snap_light_gray</item>
+        <item name="colorTertiary">@color/snap_green</item>
+        <item name="colorOnTertiary">@color/black</item>
+        <item name="colorError">@color/snap_red</item>
+        <item name="colorOnError">@color/white</item>
+        <item name="android:colorBackground">@color/snap_black</item>
+        <item name="colorOnBackground">@color/snap_light_gray</item>
+        <item name="colorSurface">@color/snap_gray</item>
+        <item name="colorOnSurface">@color/snap_light_gray</item>
+        <item name="android:statusBarColor">@color/snap_black</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
     <style name="ThemeOverlay.AppCompat.DayNight" parent="ThemeOverlay.AppCompat.Dark"/>
     <style name="ThemeOverlay.Material3.DynamicColors.DayNight" parent="ThemeOverlay.Material3.DynamicColors.Dark"/>

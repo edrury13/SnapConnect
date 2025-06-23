@@ -1,0 +1,24 @@
+R_DEF: Internal format may change without notice
+local
+color black
+color purple_200
+color purple_500
+color purple_700
+color snap_black
+color snap_blue
+color snap_blue_dark
+color snap_gray
+color snap_green
+color snap_light_gray
+color snap_red
+color snap_yellow
+color snap_yellow_dark
+color teal_200
+color teal_700
+color white
+drawable gauntlet_liquid_glass
+drawable ic_launcher
+layout activity_main
+string app_name
+string gauntlet_image_description
+style Theme.SnapConnect
