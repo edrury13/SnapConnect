@@ -68,7 +68,15 @@ class AuthViewModel @Inject constructor(
                 .onFailure { exception ->
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
-                        errorMessage = exception.message
+                        errorMessage = when {
+                            exception.message?.contains("already registered", ignoreCase = true) == true ->
+                                "This email is already registered. Please sign in instead."
+                            exception.message?.contains("Invalid email", ignoreCase = true) == true ->
+                                "Please enter a valid email address."
+                            exception.message?.contains("Password", ignoreCase = true) == true ->
+                                "Password must be at least 6 characters long."
+                            else -> exception.message ?: "Sign up failed. Please try again."
+                        }
                     )
                 }
         }

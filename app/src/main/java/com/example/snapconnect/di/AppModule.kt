@@ -1,8 +1,10 @@
 package com.example.snapconnect.di
 
+import android.content.Context
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.createSupabaseClient
@@ -33,4 +35,8 @@ object AppModule {
             install(Realtime)
         }
     }
+    
+    @Provides
+    @Singleton
+    fun provideContext(@ApplicationContext context: Context): Context = context
 } 

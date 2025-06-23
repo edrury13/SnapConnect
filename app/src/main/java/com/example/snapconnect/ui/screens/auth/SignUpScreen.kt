@@ -43,9 +43,11 @@ fun SignUpScreen(
     var confirmPasswordVisible by remember { mutableStateOf(false) }
     
     val uiState by viewModel.uiState.collectAsState()
+    var hasSignedUp by remember { mutableStateOf(false) }
     
+    // Only navigate after successful sign up
     LaunchedEffect(uiState.isLoggedIn) {
-        if (uiState.isLoggedIn) {
+        if (uiState.isLoggedIn && hasSignedUp) {
             navController.navigate(Screen.Home.route) {
                 popUpTo(Screen.SignUp.route) { inclusive = true }
             }
@@ -197,6 +199,7 @@ fun SignUpScreen(
             Button(
                 onClick = { 
                     if (password == confirmPassword) {
+                        hasSignedUp = true
                         viewModel.signUp(email, password, username)
                     }
                 },
