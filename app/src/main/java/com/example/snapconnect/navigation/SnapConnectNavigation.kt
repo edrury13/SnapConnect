@@ -16,6 +16,7 @@ import com.example.snapconnect.ui.screens.home.HomeScreen
 import com.example.snapconnect.ui.screens.messages.MessagesScreen
 import com.example.snapconnect.ui.screens.profile.ProfileScreen
 import com.example.snapconnect.ui.screens.story.StoryViewScreen
+import com.example.snapconnect.ui.screens.chat.ChatScreen
 
 sealed class Screen(val route: String) {
     object Login : Screen("login")
@@ -30,6 +31,9 @@ sealed class Screen(val route: String) {
     }
     object MediaPreview : Screen("media_preview/{mediaUri}/{isVideo}") {
         fun createRoute(mediaUri: String, isVideo: Boolean) = "media_preview/$mediaUri/$isVideo"
+    }
+    object Chat : Screen("chat/{groupId}") {
+        fun createRoute(groupId: String) = "chat/$groupId"
     }
 }
 
@@ -91,6 +95,13 @@ fun SnapConnectNavigation(
                 mediaUri = mediaUri,
                 isVideo = isVideo
             )
+        }
+        
+        composable(
+            route = Screen.Chat.route,
+            arguments = listOf(navArgument("groupId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            ChatScreen(navController = navController)
         }
     }
 } 

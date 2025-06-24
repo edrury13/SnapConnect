@@ -300,10 +300,27 @@ $$ LANGUAGE plpgsql;
 -- SELECT cron.schedule('delete-expired-stories', '*/5 * * * *', 'SELECT public.delete_expired_stories();');
 
 -- ========================================
+-- 8. ENABLE REALTIME
+-- ========================================
+
+-- Enable realtime on the messages table
+ALTER PUBLICATION supabase_realtime ADD TABLE public.messages;
+
+-- Enable realtime on the groups table
+ALTER PUBLICATION supabase_realtime ADD TABLE public.groups;
+
+-- Enable realtime on the stories table (for live updates)
+ALTER PUBLICATION supabase_realtime ADD TABLE public.stories;
+
+-- Enable realtime on the comments table
+ALTER PUBLICATION supabase_realtime ADD TABLE public.comments;
+
+-- ========================================
 -- NOTES:
 -- ========================================
 -- 1. Run these queries in order
 -- 2. Make sure to enable Email authentication in Supabase Dashboard
 -- 3. Configure storage bucket permissions in Dashboard if needed
 -- 4. Test all policies with different user scenarios
--- 5. For production, consider adding more indexes based on query patterns 
+-- 5. For production, consider adding more indexes based on query patterns
+-- 6. Run the realtime ALTER PUBLICATION commands to enable real-time functionality 

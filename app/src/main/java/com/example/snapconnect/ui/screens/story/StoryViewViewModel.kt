@@ -3,12 +3,15 @@ package com.example.snapconnect.ui.screens.story
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.snapconnect.data.model.Comment
 import com.example.snapconnect.data.model.Story
 import com.example.snapconnect.data.model.User
 import com.example.snapconnect.data.repository.AuthRepository
+import com.example.snapconnect.data.repository.CommentsRepository
 import com.example.snapconnect.data.repository.StoryRepository
 import com.example.snapconnect.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,6 +24,10 @@ data class StoryViewUiState(
     val currentUser: User? = null,
     val allUserStories: List<Story> = emptyList(),
     val currentIndex: Int = 0,
+    val comments: List<Pair<Comment, User>> = emptyList(),
+    val showComments: Boolean = false,
+    val isAddingComment: Boolean = false,
+    val commentInput: String = "",
     val errorMessage: String? = null
 )
 
@@ -29,6 +36,7 @@ class StoryViewViewModel @Inject constructor(
     private val storyRepository: StoryRepository,
     private val userRepository: UserRepository,
     private val authRepository: AuthRepository,
+    private val commentsRepository: CommentsRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     
@@ -36,6 +44,8 @@ class StoryViewViewModel @Inject constructor(
     
     private val _uiState = MutableStateFlow(StoryViewUiState())
     val uiState: StateFlow<StoryViewUiState> = _uiState.asStateFlow()
+    
+    private var commentsJob: Job? = null
     
     init {
         loadStory()
@@ -101,9 +111,15 @@ class StoryViewViewModel @Inject constructor(
             val nextStory = currentState.allUserStories[nextIndex]
             _uiState.value = currentState.copy(
                 currentStory = nextStory,
-                currentIndex = nextIndex
+                currentIndex = nextIndex,
+                comments = emptyList(), // Clear comments when changing story
+                showComments = false
             )
             markAsViewed(nextStory.id)
+            
+            // Cancel comments observation
+            commentsJob?.cancel()
+            commentsJob = null
         }
     }
     
@@ -115,8 +131,14 @@ class StoryViewViewModel @Inject constructor(
             val previousStory = currentState.allUserStories[previousIndex]
             _uiState.value = currentState.copy(
                 currentStory = previousStory,
-                currentIndex = previousIndex
+                currentIndex = previousIndex,
+                comments = emptyList(), // Clear comments when changing story
+                showComments = false
             )
+            
+            // Cancel comments observation
+            commentsJob?.cancel()
+            commentsJob = null
         }
     }
     
@@ -165,5 +187,74 @@ class StoryViewViewModel @Inject constructor(
                     )
                 }
         }
+    }
+    
+    fun toggleComments() {
+        val newShowComments = !_uiState.value.showComments
+        _uiState.value = _uiState.value.copy(showComments = newShowComments)
+        
+        if (newShowComments && _uiState.value.currentStory != null) {
+            loadComments(_uiState.value.currentStory!!.id)
+        } else {
+            // Cancel comments observation when hiding
+            commentsJob?.cancel()
+            commentsJob = null
+        }
+    }
+    
+    private fun loadComments(storyId: String) {
+        commentsJob?.cancel()
+        commentsJob = viewModelScope.launch {
+            commentsRepository.getCommentsRealtime(storyId)
+                .collect { comments ->
+                    _uiState.value = _uiState.value.copy(comments = comments)
+                }
+        }
+    }
+    
+    fun updateCommentInput(text: String) {
+        _uiState.value = _uiState.value.copy(commentInput = text)
+    }
+    
+    fun sendComment() {
+        val comment = _uiState.value.commentInput.trim()
+        val storyId = _uiState.value.currentStory?.id ?: return
+        
+        if (comment.isEmpty()) return
+        
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                isAddingComment = true,
+                commentInput = ""
+            )
+            
+            commentsRepository.addComment(storyId, comment)
+                .onSuccess {
+                    _uiState.value = _uiState.value.copy(isAddingComment = false)
+                }
+                .onFailure { error ->
+                    _uiState.value = _uiState.value.copy(
+                        isAddingComment = false,
+                        errorMessage = error.message,
+                        commentInput = comment // Restore on failure
+                    )
+                }
+        }
+    }
+    
+    fun deleteComment(commentId: String) {
+        viewModelScope.launch {
+            commentsRepository.deleteComment(commentId)
+                .onFailure { error ->
+                    _uiState.value = _uiState.value.copy(
+                        errorMessage = error.message
+                    )
+                }
+        }
+    }
+    
+    override fun onCleared() {
+        super.onCleared()
+        commentsJob?.cancel()
     }
 } 

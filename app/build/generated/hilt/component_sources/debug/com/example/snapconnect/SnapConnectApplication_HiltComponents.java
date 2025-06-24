@@ -3,7 +3,10 @@ package com.example.snapconnect;
 import com.example.snapconnect.di.AppModule;
 import com.example.snapconnect.ui.screens.auth.AuthViewModel_HiltModules;
 import com.example.snapconnect.ui.screens.camera.StoryPostViewModel_HiltModules;
+import com.example.snapconnect.ui.screens.chat.ChatViewModel_HiltModules;
+import com.example.snapconnect.ui.screens.friends.FriendsViewModel_HiltModules;
 import com.example.snapconnect.ui.screens.home.HomeViewModel_HiltModules;
+import com.example.snapconnect.ui.screens.messages.MessagesViewModel_HiltModules;
 import com.example.snapconnect.ui.screens.profile.ProfileViewModel_HiltModules;
 import com.example.snapconnect.ui.screens.story.StoryViewViewModel_HiltModules;
 import dagger.Binds;
@@ -157,8 +160,11 @@ public final class SnapConnectApplication_HiltComponents {
   @Subcomponent(
       modules = {
           AuthViewModel_HiltModules.KeyModule.class,
+          ChatViewModel_HiltModules.KeyModule.class,
+          FriendsViewModel_HiltModules.KeyModule.class,
           HiltWrapper_ActivityRetainedComponentManager_LifecycleModule.class,
           HomeViewModel_HiltModules.KeyModule.class,
+          MessagesViewModel_HiltModules.KeyModule.class,
           ProfileViewModel_HiltModules.KeyModule.class,
           ActivityCBuilderModule.class,
           ViewModelCBuilderModule.class,
@@ -200,8 +206,11 @@ public final class SnapConnectApplication_HiltComponents {
   @Subcomponent(
       modules = {
           AuthViewModel_HiltModules.BindsModule.class,
+          ChatViewModel_HiltModules.BindsModule.class,
+          FriendsViewModel_HiltModules.BindsModule.class,
           HiltWrapper_HiltViewModelFactory_ViewModelModule.class,
           HomeViewModel_HiltModules.BindsModule.class,
+          MessagesViewModel_HiltModules.BindsModule.class,
           ProfileViewModel_HiltModules.BindsModule.class,
           StoryPostViewModel_HiltModules.BindsModule.class,
           StoryViewViewModel_HiltModules.BindsModule.class
