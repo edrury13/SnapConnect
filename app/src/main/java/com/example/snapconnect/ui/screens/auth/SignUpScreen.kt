@@ -107,7 +107,10 @@ fun SignUpScreen(
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     containerColor = Color.White,
                     focusedBorderColor = Color.Black,
-                    unfocusedBorderColor = Color.Gray
+                    unfocusedBorderColor = Color.Gray,
+                    focusedLabelColor = Color.Black,
+                    unfocusedLabelColor = Color.Gray,
+                    cursorColor = Color.Black
                 ),
                 shape = RoundedCornerShape(12.dp)
             )
@@ -124,7 +127,10 @@ fun SignUpScreen(
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     containerColor = Color.White,
                     focusedBorderColor = Color.Black,
-                    unfocusedBorderColor = Color.Gray
+                    unfocusedBorderColor = Color.Gray,
+                    focusedLabelColor = Color.Black,
+                    unfocusedLabelColor = Color.Gray,
+                    cursorColor = Color.Black
                 ),
                 shape = RoundedCornerShape(12.dp)
             )
@@ -150,7 +156,10 @@ fun SignUpScreen(
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     containerColor = Color.White,
                     focusedBorderColor = Color.Black,
-                    unfocusedBorderColor = Color.Gray
+                    unfocusedBorderColor = Color.Gray,
+                    focusedLabelColor = Color.Black,
+                    unfocusedLabelColor = Color.Gray,
+                    cursorColor = Color.Black
                 ),
                 shape = RoundedCornerShape(12.dp)
             )
@@ -176,7 +185,10 @@ fun SignUpScreen(
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     containerColor = Color.White,
                     focusedBorderColor = Color.Black,
-                    unfocusedBorderColor = Color.Gray
+                    unfocusedBorderColor = Color.Gray,
+                    focusedLabelColor = Color.Black,
+                    unfocusedLabelColor = Color.Gray,
+                    cursorColor = Color.Black
                 ),
                 shape = RoundedCornerShape(12.dp),
                 isError = confirmPassword.isNotEmpty() && password != confirmPassword
@@ -221,6 +233,7 @@ fun SignUpScreen(
                 } else {
                     Text(
                         text = "Sign Up",
+                        color = Color.White,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
                     )

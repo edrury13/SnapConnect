@@ -88,7 +88,10 @@ fun LoginScreen(
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     containerColor = Color.White,
                     focusedBorderColor = Color.Black,
-                    unfocusedBorderColor = Color.Gray
+                    unfocusedBorderColor = Color.Gray,
+                    focusedLabelColor = Color.Black,
+                    unfocusedLabelColor = Color.Gray,
+                    cursorColor = Color.Black
                 ),
                 shape = RoundedCornerShape(12.dp)
             )
@@ -114,7 +117,10 @@ fun LoginScreen(
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     containerColor = Color.White,
                     focusedBorderColor = Color.Black,
-                    unfocusedBorderColor = Color.Gray
+                    unfocusedBorderColor = Color.Gray,
+                    focusedLabelColor = Color.Black,
+                    unfocusedLabelColor = Color.Gray,
+                    cursorColor = Color.Black
                 ),
                 shape = RoundedCornerShape(12.dp)
             )
@@ -140,7 +146,8 @@ fun LoginScreen(
                     )
                 } else {
                     Text(
-                        text = "Log In",
+                        text = "Login",
+                        color = Color.White,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
                     )

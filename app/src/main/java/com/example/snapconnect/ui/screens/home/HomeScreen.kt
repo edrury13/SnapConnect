@@ -37,6 +37,7 @@ import com.example.snapconnect.ui.components.SnapConnectBottomBar
 import com.example.snapconnect.ui.theme.SnapBlue
 import com.example.snapconnect.ui.theme.SnapRed
 import com.example.snapconnect.ui.theme.SnapYellow
+import com.example.snapconnect.ui.theme.SnapBlueAccent
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.coroutines.flow.StateFlow
@@ -63,14 +64,14 @@ fun HomeScreen(
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = SnapYellow,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimary
+                    titleContentColor = Color.Black
                 ),
                 actions = {
                     IconButton(onClick = { viewModel.loadStories() }) {
                         Icon(
                             imageVector = Icons.Default.Refresh,
                             contentDescription = "Refresh",
-                            tint = MaterialTheme.colorScheme.onPrimary
+                            tint = Color.Black
                         )
                     }
                 }
@@ -248,7 +249,7 @@ fun StoryCircle(
                         Modifier.border(
                             width = 2.dp,
                             brush = Brush.linearGradient(
-                                colors = listOf(SnapYellow, SnapRed, SnapBlue)
+                                colors = listOf(SnapBlue, SnapRed, SnapBlueAccent)
                             ),
                             shape = CircleShape
                         )

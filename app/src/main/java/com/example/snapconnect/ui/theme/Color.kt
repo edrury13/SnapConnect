@@ -11,10 +11,11 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 // SnapConnect Brand Colors
-val SnapYellow = Color(0xFFFFFC00)
+val SnapYellow = Color(0xFF64B5F6)  // Changed to light blue
+val SnapBlue = Color(0xFF64B5F6)   // Primary brand color - light blue
 val SnapBlack = Color(0xFF000000)
 val SnapGray = Color(0xFF262626)
 val SnapLightGray = Color(0xFFF5F5F5)
 val SnapRed = Color(0xFFFF0049)
-val SnapBlue = Color(0xFF00D4FF)
+val SnapBlueAccent = Color(0xFF2196F3)  // Slightly darker blue for accents
 val SnapGreen = Color(0xFF00FF88) 
