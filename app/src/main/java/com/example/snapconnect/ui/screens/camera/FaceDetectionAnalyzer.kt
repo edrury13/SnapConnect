@@ -9,8 +9,14 @@ import com.google.mlkit.vision.face.FaceDetectorOptions
 
 class FaceDetectionAnalyzer(
     private val onFacesDetected: (List<Face>) -> Unit,
-    private val onError: (Exception) -> Unit = {}
+    private val onError: (Exception) -> Unit = {},
+    private val onImageSizeChanged: (width: Int, height: Int) -> Unit = { _, _ -> },
+    private val onRotationChanged: (Int) -> Unit = {}
 ) : ImageAnalysis.Analyzer {
+    
+    private var lastImageWidth = 0
+    private var lastImageHeight = 0
+    private var lastRotation = -1
     
     private val detector = FaceDetection.getClient(
         FaceDetectorOptions.Builder()
@@ -26,6 +32,19 @@ class FaceDetectionAnalyzer(
     override fun analyze(imageProxy: ImageProxy) {
         val mediaImage = imageProxy.image
         if (mediaImage != null) {
+            // Check if image size has changed
+            if (imageProxy.width != lastImageWidth || imageProxy.height != lastImageHeight) {
+                lastImageWidth = imageProxy.width
+                lastImageHeight = imageProxy.height
+                onImageSizeChanged(imageProxy.width, imageProxy.height)
+            }
+            
+            // Check if rotation has changed
+            if (imageProxy.imageInfo.rotationDegrees != lastRotation) {
+                lastRotation = imageProxy.imageInfo.rotationDegrees
+                onRotationChanged(lastRotation)
+            }
+            
             val image = InputImage.fromMediaImage(
                 mediaImage, 
                 imageProxy.imageInfo.rotationDegrees

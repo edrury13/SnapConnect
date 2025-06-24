@@ -1,6 +1,7 @@
 package com.example.snapconnect.ui.components
 
 import android.graphics.PointF
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
@@ -46,6 +47,12 @@ fun FilterOverlayView(
         }
     }
     
+    // Log dimensions for debugging
+    LaunchedEffect(viewSize, imageSize) {
+        Log.d("FilterOverlay", "View size: ${viewSize.width}x${viewSize.height}")
+        Log.d("FilterOverlay", "Image size: ${imageSize.width}x${imageSize.height}")
+    }
+    
     Canvas(modifier = modifier.fillMaxSize()) {
         faces.forEach { face ->
             drawFaceOverlays(
@@ -68,9 +75,14 @@ private fun DrawScope.drawFaceOverlays(
     imageSize: Size,
     isFrontCamera: Boolean
 ) {
-    // Calculate scale factors to map from image coordinates to view coordinates
+    // Simple direct scaling - map image coordinates to view coordinates
     val scaleX = viewSize.width / imageSize.width
     val scaleY = viewSize.height / imageSize.height
+    
+    // For now, use simple scaling without offsets to debug
+    val scale = scaleX  // Try using just X scale
+    
+
     
     filter.overlays.forEach { overlay ->
         val overlayImage = overlayImages[overlay] ?: return@forEach
@@ -80,27 +92,59 @@ private fun DrawScope.drawFaceOverlays(
             ?: getCenterPointForLandmark(face, overlay.landmark)
             ?: return@forEach
         
+        // Debug log the raw values
+        if (overlay.landmark == FaceLandmarkType.BETWEEN_EYES) {
+            Log.d("FilterOverlay", "=== Debug Info ===")
+            Log.d("FilterOverlay", "View size: ${viewSize.width}x${viewSize.height}")
+            Log.d("FilterOverlay", "Image size: ${imageSize.width}x${imageSize.height}")
+            Log.d("FilterOverlay", "ScaleX: $scaleX, ScaleY: $scaleY, Using: $scale")
+            Log.d("FilterOverlay", "Face bounds: ${face.boundingBox}")
+            Log.d("FilterOverlay", "Landmark pos: $landmarkPos")
+            Log.d("FilterOverlay", "isFrontCamera: $isFrontCamera")
+        }
+        
         // Calculate overlay size based on face width
         val faceWidth = face.boundingBox.width() * scaleX
         val overlayWidth = faceWidth * overlay.widthRatio
         val overlayScale = overlayWidth / overlayImage.width
         val overlayHeight = overlayImage.height * overlayScale
         
-        // Calculate position in view coordinates
+        // Calculate position in view coordinates - simple direct mapping
         var x = landmarkPos.x * scaleX
         var y = landmarkPos.y * scaleY
         
-        // Apply offsets
-        x += overlay.offsetX * scaleX
-        y += overlay.offsetY * scaleY
+        // Apply filter offsets
+        x += overlay.offsetX
+        y += overlay.offsetY
         
-        // Center the overlay on the landmark
-        x -= overlayWidth / 2f
-        y -= overlayHeight / 2f
+        // Apply preview-specific corrections for alignment
+        val previewOffsetY = if (overlay.landmark == FaceLandmarkType.BETWEEN_EYES) -850f else 0f
+        val previewOffsetX = if (overlay.landmark == FaceLandmarkType.BETWEEN_EYES) 575f else 0f
+        val previewScaleFactor = if (overlay.landmark == FaceLandmarkType.BETWEEN_EYES) 1.3f else 1.0f
+        
+        // Apply preview scale adjustment
+        val adjustedOverlayWidth = overlayWidth * previewScaleFactor
+        val adjustedOverlayHeight = overlayHeight * previewScaleFactor
+        
+        y += previewOffsetY
+        x += previewOffsetX
+        
+        // Center the overlay on the landmark (using adjusted size)
+        x -= adjustedOverlayWidth / 2f
+        y -= adjustedOverlayHeight / 2f
         
         // Mirror for front camera
         if (isFrontCamera) {
             x = viewSize.width - x - overlayWidth
+        }
+        
+        // More debug logging
+        if (overlay.landmark == FaceLandmarkType.BETWEEN_EYES) {
+            Log.d("FilterOverlay", "=== Position Calculation ===")
+            Log.d("FilterOverlay", "Scaled position: ${landmarkPos.x * scaleX}, ${landmarkPos.y * scaleY}")
+            Log.d("FilterOverlay", "After centering: x=$x, y=$y")
+            Log.d("FilterOverlay", "Overlay size: ${overlayWidth}x${overlayHeight}")
+            Log.d("FilterOverlay", "View bounds: 0,0 to ${viewSize.width},${viewSize.height}")
         }
         
         // Draw the overlay
@@ -108,17 +152,17 @@ private fun DrawScope.drawFaceOverlays(
             if (abs(overlay.rotation) > 0.1f) {
                 rotate(
                     degrees = overlay.rotation,
-                    pivot = Offset(overlayWidth / 2f, overlayHeight / 2f)
+                    pivot = Offset(adjustedOverlayWidth / 2f, adjustedOverlayHeight / 2f)
                 ) {
                     drawImage(
                         image = overlayImage,
-                        dstSize = Size(overlayWidth, overlayHeight).toIntSize()
+                        dstSize = Size(adjustedOverlayWidth, adjustedOverlayHeight).toIntSize()
                     )
                 }
             } else {
                 drawImage(
                     image = overlayImage,
-                    dstSize = Size(overlayWidth, overlayHeight).toIntSize()
+                    dstSize = Size(adjustedOverlayWidth, adjustedOverlayHeight).toIntSize()
                 )
             }
         }

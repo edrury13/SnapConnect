@@ -3234,6 +3234,7 @@ int drawable notification_template_icon_bg 0x7f080142
 int drawable notification_template_icon_low_bg 0x7f080143
 int drawable notification_tile_bg 0x7f080144
 int drawable notify_panel_notification_icon_bg 0x7f080145
+int drawable sunglasses 0x7f080149
 int drawable test_level_drawable 0x7f080146
 int drawable tooltip_frame_dark 0x7f080147
 int drawable tooltip_frame_light 0x7f080148

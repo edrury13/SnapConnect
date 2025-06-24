@@ -20,13 +20,14 @@ class FiltersRepository @Inject constructor() {
         ARFilter(
             id = "sunglasses",
             name = "Cool Shades",
-            iconRes = R.drawable.ic_launcher,  // Will be replaced with sunglasses icon
+            iconRes = R.drawable.sunglasses,
             overlays = listOf(
                 FilterOverlay(
-                    imageRes = R.drawable.ic_launcher, // Will be replaced with sunglasses.png
+                    imageRes = R.drawable.sunglasses,
                     landmark = FaceLandmarkType.BETWEEN_EYES,
-                    widthRatio = 0.9f,
-                    offsetY = -30f
+                    widthRatio = 1.2f,
+                    offsetX = 0f,
+                    offsetY = 0f  // Reset to 0 for captured image
                 )
             )
         ),

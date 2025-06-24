@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
@@ -49,6 +50,10 @@ import com.example.snapconnect.ui.theme.SnapBlue
 import com.example.snapconnect.utils.FilterProcessor
 import com.google.accompanist.permissions.*
 import com.google.mlkit.vision.face.Face
+import com.google.mlkit.vision.face.FaceDetection
+import com.google.mlkit.vision.face.FaceDetectorOptions
+import com.google.mlkit.vision.common.InputImage
+import com.google.android.gms.tasks.Tasks
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -97,12 +102,13 @@ fun CameraScreen(
     val availableFilters = viewModel.availableFilters
     var viewSize by remember { mutableStateOf(Size.Zero) }
     var imageSize by remember { mutableStateOf(Size(1920f, 1080f)) } // Default to 1080p
+    var imageRotation by remember { mutableStateOf(0) }
     
     val previewView = remember { PreviewView(context) }
     val cameraProviderFuture = remember { ProcessCameraProvider.getInstance(context) }
     val executor = ContextCompat.getMainExecutor(context)
     
-    LaunchedEffect(multiplePermissionsState.allPermissionsGranted) {
+                        LaunchedEffect(multiplePermissionsState.allPermissionsGranted) {
         if (multiplePermissionsState.allPermissionsGranted) {
             startCamera(
                 context = context,
@@ -118,6 +124,10 @@ fun CameraScreen(
                 },
                 onFacesDetected = { faces ->
                     detectedFaces = faces
+                },
+                onImageSizeChanged = { size ->
+                    imageSize = size
+                    Log.d("CameraScreen", "Image analysis size: ${size.width}x${size.height}")
                 }
             )
         }
@@ -139,6 +149,10 @@ fun CameraScreen(
                 },
                 onFacesDetected = { faces ->
                     detectedFaces = faces
+                },
+                onImageSizeChanged = { size ->
+                    imageSize = size
+                    Log.d("CameraScreen", "Image analysis size: ${size.width}x${size.height}")
                 }
             )
         }
@@ -163,8 +177,17 @@ fun CameraScreen(
         ) {
             // Camera preview
             AndroidView(
-                factory = { previewView },
-                modifier = Modifier.fillMaxSize()
+                factory = { 
+                    previewView.apply {
+                        scaleType = PreviewView.ScaleType.FILL_CENTER
+                        implementationMode = PreviewView.ImplementationMode.COMPATIBLE
+                    }
+                },
+                modifier = Modifier.fillMaxSize(),
+                update = { view ->
+                    // Log preview dimensions for debugging
+                    Log.d("CameraPreview", "Preview view size: ${view.width}x${view.height}")
+                }
             )
             
             // Filter overlay
@@ -449,7 +472,8 @@ private fun startCamera(
     previewView: PreviewView,
     isFrontCamera: Boolean,
     onCameraReady: (Camera, ImageCapture, VideoCapture<Recorder>, ImageAnalysis) -> Unit,
-    onFacesDetected: (List<Face>) -> Unit
+    onFacesDetected: (List<Face>) -> Unit,
+    onImageSizeChanged: (Size) -> Unit = {}
 ) {
     cameraProviderFuture.addListener({
         val cameraProvider = cameraProviderFuture.get()
@@ -477,7 +501,10 @@ private fun startCamera(
                     ContextCompat.getMainExecutor(context),
                     FaceDetectionAnalyzer(
                         onFacesDetected = onFacesDetected,
-                        onError = { /* Handle error */ }
+                        onError = { /* Handle error */ },
+                        onImageSizeChanged = { width, height ->
+                            onImageSizeChanged(Size(width.toFloat(), height.toFloat()))
+                        }
                     )
                 )
             }
@@ -534,35 +561,93 @@ private fun capturePhotoWithFilter(
                     val finalUri = if (selectedFilter != null && selectedFilter.overlays.isNotEmpty()) {
                         withContext(Dispatchers.IO) {
                             // Load the captured image
-                            val bitmap = BitmapFactory.decodeFile(photoFile.absolutePath)
+                            var bitmap = BitmapFactory.decodeFile(photoFile.absolutePath)
                             
-                            // Apply filter
-                            val filteredBitmap = filterProcessor.applyFilterToImage(
-                                originalBitmap = bitmap,
-                                faces = faces,
-                                filter = selectedFilter,
-                                isFrontCamera = isFrontCamera
-                            )
-                            
-                            // Save filtered image
-                            val filteredFile = File(
-                                context.cacheDir,
-                                "filtered_${photoFile.name}"
-                            )
-                            
-                            FileOutputStream(filteredFile).use { out ->
-                                filteredBitmap.compress(Bitmap.CompressFormat.JPEG, 95, out)
+                            // Rotate image if needed (front camera images often need rotation)
+                            if (isFrontCamera) {
+                                val matrix = Matrix().apply {
+                                    postRotate(-90f) // Rotate 90 degrees counter-clockwise
+                                    postScale(-1f, 1f, bitmap.width / 2f, bitmap.height / 2f) // Mirror horizontally
+                                }
+                                val rotatedBitmap = Bitmap.createBitmap(
+                                    bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true
+                                )
+                                bitmap.recycle()
+                                bitmap = rotatedBitmap
                             }
                             
-                            // Clean up
-                            bitmap.recycle()
-                            filteredBitmap.recycle()
-                            photoFile.delete()
+                            // Detect faces in the captured image
+                            val detector = FaceDetection.getClient(
+                                FaceDetectorOptions.Builder()
+                                    .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_ACCURATE)
+                                    .setLandmarkMode(FaceDetectorOptions.LANDMARK_MODE_ALL)
+                                    .build()
+                            )
                             
-                            Uri.fromFile(filteredFile)
+                            val inputImage = InputImage.fromBitmap(bitmap, 0)
+                            
+                            try {
+                                val detectedFaces = Tasks.await(detector.process(inputImage))
+                                
+                                // Apply filter with detected faces from the actual image
+                                val filteredBitmap = filterProcessor.applyFilterToImage(
+                                    originalBitmap = bitmap,
+                                    faces = detectedFaces,
+                                    filter = selectedFilter,
+                                    isFrontCamera = false // Already handled rotation/mirroring
+                                )
+                                
+                                // Save filtered image
+                                val filteredFile = File(
+                                    context.cacheDir,
+                                    "filtered_${photoFile.name}"
+                                )
+                                
+                                FileOutputStream(filteredFile).use { out ->
+                                    filteredBitmap.compress(Bitmap.CompressFormat.JPEG, 95, out)
+                                }
+                                
+                                // Clean up
+                                bitmap.recycle()
+                                filteredBitmap.recycle()
+                                photoFile.delete()
+                                detector.close()
+                                
+                                Uri.fromFile(filteredFile)
+                            } catch (e: Exception) {
+                                // If face detection fails, return original image
+                                detector.close()
+                                Uri.fromFile(photoFile)
+                            }
                         }
                     } else {
-                        Uri.fromFile(photoFile)
+                        // Handle rotation for regular photos without filters
+                        if (isFrontCamera) {
+                            withContext(Dispatchers.IO) {
+                                // Load the captured image
+                                var bitmap = BitmapFactory.decodeFile(photoFile.absolutePath)
+                                
+                                // Rotate and mirror for front camera
+                                val matrix = Matrix().apply {
+                                    postRotate(-90f) // Rotate 90 degrees counter-clockwise
+                                    postScale(-1f, 1f, bitmap.width / 2f, bitmap.height / 2f) // Mirror horizontally
+                                }
+                                val rotatedBitmap = Bitmap.createBitmap(
+                                    bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true
+                                )
+                                bitmap.recycle()
+                                
+                                // Save rotated image
+                                FileOutputStream(photoFile).use { out ->
+                                    rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 95, out)
+                                }
+                                rotatedBitmap.recycle()
+                                
+                                Uri.fromFile(photoFile)
+                            }
+                        } else {
+                            Uri.fromFile(photoFile)
+                        }
                     }
                     
                     onPhotoCaptured(finalUri)

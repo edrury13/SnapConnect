@@ -660,7 +660,7 @@ public final class DaggerSnapConnectApplication_HiltComponents_SingletonC {
     }
 
     @Override
-    public void injectSnapConnectApplication(SnapConnectApplication arg0) {
+    public void injectSnapConnectApplication(SnapConnectApplication snapConnectApplication) {
     }
 
     @Override
