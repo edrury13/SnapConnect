@@ -42,6 +42,14 @@ MERGED from [androidx.navigation:navigation-compose:2.7.7] C:\Users\drury\Docume
 MERGED from [com.google.accompanist:accompanist-permissions:0.32.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\c8a1f30d1b7fe55d111987fae60d29e5\transformed\accompanist-permissions-0.32.0\AndroidManifest.xml:17:1-23:12
 MERGED from [androidx.compose.material3:material3:1.1.2] C:\Users\drury\Documents\Gradle\caches\transforms-3\be3b20434917d9e0cdf2d764f547a1e4\transformed\material3-1.1.2\AndroidManifest.xml:17:1-22:12
 MERGED from [com.google.dagger:hilt-android:2.48] C:\Users\drury\Documents\Gradle\caches\transforms-3\ed8ccdfe30003e9763564897f0e3be05\transformed\hilt-android-2.48\AndroidManifest.xml:16:1-19:12
+MERGED from [com.google.mlkit:face-detection:16.1.5] C:\Users\drury\Documents\Gradle\caches\transforms-3\e5b0fbf79c6f2349a3739bfd0c4d19fb\transformed\face-detection-16.1.5\AndroidManifest.xml:2:1-8:12
+MERGED from [com.google.android.gms:play-services-mlkit-face-detection:17.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\6fd63ba145b9bd90c895abd523f0f946\transformed\play-services-mlkit-face-detection-17.0.1\AndroidManifest.xml:2:1-18:12
+MERGED from [com.google.mlkit:vision-common:17.1.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\323ba5c4ce05fa1e70c4ac7b53a1bc4d\transformed\vision-common-17.1.0\AndroidManifest.xml:2:1-18:12
+MERGED from [com.google.mlkit:common:18.1.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\504b9fb0200b6a82f57dd6b1f4af7aad\transformed\common-18.1.0\AndroidManifest.xml:2:1-26:12
+MERGED from [com.google.android.gms:play-services-base:18.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\8f22b2ab90ccb0f53e516953657d77af\transformed\play-services-base-18.0.1\AndroidManifest.xml:16:1-24:12
+MERGED from [com.google.mlkit:vision-interfaces:16.0.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\de3c4d88120d7d369acaefa117a21521\transformed\vision-interfaces-16.0.0\AndroidManifest.xml:2:1-7:12
+MERGED from [com.google.android.gms:play-services-tasks:18.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\d8c4d8f1dfae96dae0b3e76b522019f7\transformed\play-services-tasks-18.0.1\AndroidManifest.xml:2:1-6:12
+MERGED from [com.google.android.gms:play-services-basement:18.0.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\6949738d2666f302207ab2ae57579b8b\transformed\play-services-basement-18.0.0\AndroidManifest.xml:16:1-26:12
 MERGED from [androidx.fragment:fragment:1.5.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\543149a9bd319b5f5d6569629a9900c5\transformed\fragment-1.5.1\AndroidManifest.xml:17:1-24:12
 MERGED from [io.github.jan-tennert.supabase:postgrest-kt-android-debug:2.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\1a4ea9f1ebf176239bad8c8aca00866a\transformed\postgrest-kt-debug\AndroidManifest.xml:2:1-7:12
 MERGED from [io.github.jan-tennert.supabase:storage-kt-android-debug:2.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\5fc734526e215fbbd2636ad7130a5a30\transformed\storage-kt-debug\AndroidManifest.xml:2:1-20:12
@@ -109,6 +117,11 @@ MERGED from [com.russhwolf:multiplatform-settings-no-arg-android-debug:1.1.1] C:
 MERGED from [com.russhwolf:multiplatform-settings-coroutines-android-debug:1.1.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\7ebf38ec748a26b9ee1446cf464cd7d9\transformed\multiplatform-settings-coroutines-debug\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.cardview:cardview:1.0.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\a9c9db07b8a26030db95114120befe41\transformed\cardview-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.exifinterface:exifinterface:1.3.6] C:\Users\drury\Documents\Gradle\caches\transforms-3\a156288791127222825b08d5b3c0ca8e\transformed\exifinterface-1.3.6\AndroidManifest.xml:17:1-24:12
+MERGED from [com.google.android.datatransport:transport-backend-cct:2.3.3] C:\Users\drury\Documents\Gradle\caches\transforms-3\694ddcc084f67505be09a8a1d0e1708e\transformed\transport-backend-cct-2.3.3\AndroidManifest.xml:15:1-38:12
+MERGED from [com.google.android.datatransport:transport-runtime:2.2.6] C:\Users\drury\Documents\Gradle\caches\transforms-3\7f8e62429b08ffdf115e277769af06eb\transformed\transport-runtime-2.2.6\AndroidManifest.xml:15:1-41:12
+MERGED from [com.google.android.datatransport:transport-api:2.2.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\131f5ea0a13e46394743f786cb61f1cb\transformed\transport-api-2.2.1\AndroidManifest.xml:15:1-22:12
+MERGED from [com.google.firebase:firebase-components:16.1.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\51ea9c3bb8d8593e0f475013e5f53e3c\transformed\firebase-components-16.1.0\AndroidManifest.xml:15:1-23:12
+MERGED from [com.google.firebase:firebase-encoders-json:17.1.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\6eb417405ce2040eb628537fb5f5b415\transformed\firebase-encoders-json-17.1.0\AndroidManifest.xml:15:1-23:12
 MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\c3e6e0acbbaaadebf49b8d4592eaafbb\transformed\interpolator-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\89b5a4d014765c5fa2a765987753e338\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:17:1-27:12
 MERGED from [androidx.arch.core:core-runtime:2.2.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\7283c40dcc385ae6509d0cf762497ca8\transformed\core-runtime-2.2.0\AndroidManifest.xml:17:1-22:12
@@ -121,6 +134,7 @@ MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] C:\User
 MERGED from [androidx.print:print:1.0.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\d92453203b0ef5eefd833d7a41ac2a4c\transformed\print-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [com.russhwolf:multiplatform-settings-android-debug:1.1.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\643d2056d3dcedb5e5cc3beef7813933\transformed\multiplatform-settings-debug\AndroidManifest.xml:2:1-7:12
 MERGED from [com.google.dagger:dagger-lint-aar:2.48] C:\Users\drury\Documents\Gradle\caches\transforms-3\ae2b811130bcedce354d624648c5ab66\transformed\dagger-lint-aar-2.48\AndroidManifest.xml:16:1-19:12
+MERGED from [com.google.android.odml:image:1.0.0-beta1] C:\Users\drury\Documents\Gradle\caches\transforms-3\35ccde14c9559cf939ecede8e991cfe8\transformed\image-1.0.0-beta1\AndroidManifest.xml:2:1-9:12
 	package
 		INJECTED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml
 	android:versionName
@@ -131,6 +145,8 @@ MERGED from [com.google.dagger:dagger-lint-aar:2.48] C:\Users\drury\Documents\Gr
 		ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:2:11-69
 uses-permission#android.permission.INTERNET
 ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:5:5-67
+MERGED from [com.google.android.datatransport:transport-backend-cct:2.3.3] C:\Users\drury\Documents\Gradle\caches\transforms-3\694ddcc084f67505be09a8a1d0e1708e\transformed\transport-backend-cct-2.3.3\AndroidManifest.xml:26:5-67
+MERGED from [com.google.android.datatransport:transport-backend-cct:2.3.3] C:\Users\drury\Documents\Gradle\caches\transforms-3\694ddcc084f67505be09a8a1d0e1708e\transformed\transport-backend-cct-2.3.3\AndroidManifest.xml:26:5-67
 	android:name
 		ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:5:22-64
 uses-permission#android.permission.CAMERA
@@ -172,6 +188,18 @@ MERGED from [androidx.camera:camera-core:1.3.1] C:\Users\drury\Documents\Gradle\
 MERGED from [androidx.camera:camera-core:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\9fef95f12a0a7458be467a1e499f2a03\transformed\camera-core-1.3.1\AndroidManifest.xml:23:5-34:19
 MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\0bdd47bfe04fcb84e28e477d6c34cc8b\transformed\constraintlayout-2.0.1\AndroidManifest.xml:9:5-20
 MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\0bdd47bfe04fcb84e28e477d6c34cc8b\transformed\constraintlayout-2.0.1\AndroidManifest.xml:9:5-20
+MERGED from [com.google.android.gms:play-services-mlkit-face-detection:17.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\6fd63ba145b9bd90c895abd523f0f946\transformed\play-services-mlkit-face-detection-17.0.1\AndroidManifest.xml:8:5-16:19
+MERGED from [com.google.android.gms:play-services-mlkit-face-detection:17.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\6fd63ba145b9bd90c895abd523f0f946\transformed\play-services-mlkit-face-detection-17.0.1\AndroidManifest.xml:8:5-16:19
+MERGED from [com.google.mlkit:vision-common:17.1.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\323ba5c4ce05fa1e70c4ac7b53a1bc4d\transformed\vision-common-17.1.0\AndroidManifest.xml:8:5-16:19
+MERGED from [com.google.mlkit:vision-common:17.1.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\323ba5c4ce05fa1e70c4ac7b53a1bc4d\transformed\vision-common-17.1.0\AndroidManifest.xml:8:5-16:19
+MERGED from [com.google.mlkit:common:18.1.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\504b9fb0200b6a82f57dd6b1f4af7aad\transformed\common-18.1.0\AndroidManifest.xml:8:5-24:19
+MERGED from [com.google.mlkit:common:18.1.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\504b9fb0200b6a82f57dd6b1f4af7aad\transformed\common-18.1.0\AndroidManifest.xml:8:5-24:19
+MERGED from [com.google.android.gms:play-services-base:18.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\8f22b2ab90ccb0f53e516953657d77af\transformed\play-services-base-18.0.1\AndroidManifest.xml:19:5-23:19
+MERGED from [com.google.android.gms:play-services-base:18.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\8f22b2ab90ccb0f53e516953657d77af\transformed\play-services-base-18.0.1\AndroidManifest.xml:19:5-23:19
+MERGED from [com.google.android.gms:play-services-tasks:18.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\d8c4d8f1dfae96dae0b3e76b522019f7\transformed\play-services-tasks-18.0.1\AndroidManifest.xml:5:5-20
+MERGED from [com.google.android.gms:play-services-tasks:18.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\d8c4d8f1dfae96dae0b3e76b522019f7\transformed\play-services-tasks-18.0.1\AndroidManifest.xml:5:5-20
+MERGED from [com.google.android.gms:play-services-basement:18.0.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\6949738d2666f302207ab2ae57579b8b\transformed\play-services-basement-18.0.0\AndroidManifest.xml:20:5-24:19
+MERGED from [com.google.android.gms:play-services-basement:18.0.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\6949738d2666f302207ab2ae57579b8b\transformed\play-services-basement-18.0.0\AndroidManifest.xml:20:5-24:19
 MERGED from [io.github.jan-tennert.supabase:storage-kt-android-debug:2.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\5fc734526e215fbbd2636ad7130a5a30\transformed\storage-kt-debug\AndroidManifest.xml:8:5-18:19
 MERGED from [io.github.jan-tennert.supabase:storage-kt-android-debug:2.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\5fc734526e215fbbd2636ad7130a5a30\transformed\storage-kt-debug\AndroidManifest.xml:8:5-18:19
 MERGED from [io.github.jan-tennert.supabase:gotrue-kt-android-debug:2.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\a886e18a62fc14ffd587cf63972c5c5c\transformed\gotrue-kt-debug\AndroidManifest.xml:8:5-18:19
@@ -188,12 +216,18 @@ MERGED from [androidx.core:core:1.12.0] C:\Users\drury\Documents\Gradle\caches\t
 MERGED from [androidx.core:core:1.12.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\90da2efa79bbb982acc4540cc64aa195\transformed\core-1.12.0\AndroidManifest.xml:28:5-89
 MERGED from [com.russhwolf:multiplatform-settings-no-arg-android-debug:1.1.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\294815d16f05a62f79d3fbe76bd03be3\transformed\multiplatform-settings-no-arg-debug\AndroidManifest.xml:23:5-33:19
 MERGED from [com.russhwolf:multiplatform-settings-no-arg-android-debug:1.1.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\294815d16f05a62f79d3fbe76bd03be3\transformed\multiplatform-settings-no-arg-debug\AndroidManifest.xml:23:5-33:19
+MERGED from [com.google.android.datatransport:transport-backend-cct:2.3.3] C:\Users\drury\Documents\Gradle\caches\transforms-3\694ddcc084f67505be09a8a1d0e1708e\transformed\transport-backend-cct-2.3.3\AndroidManifest.xml:28:5-36:19
+MERGED from [com.google.android.datatransport:transport-backend-cct:2.3.3] C:\Users\drury\Documents\Gradle\caches\transforms-3\694ddcc084f67505be09a8a1d0e1708e\transformed\transport-backend-cct-2.3.3\AndroidManifest.xml:28:5-36:19
+MERGED from [com.google.android.datatransport:transport-runtime:2.2.6] C:\Users\drury\Documents\Gradle\caches\transforms-3\7f8e62429b08ffdf115e277769af06eb\transformed\transport-runtime-2.2.6\AndroidManifest.xml:25:5-39:19
+MERGED from [com.google.android.datatransport:transport-runtime:2.2.6] C:\Users\drury\Documents\Gradle\caches\transforms-3\7f8e62429b08ffdf115e277769af06eb\transformed\transport-runtime-2.2.6\AndroidManifest.xml:25:5-39:19
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\89b5a4d014765c5fa2a765987753e338\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:24:5-25:19
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\89b5a4d014765c5fa2a765987753e338\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:24:5-25:19
 MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:23:5-53:19
 MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:23:5-53:19
 MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\ca2990da31f3419e0f3a16afc3b7a63b\transformed\startup-runtime-1.1.1\AndroidManifest.xml:25:5-31:19
 MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\ca2990da31f3419e0f3a16afc3b7a63b\transformed\startup-runtime-1.1.1\AndroidManifest.xml:25:5-31:19
+MERGED from [com.google.android.odml:image:1.0.0-beta1] C:\Users\drury\Documents\Gradle\caches\transforms-3\35ccde14c9559cf939ecede8e991cfe8\transformed\image-1.0.0-beta1\AndroidManifest.xml:7:5-20
+MERGED from [com.google.android.odml:image:1.0.0-beta1] C:\Users\drury\Documents\Gradle\caches\transforms-3\35ccde14c9559cf939ecede8e991cfe8\transformed\image-1.0.0-beta1\AndroidManifest.xml:7:5-20
 	android:extractNativeLibs
 		INJECTED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml
 	android:appComponentFactory
@@ -308,6 +342,22 @@ MERGED from [androidx.compose.material3:material3:1.1.2] C:\Users\drury\Document
 MERGED from [androidx.compose.material3:material3:1.1.2] C:\Users\drury\Documents\Gradle\caches\transforms-3\be3b20434917d9e0cdf2d764f547a1e4\transformed\material3-1.1.2\AndroidManifest.xml:20:5-44
 MERGED from [com.google.dagger:hilt-android:2.48] C:\Users\drury\Documents\Gradle\caches\transforms-3\ed8ccdfe30003e9763564897f0e3be05\transformed\hilt-android-2.48\AndroidManifest.xml:18:3-42
 MERGED from [com.google.dagger:hilt-android:2.48] C:\Users\drury\Documents\Gradle\caches\transforms-3\ed8ccdfe30003e9763564897f0e3be05\transformed\hilt-android-2.48\AndroidManifest.xml:18:3-42
+MERGED from [com.google.mlkit:face-detection:16.1.5] C:\Users\drury\Documents\Gradle\caches\transforms-3\e5b0fbf79c6f2349a3739bfd0c4d19fb\transformed\face-detection-16.1.5\AndroidManifest.xml:6:5-44
+MERGED from [com.google.mlkit:face-detection:16.1.5] C:\Users\drury\Documents\Gradle\caches\transforms-3\e5b0fbf79c6f2349a3739bfd0c4d19fb\transformed\face-detection-16.1.5\AndroidManifest.xml:6:5-44
+MERGED from [com.google.android.gms:play-services-mlkit-face-detection:17.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\6fd63ba145b9bd90c895abd523f0f946\transformed\play-services-mlkit-face-detection-17.0.1\AndroidManifest.xml:6:5-44
+MERGED from [com.google.android.gms:play-services-mlkit-face-detection:17.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\6fd63ba145b9bd90c895abd523f0f946\transformed\play-services-mlkit-face-detection-17.0.1\AndroidManifest.xml:6:5-44
+MERGED from [com.google.mlkit:vision-common:17.1.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\323ba5c4ce05fa1e70c4ac7b53a1bc4d\transformed\vision-common-17.1.0\AndroidManifest.xml:6:5-44
+MERGED from [com.google.mlkit:vision-common:17.1.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\323ba5c4ce05fa1e70c4ac7b53a1bc4d\transformed\vision-common-17.1.0\AndroidManifest.xml:6:5-44
+MERGED from [com.google.mlkit:common:18.1.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\504b9fb0200b6a82f57dd6b1f4af7aad\transformed\common-18.1.0\AndroidManifest.xml:6:5-44
+MERGED from [com.google.mlkit:common:18.1.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\504b9fb0200b6a82f57dd6b1f4af7aad\transformed\common-18.1.0\AndroidManifest.xml:6:5-44
+MERGED from [com.google.android.gms:play-services-base:18.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\8f22b2ab90ccb0f53e516953657d77af\transformed\play-services-base-18.0.1\AndroidManifest.xml:18:5-43
+MERGED from [com.google.android.gms:play-services-base:18.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\8f22b2ab90ccb0f53e516953657d77af\transformed\play-services-base-18.0.1\AndroidManifest.xml:18:5-43
+MERGED from [com.google.mlkit:vision-interfaces:16.0.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\de3c4d88120d7d369acaefa117a21521\transformed\vision-interfaces-16.0.0\AndroidManifest.xml:5:5-44
+MERGED from [com.google.mlkit:vision-interfaces:16.0.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\de3c4d88120d7d369acaefa117a21521\transformed\vision-interfaces-16.0.0\AndroidManifest.xml:5:5-44
+MERGED from [com.google.android.gms:play-services-tasks:18.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\d8c4d8f1dfae96dae0b3e76b522019f7\transformed\play-services-tasks-18.0.1\AndroidManifest.xml:4:5-43
+MERGED from [com.google.android.gms:play-services-tasks:18.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\d8c4d8f1dfae96dae0b3e76b522019f7\transformed\play-services-tasks-18.0.1\AndroidManifest.xml:4:5-43
+MERGED from [com.google.android.gms:play-services-basement:18.0.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\6949738d2666f302207ab2ae57579b8b\transformed\play-services-basement-18.0.0\AndroidManifest.xml:18:5-43
+MERGED from [com.google.android.gms:play-services-basement:18.0.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\6949738d2666f302207ab2ae57579b8b\transformed\play-services-basement-18.0.0\AndroidManifest.xml:18:5-43
 MERGED from [androidx.fragment:fragment:1.5.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\543149a9bd319b5f5d6569629a9900c5\transformed\fragment-1.5.1\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.fragment:fragment:1.5.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\543149a9bd319b5f5d6569629a9900c5\transformed\fragment-1.5.1\AndroidManifest.xml:20:5-22:41
 MERGED from [io.github.jan-tennert.supabase:postgrest-kt-android-debug:2.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\1a4ea9f1ebf176239bad8c8aca00866a\transformed\postgrest-kt-debug\AndroidManifest.xml:5:5-44
@@ -442,6 +492,16 @@ MERGED from [androidx.cardview:cardview:1.0.0] C:\Users\drury\Documents\Gradle\c
 MERGED from [androidx.cardview:cardview:1.0.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\a9c9db07b8a26030db95114120befe41\transformed\cardview-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.exifinterface:exifinterface:1.3.6] C:\Users\drury\Documents\Gradle\caches\transforms-3\a156288791127222825b08d5b3c0ca8e\transformed\exifinterface-1.3.6\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.exifinterface:exifinterface:1.3.6] C:\Users\drury\Documents\Gradle\caches\transforms-3\a156288791127222825b08d5b3c0ca8e\transformed\exifinterface-1.3.6\AndroidManifest.xml:20:5-22:41
+MERGED from [com.google.android.datatransport:transport-backend-cct:2.3.3] C:\Users\drury\Documents\Gradle\caches\transforms-3\694ddcc084f67505be09a8a1d0e1708e\transformed\transport-backend-cct-2.3.3\AndroidManifest.xml:19:5-21:41
+MERGED from [com.google.android.datatransport:transport-backend-cct:2.3.3] C:\Users\drury\Documents\Gradle\caches\transforms-3\694ddcc084f67505be09a8a1d0e1708e\transformed\transport-backend-cct-2.3.3\AndroidManifest.xml:19:5-21:41
+MERGED from [com.google.android.datatransport:transport-runtime:2.2.6] C:\Users\drury\Documents\Gradle\caches\transforms-3\7f8e62429b08ffdf115e277769af06eb\transformed\transport-runtime-2.2.6\AndroidManifest.xml:18:5-20:41
+MERGED from [com.google.android.datatransport:transport-runtime:2.2.6] C:\Users\drury\Documents\Gradle\caches\transforms-3\7f8e62429b08ffdf115e277769af06eb\transformed\transport-runtime-2.2.6\AndroidManifest.xml:18:5-20:41
+MERGED from [com.google.android.datatransport:transport-api:2.2.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\131f5ea0a13e46394743f786cb61f1cb\transformed\transport-api-2.2.1\AndroidManifest.xml:18:5-20:41
+MERGED from [com.google.android.datatransport:transport-api:2.2.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\131f5ea0a13e46394743f786cb61f1cb\transformed\transport-api-2.2.1\AndroidManifest.xml:18:5-20:41
+MERGED from [com.google.firebase:firebase-components:16.1.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\51ea9c3bb8d8593e0f475013e5f53e3c\transformed\firebase-components-16.1.0\AndroidManifest.xml:19:5-21:41
+MERGED from [com.google.firebase:firebase-components:16.1.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\51ea9c3bb8d8593e0f475013e5f53e3c\transformed\firebase-components-16.1.0\AndroidManifest.xml:19:5-21:41
+MERGED from [com.google.firebase:firebase-encoders-json:17.1.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\6eb417405ce2040eb628537fb5f5b415\transformed\firebase-encoders-json-17.1.0\AndroidManifest.xml:19:5-21:41
+MERGED from [com.google.firebase:firebase-encoders-json:17.1.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\6eb417405ce2040eb628537fb5f5b415\transformed\firebase-encoders-json-17.1.0\AndroidManifest.xml:19:5-21:41
 MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\c3e6e0acbbaaadebf49b8d4592eaafbb\transformed\interpolator-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\c3e6e0acbbaaadebf49b8d4592eaafbb\transformed\interpolator-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\89b5a4d014765c5fa2a765987753e338\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:20:5-22:41
@@ -466,6 +526,8 @@ MERGED from [com.russhwolf:multiplatform-settings-android-debug:1.1.1] C:\Users\
 MERGED from [com.russhwolf:multiplatform-settings-android-debug:1.1.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\643d2056d3dcedb5e5cc3beef7813933\transformed\multiplatform-settings-debug\AndroidManifest.xml:5:5-44
 MERGED from [com.google.dagger:dagger-lint-aar:2.48] C:\Users\drury\Documents\Gradle\caches\transforms-3\ae2b811130bcedce354d624648c5ab66\transformed\dagger-lint-aar-2.48\AndroidManifest.xml:18:3-42
 MERGED from [com.google.dagger:dagger-lint-aar:2.48] C:\Users\drury\Documents\Gradle\caches\transforms-3\ae2b811130bcedce354d624648c5ab66\transformed\dagger-lint-aar-2.48\AndroidManifest.xml:18:3-42
+MERGED from [com.google.android.odml:image:1.0.0-beta1] C:\Users\drury\Documents\Gradle\caches\transforms-3\35ccde14c9559cf939ecede8e991cfe8\transformed\image-1.0.0-beta1\AndroidManifest.xml:5:5-44
+MERGED from [com.google.android.odml:image:1.0.0-beta1] C:\Users\drury\Documents\Gradle\caches\transforms-3\35ccde14c9559cf939ecede8e991cfe8\transformed\image-1.0.0-beta1\AndroidManifest.xml:5:5-44
 	android:targetSdkVersion
 		INJECTED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml
 	android:minSdkVersion
@@ -494,8 +556,68 @@ uses-permission#android.permission.ACCESS_NETWORK_STATE
 ADDED from [androidx.media3:media3-common:1.2.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\d8a19fd59f5bd6d655de37dd683736f5\transformed\media3-common-1.2.0\AndroidManifest.xml:22:5-79
 MERGED from [androidx.media3:media3-exoplayer:1.2.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\721e7566445dc7287eb00ec336cc4779\transformed\media3-exoplayer-1.2.0\AndroidManifest.xml:22:5-79
 MERGED from [androidx.media3:media3-exoplayer:1.2.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\721e7566445dc7287eb00ec336cc4779\transformed\media3-exoplayer-1.2.0\AndroidManifest.xml:22:5-79
+MERGED from [com.google.android.datatransport:transport-backend-cct:2.3.3] C:\Users\drury\Documents\Gradle\caches\transforms-3\694ddcc084f67505be09a8a1d0e1708e\transformed\transport-backend-cct-2.3.3\AndroidManifest.xml:25:5-79
+MERGED from [com.google.android.datatransport:transport-backend-cct:2.3.3] C:\Users\drury\Documents\Gradle\caches\transforms-3\694ddcc084f67505be09a8a1d0e1708e\transformed\transport-backend-cct-2.3.3\AndroidManifest.xml:25:5-79
+MERGED from [com.google.android.datatransport:transport-runtime:2.2.6] C:\Users\drury\Documents\Gradle\caches\transforms-3\7f8e62429b08ffdf115e277769af06eb\transformed\transport-runtime-2.2.6\AndroidManifest.xml:22:5-79
+MERGED from [com.google.android.datatransport:transport-runtime:2.2.6] C:\Users\drury\Documents\Gradle\caches\transforms-3\7f8e62429b08ffdf115e277769af06eb\transformed\transport-runtime-2.2.6\AndroidManifest.xml:22:5-79
 	android:name
 		ADDED from [androidx.media3:media3-common:1.2.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\d8a19fd59f5bd6d655de37dd683736f5\transformed\media3-common-1.2.0\AndroidManifest.xml:22:22-76
+service#com.google.mlkit.common.internal.MlKitComponentDiscoveryService
+ADDED from [com.google.android.gms:play-services-mlkit-face-detection:17.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\6fd63ba145b9bd90c895abd523f0f946\transformed\play-services-mlkit-face-detection-17.0.1\AndroidManifest.xml:9:9-15:19
+MERGED from [com.google.mlkit:vision-common:17.1.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\323ba5c4ce05fa1e70c4ac7b53a1bc4d\transformed\vision-common-17.1.0\AndroidManifest.xml:9:9-15:19
+MERGED from [com.google.mlkit:vision-common:17.1.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\323ba5c4ce05fa1e70c4ac7b53a1bc4d\transformed\vision-common-17.1.0\AndroidManifest.xml:9:9-15:19
+MERGED from [com.google.mlkit:common:18.1.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\504b9fb0200b6a82f57dd6b1f4af7aad\transformed\common-18.1.0\AndroidManifest.xml:15:9-23:19
+MERGED from [com.google.mlkit:common:18.1.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\504b9fb0200b6a82f57dd6b1f4af7aad\transformed\common-18.1.0\AndroidManifest.xml:15:9-23:19
+	android:exported
+		ADDED from [com.google.android.gms:play-services-mlkit-face-detection:17.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\6fd63ba145b9bd90c895abd523f0f946\transformed\play-services-mlkit-face-detection-17.0.1\AndroidManifest.xml:11:13-37
+	tools:targetApi
+		ADDED from [com.google.mlkit:common:18.1.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\504b9fb0200b6a82f57dd6b1f4af7aad\transformed\common-18.1.0\AndroidManifest.xml:19:13-32
+	android:directBootAware
+		ADDED from [com.google.mlkit:common:18.1.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\504b9fb0200b6a82f57dd6b1f4af7aad\transformed\common-18.1.0\AndroidManifest.xml:17:13-43
+	android:name
+		ADDED from [com.google.android.gms:play-services-mlkit-face-detection:17.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\6fd63ba145b9bd90c895abd523f0f946\transformed\play-services-mlkit-face-detection-17.0.1\AndroidManifest.xml:10:13-91
+meta-data#com.google.firebase.components:com.google.mlkit.vision.face.internal.FaceRegistrar
+ADDED from [com.google.android.gms:play-services-mlkit-face-detection:17.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\6fd63ba145b9bd90c895abd523f0f946\transformed\play-services-mlkit-face-detection-17.0.1\AndroidManifest.xml:12:13-14:85
+	android:value
+		ADDED from [com.google.android.gms:play-services-mlkit-face-detection:17.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\6fd63ba145b9bd90c895abd523f0f946\transformed\play-services-mlkit-face-detection-17.0.1\AndroidManifest.xml:14:17-82
+	android:name
+		ADDED from [com.google.android.gms:play-services-mlkit-face-detection:17.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\6fd63ba145b9bd90c895abd523f0f946\transformed\play-services-mlkit-face-detection-17.0.1\AndroidManifest.xml:13:17-114
+meta-data#com.google.firebase.components:com.google.mlkit.vision.common.internal.VisionCommonRegistrar
+ADDED from [com.google.mlkit:vision-common:17.1.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\323ba5c4ce05fa1e70c4ac7b53a1bc4d\transformed\vision-common-17.1.0\AndroidManifest.xml:12:13-14:85
+	android:value
+		ADDED from [com.google.mlkit:vision-common:17.1.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\323ba5c4ce05fa1e70c4ac7b53a1bc4d\transformed\vision-common-17.1.0\AndroidManifest.xml:14:17-82
+	android:name
+		ADDED from [com.google.mlkit:vision-common:17.1.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\323ba5c4ce05fa1e70c4ac7b53a1bc4d\transformed\vision-common-17.1.0\AndroidManifest.xml:13:17-124
+provider#com.google.mlkit.common.internal.MlKitInitProvider
+ADDED from [com.google.mlkit:common:18.1.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\504b9fb0200b6a82f57dd6b1f4af7aad\transformed\common-18.1.0\AndroidManifest.xml:9:9-13:38
+	android:authorities
+		ADDED from [com.google.mlkit:common:18.1.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\504b9fb0200b6a82f57dd6b1f4af7aad\transformed\common-18.1.0\AndroidManifest.xml:11:13-69
+	android:exported
+		ADDED from [com.google.mlkit:common:18.1.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\504b9fb0200b6a82f57dd6b1f4af7aad\transformed\common-18.1.0\AndroidManifest.xml:12:13-37
+	android:initOrder
+		ADDED from [com.google.mlkit:common:18.1.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\504b9fb0200b6a82f57dd6b1f4af7aad\transformed\common-18.1.0\AndroidManifest.xml:13:13-35
+	android:name
+		ADDED from [com.google.mlkit:common:18.1.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\504b9fb0200b6a82f57dd6b1f4af7aad\transformed\common-18.1.0\AndroidManifest.xml:10:13-78
+meta-data#com.google.firebase.components:com.google.mlkit.common.internal.CommonComponentRegistrar
+ADDED from [com.google.mlkit:common:18.1.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\504b9fb0200b6a82f57dd6b1f4af7aad\transformed\common-18.1.0\AndroidManifest.xml:20:13-22:85
+	android:value
+		ADDED from [com.google.mlkit:common:18.1.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\504b9fb0200b6a82f57dd6b1f4af7aad\transformed\common-18.1.0\AndroidManifest.xml:22:17-82
+	android:name
+		ADDED from [com.google.mlkit:common:18.1.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\504b9fb0200b6a82f57dd6b1f4af7aad\transformed\common-18.1.0\AndroidManifest.xml:21:17-120
+activity#com.google.android.gms.common.api.GoogleApiActivity
+ADDED from [com.google.android.gms:play-services-base:18.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\8f22b2ab90ccb0f53e516953657d77af\transformed\play-services-base-18.0.1\AndroidManifest.xml:20:9-22:45
+	android:exported
+		ADDED from [com.google.android.gms:play-services-base:18.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\8f22b2ab90ccb0f53e516953657d77af\transformed\play-services-base-18.0.1\AndroidManifest.xml:22:19-43
+	android:theme
+		ADDED from [com.google.android.gms:play-services-base:18.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\8f22b2ab90ccb0f53e516953657d77af\transformed\play-services-base-18.0.1\AndroidManifest.xml:21:19-78
+	android:name
+		ADDED from [com.google.android.gms:play-services-base:18.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\8f22b2ab90ccb0f53e516953657d77af\transformed\play-services-base-18.0.1\AndroidManifest.xml:20:19-85
+meta-data#com.google.android.gms.version
+ADDED from [com.google.android.gms:play-services-basement:18.0.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\6949738d2666f302207ab2ae57579b8b\transformed\play-services-basement-18.0.0\AndroidManifest.xml:21:9-23:69
+	android:value
+		ADDED from [com.google.android.gms:play-services-basement:18.0.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\6949738d2666f302207ab2ae57579b8b\transformed\play-services-basement-18.0.0\AndroidManifest.xml:23:13-66
+	android:name
+		ADDED from [com.google.android.gms:play-services-basement:18.0.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\6949738d2666f302207ab2ae57579b8b\transformed\play-services-basement-18.0.0\AndroidManifest.xml:22:13-58
 provider#androidx.startup.InitializationProvider
 ADDED from [io.github.jan-tennert.supabase:storage-kt-android-debug:2.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\5fc734526e215fbbd2636ad7130a5a30\transformed\storage-kt-debug\AndroidManifest.xml:9:9-17:20
 MERGED from [io.github.jan-tennert.supabase:gotrue-kt-android-debug:2.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\a886e18a62fc14ffd587cf63972c5c5c\transformed\gotrue-kt-debug\AndroidManifest.xml:9:9-17:20
@@ -580,6 +702,34 @@ ADDED from [com.russhwolf:multiplatform-settings-no-arg-android-debug:1.1.1] C:\
 		ADDED from [com.russhwolf:multiplatform-settings-no-arg-android-debug:1.1.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\294815d16f05a62f79d3fbe76bd03be3\transformed\multiplatform-settings-no-arg-debug\AndroidManifest.xml:31:17-49
 	android:name
 		ADDED from [com.russhwolf:multiplatform-settings-no-arg-android-debug:1.1.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\294815d16f05a62f79d3fbe76bd03be3\transformed\multiplatform-settings-no-arg-debug\AndroidManifest.xml:30:17-74
+service#com.google.android.datatransport.runtime.backends.TransportBackendDiscovery
+ADDED from [com.google.android.datatransport:transport-backend-cct:2.3.3] C:\Users\drury\Documents\Gradle\caches\transforms-3\694ddcc084f67505be09a8a1d0e1708e\transformed\transport-backend-cct-2.3.3\AndroidManifest.xml:29:9-35:19
+MERGED from [com.google.android.datatransport:transport-runtime:2.2.6] C:\Users\drury\Documents\Gradle\caches\transforms-3\7f8e62429b08ffdf115e277769af06eb\transformed\transport-runtime-2.2.6\AndroidManifest.xml:36:9-38:40
+MERGED from [com.google.android.datatransport:transport-runtime:2.2.6] C:\Users\drury\Documents\Gradle\caches\transforms-3\7f8e62429b08ffdf115e277769af06eb\transformed\transport-runtime-2.2.6\AndroidManifest.xml:36:9-38:40
+	android:exported
+		ADDED from [com.google.android.datatransport:transport-backend-cct:2.3.3] C:\Users\drury\Documents\Gradle\caches\transforms-3\694ddcc084f67505be09a8a1d0e1708e\transformed\transport-backend-cct-2.3.3\AndroidManifest.xml:31:13-37
+	android:name
+		ADDED from [com.google.android.datatransport:transport-backend-cct:2.3.3] C:\Users\drury\Documents\Gradle\caches\transforms-3\694ddcc084f67505be09a8a1d0e1708e\transformed\transport-backend-cct-2.3.3\AndroidManifest.xml:30:13-103
+meta-data#backend:com.google.android.datatransport.cct.CctBackendFactory
+ADDED from [com.google.android.datatransport:transport-backend-cct:2.3.3] C:\Users\drury\Documents\Gradle\caches\transforms-3\694ddcc084f67505be09a8a1d0e1708e\transformed\transport-backend-cct-2.3.3\AndroidManifest.xml:32:13-34:39
+	android:value
+		ADDED from [com.google.android.datatransport:transport-backend-cct:2.3.3] C:\Users\drury\Documents\Gradle\caches\transforms-3\694ddcc084f67505be09a8a1d0e1708e\transformed\transport-backend-cct-2.3.3\AndroidManifest.xml:34:17-36
+	android:name
+		ADDED from [com.google.android.datatransport:transport-backend-cct:2.3.3] C:\Users\drury\Documents\Gradle\caches\transforms-3\694ddcc084f67505be09a8a1d0e1708e\transformed\transport-backend-cct-2.3.3\AndroidManifest.xml:33:17-94
+service#com.google.android.datatransport.runtime.scheduling.jobscheduling.JobInfoSchedulerService
+ADDED from [com.google.android.datatransport:transport-runtime:2.2.6] C:\Users\drury\Documents\Gradle\caches\transforms-3\7f8e62429b08ffdf115e277769af06eb\transformed\transport-runtime-2.2.6\AndroidManifest.xml:26:9-30:19
+	android:exported
+		ADDED from [com.google.android.datatransport:transport-runtime:2.2.6] C:\Users\drury\Documents\Gradle\caches\transforms-3\7f8e62429b08ffdf115e277769af06eb\transformed\transport-runtime-2.2.6\AndroidManifest.xml:28:13-37
+	android:permission
+		ADDED from [com.google.android.datatransport:transport-runtime:2.2.6] C:\Users\drury\Documents\Gradle\caches\transforms-3\7f8e62429b08ffdf115e277769af06eb\transformed\transport-runtime-2.2.6\AndroidManifest.xml:29:13-69
+	android:name
+		ADDED from [com.google.android.datatransport:transport-runtime:2.2.6] C:\Users\drury\Documents\Gradle\caches\transforms-3\7f8e62429b08ffdf115e277769af06eb\transformed\transport-runtime-2.2.6\AndroidManifest.xml:27:13-117
+receiver#com.google.android.datatransport.runtime.scheduling.jobscheduling.AlarmManagerSchedulerBroadcastReceiver
+ADDED from [com.google.android.datatransport:transport-runtime:2.2.6] C:\Users\drury\Documents\Gradle\caches\transforms-3\7f8e62429b08ffdf115e277769af06eb\transformed\transport-runtime-2.2.6\AndroidManifest.xml:32:9-34:40
+	android:exported
+		ADDED from [com.google.android.datatransport:transport-runtime:2.2.6] C:\Users\drury\Documents\Gradle\caches\transforms-3\7f8e62429b08ffdf115e277769af06eb\transformed\transport-runtime-2.2.6\AndroidManifest.xml:34:13-37
+	android:name
+		ADDED from [com.google.android.datatransport:transport-runtime:2.2.6] C:\Users\drury\Documents\Gradle\caches\transforms-3\7f8e62429b08ffdf115e277769af06eb\transformed\transport-runtime-2.2.6\AndroidManifest.xml:33:13-132
 meta-data#androidx.profileinstaller.ProfileInstallerInitializer
 ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:29:13-31:52
 	android:value

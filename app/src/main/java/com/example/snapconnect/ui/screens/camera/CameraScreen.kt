@@ -2,6 +2,9 @@ package com.example.snapconnect.ui.screens.camera
 
 import android.Manifest
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
 import android.net.Uri
 import android.widget.Toast
 import androidx.camera.core.*
@@ -11,8 +14,12 @@ import androidx.camera.video.VideoCapture
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -20,28 +27,47 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.toSize
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
+import com.example.snapconnect.data.model.ARFilter
+import com.example.snapconnect.data.repository.FiltersRepository
 import com.example.snapconnect.navigation.Screen
+import com.example.snapconnect.ui.components.FilterOverlayView
+import com.example.snapconnect.ui.theme.SnapBlue
+import com.example.snapconnect.utils.FilterProcessor
 import com.google.accompanist.permissions.*
+import com.google.mlkit.vision.face.Face
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
+import java.io.FileOutputStream
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.Executor
+import javax.inject.Inject
 
 @OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun CameraScreen(
     navController: NavController,
-    groupId: String? = null
+    groupId: String? = null,
+    viewModel: CameraViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -58,11 +84,19 @@ fun CameraScreen(
     var camera by remember { mutableStateOf<Camera?>(null) }
     var imageCapture by remember { mutableStateOf<ImageCapture?>(null) }
     var videoCapture by remember { mutableStateOf<VideoCapture<Recorder>?>(null) }
+    var imageAnalysis by remember { mutableStateOf<ImageAnalysis?>(null) }
     var recording by remember { mutableStateOf<Recording?>(null) }
     var isRecording by remember { mutableStateOf(false) }
     var isFlashEnabled by remember { mutableStateOf(false) }
     var isFrontCamera by remember { mutableStateOf(false) }
     var captureMode by remember { mutableStateOf(CaptureMode.PHOTO) }
+    
+    // Face detection and filter state
+    var detectedFaces by remember { mutableStateOf<List<Face>>(emptyList()) }
+    var selectedFilter by remember { mutableStateOf<ARFilter?>(null) }
+    val availableFilters = viewModel.availableFilters
+    var viewSize by remember { mutableStateOf(Size.Zero) }
+    var imageSize by remember { mutableStateOf(Size(1920f, 1080f)) } // Default to 1080p
     
     val previewView = remember { PreviewView(context) }
     val cameraProviderFuture = remember { ProcessCameraProvider.getInstance(context) }
@@ -76,10 +110,14 @@ fun CameraScreen(
                 cameraProviderFuture = cameraProviderFuture,
                 previewView = previewView,
                 isFrontCamera = isFrontCamera,
-                onCameraReady = { cam, imgCapture, vidCapture ->
+                onCameraReady = { cam, imgCapture, vidCapture, imgAnalysis ->
                     camera = cam
                     imageCapture = imgCapture
                     videoCapture = vidCapture
+                    imageAnalysis = imgAnalysis
+                },
+                onFacesDetected = { faces ->
+                    detectedFaces = faces
                 }
             )
         }
@@ -93,10 +131,14 @@ fun CameraScreen(
                 cameraProviderFuture = cameraProviderFuture,
                 previewView = previewView,
                 isFrontCamera = isFrontCamera,
-                onCameraReady = { cam, imgCapture, vidCapture ->
+                onCameraReady = { cam, imgCapture, vidCapture, imgAnalysis ->
                     camera = cam
                     imageCapture = imgCapture
                     videoCapture = vidCapture
+                    imageAnalysis = imgAnalysis
+                },
+                onFacesDetected = { faces ->
+                    detectedFaces = faces
                 }
             )
         }
@@ -112,10 +154,26 @@ fun CameraScreen(
         )
     } else {
         // Camera screen
-        Box(modifier = Modifier.fillMaxSize()) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .onSizeChanged { size ->
+                    viewSize = size.toSize()
+                }
+        ) {
             // Camera preview
             AndroidView(
                 factory = { previewView },
+                modifier = Modifier.fillMaxSize()
+            )
+            
+            // Filter overlay
+            FilterOverlayView(
+                faces = detectedFaces,
+                selectedFilter = selectedFilter,
+                viewSize = viewSize,
+                imageSize = imageSize,
+                isFrontCamera = isFrontCamera,
                 modifier = Modifier.fillMaxSize()
             )
             
@@ -168,6 +226,37 @@ fun CameraScreen(
                     .padding(bottom = 32.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                // Filter selection
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(horizontal = 16.dp)
+                ) {
+                    items(availableFilters) { filter ->
+                        FilterChip(
+                            onClick = { 
+                                selectedFilter = if (selectedFilter?.id == filter.id) null else filter
+                            },
+                            label = {
+                                Text(
+                                    text = filter.name,
+                                    fontSize = 12.sp,
+                                    textAlign = TextAlign.Center
+                                )
+                            },
+                            selected = selectedFilter?.id == filter.id,
+                            modifier = Modifier.width(80.dp),
+                            shape = RoundedCornerShape(16.dp),
+                            colors = FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = SnapBlue,
+                                selectedLabelColor = Color.Black
+                            )
+                        )
+                    }
+                }
+                
                 // Capture mode selector
                 Row(
                     modifier = Modifier
@@ -213,10 +302,15 @@ fun CameraScreen(
                     IconButton(
                         onClick = {
                             when (captureMode) {
-                                CaptureMode.PHOTO -> capturePhoto(
+                                CaptureMode.PHOTO -> capturePhotoWithFilter(
                                     context = context,
                                     imageCapture = imageCapture,
                                     executor = executor,
+                                    faces = detectedFaces,
+                                    selectedFilter = selectedFilter,
+                                    filterProcessor = viewModel.filterProcessor,
+                                    isFrontCamera = isFrontCamera,
+                                    scope = scope,
                                     onPhotoCaptured = { uri ->
                                         val encodedUri = URLEncoder.encode(uri.toString(), StandardCharsets.UTF_8.toString())
                                         navController.navigate(Screen.MediaPreview.createRoute(encodedUri, false, groupId))
@@ -354,7 +448,8 @@ private fun startCamera(
     cameraProviderFuture: com.google.common.util.concurrent.ListenableFuture<ProcessCameraProvider>,
     previewView: PreviewView,
     isFrontCamera: Boolean,
-    onCameraReady: (Camera, ImageCapture, VideoCapture<Recorder>) -> Unit
+    onCameraReady: (Camera, ImageCapture, VideoCapture<Recorder>, ImageAnalysis) -> Unit,
+    onFacesDetected: (List<Face>) -> Unit
 ) {
     cameraProviderFuture.addListener({
         val cameraProvider = cameraProviderFuture.get()
@@ -373,6 +468,20 @@ private fun startCamera(
         
         val videoCapture = VideoCapture.withOutput(recorder)
         
+        val imageAnalysis = ImageAnalysis.Builder()
+            .setTargetAspectRatio(AspectRatio.RATIO_16_9)
+            .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+            .build()
+            .also {
+                it.setAnalyzer(
+                    ContextCompat.getMainExecutor(context),
+                    FaceDetectionAnalyzer(
+                        onFacesDetected = onFacesDetected,
+                        onError = { /* Handle error */ }
+                    )
+                )
+            }
+        
         val cameraSelector = if (isFrontCamera) {
             CameraSelector.DEFAULT_FRONT_CAMERA
         } else {
@@ -386,13 +495,85 @@ private fun startCamera(
                 cameraSelector,
                 preview,
                 imageCapture,
-                videoCapture
+                videoCapture,
+                imageAnalysis
             )
-            onCameraReady(camera, imageCapture, videoCapture)
+            onCameraReady(camera, imageCapture, videoCapture, imageAnalysis)
         } catch (exc: Exception) {
             // Handle error
         }
     }, ContextCompat.getMainExecutor(context))
+}
+
+private fun capturePhotoWithFilter(
+    context: Context,
+    imageCapture: ImageCapture?,
+    executor: Executor,
+    faces: List<Face>,
+    selectedFilter: ARFilter?,
+    filterProcessor: FilterProcessor,
+    isFrontCamera: Boolean,
+    scope: kotlinx.coroutines.CoroutineScope,
+    onPhotoCaptured: (Uri) -> Unit,
+    onError: (ImageCaptureException) -> Unit
+) {
+    val photoFile = File(
+        context.cacheDir,
+        SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS", Locale.US)
+            .format(System.currentTimeMillis()) + ".jpg"
+    )
+    
+    val outputFileOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
+    
+    imageCapture?.takePicture(
+        outputFileOptions,
+        executor,
+        object : ImageCapture.OnImageSavedCallback {
+            override fun onImageSaved(output: ImageCapture.OutputFileResults) {
+                scope.launch {
+                    val finalUri = if (selectedFilter != null && selectedFilter.overlays.isNotEmpty()) {
+                        withContext(Dispatchers.IO) {
+                            // Load the captured image
+                            val bitmap = BitmapFactory.decodeFile(photoFile.absolutePath)
+                            
+                            // Apply filter
+                            val filteredBitmap = filterProcessor.applyFilterToImage(
+                                originalBitmap = bitmap,
+                                faces = faces,
+                                filter = selectedFilter,
+                                isFrontCamera = isFrontCamera
+                            )
+                            
+                            // Save filtered image
+                            val filteredFile = File(
+                                context.cacheDir,
+                                "filtered_${photoFile.name}"
+                            )
+                            
+                            FileOutputStream(filteredFile).use { out ->
+                                filteredBitmap.compress(Bitmap.CompressFormat.JPEG, 95, out)
+                            }
+                            
+                            // Clean up
+                            bitmap.recycle()
+                            filteredBitmap.recycle()
+                            photoFile.delete()
+                            
+                            Uri.fromFile(filteredFile)
+                        }
+                    } else {
+                        Uri.fromFile(photoFile)
+                    }
+                    
+                    onPhotoCaptured(finalUri)
+                }
+            }
+            
+            override fun onError(exception: ImageCaptureException) {
+                onError(exception)
+            }
+        }
+    )
 }
 
 private fun capturePhoto(
@@ -463,4 +644,13 @@ private fun startVideoRecording(
 
 private fun stopRecording(recording: Recording?) {
     recording?.stop()
+}
+
+@HiltViewModel
+class CameraViewModel @Inject constructor(
+    private val filtersRepository: FiltersRepository,
+    val filterProcessor: FilterProcessor
+) : ViewModel() {
+    
+    val availableFilters = filtersRepository.getAvailableFilters()
 } 

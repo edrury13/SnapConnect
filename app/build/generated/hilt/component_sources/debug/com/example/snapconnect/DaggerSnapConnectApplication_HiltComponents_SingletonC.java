@@ -8,6 +8,7 @@ import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModel;
 import com.example.snapconnect.data.repository.AuthRepository;
 import com.example.snapconnect.data.repository.CommentsRepository;
+import com.example.snapconnect.data.repository.FiltersRepository;
 import com.example.snapconnect.data.repository.FriendRepository;
 import com.example.snapconnect.data.repository.MessagesRepository;
 import com.example.snapconnect.data.repository.StorageRepository;
@@ -17,6 +18,8 @@ import com.example.snapconnect.di.AppModule;
 import com.example.snapconnect.di.AppModule_ProvideSupabaseClientFactory;
 import com.example.snapconnect.ui.screens.auth.AuthViewModel;
 import com.example.snapconnect.ui.screens.auth.AuthViewModel_HiltModules_KeyModule_ProvideFactory;
+import com.example.snapconnect.ui.screens.camera.CameraViewModel;
+import com.example.snapconnect.ui.screens.camera.CameraViewModel_HiltModules_KeyModule_ProvideFactory;
 import com.example.snapconnect.ui.screens.camera.MediaSendViewModel;
 import com.example.snapconnect.ui.screens.camera.MediaSendViewModel_HiltModules_KeyModule_ProvideFactory;
 import com.example.snapconnect.ui.screens.camera.StoryPostViewModel;
@@ -35,6 +38,7 @@ import com.example.snapconnect.ui.screens.profile.ProfileViewModel;
 import com.example.snapconnect.ui.screens.profile.ProfileViewModel_HiltModules_KeyModule_ProvideFactory;
 import com.example.snapconnect.ui.screens.story.StoryViewViewModel;
 import com.example.snapconnect.ui.screens.story.StoryViewViewModel_HiltModules_KeyModule_ProvideFactory;
+import com.example.snapconnect.utils.FilterProcessor;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import dagger.hilt.android.ActivityRetainedLifecycle;
@@ -401,7 +405,7 @@ public final class DaggerSnapConnectApplication_HiltComponents_SingletonC {
 
     @Override
     public Set<String> getViewModelKeys() {
-      return ImmutableSet.<String>of(AuthViewModel_HiltModules_KeyModule_ProvideFactory.provide(), ChatViewModel_HiltModules_KeyModule_ProvideFactory.provide(), FriendsViewModel_HiltModules_KeyModule_ProvideFactory.provide(), HomeViewModel_HiltModules_KeyModule_ProvideFactory.provide(), MediaSendViewModel_HiltModules_KeyModule_ProvideFactory.provide(), MessagesViewModel_HiltModules_KeyModule_ProvideFactory.provide(), NotificationsViewModel_HiltModules_KeyModule_ProvideFactory.provide(), ProfileViewModel_HiltModules_KeyModule_ProvideFactory.provide(), StoryPostViewModel_HiltModules_KeyModule_ProvideFactory.provide(), StoryViewViewModel_HiltModules_KeyModule_ProvideFactory.provide());
+      return ImmutableSet.<String>of(AuthViewModel_HiltModules_KeyModule_ProvideFactory.provide(), CameraViewModel_HiltModules_KeyModule_ProvideFactory.provide(), ChatViewModel_HiltModules_KeyModule_ProvideFactory.provide(), FriendsViewModel_HiltModules_KeyModule_ProvideFactory.provide(), HomeViewModel_HiltModules_KeyModule_ProvideFactory.provide(), MediaSendViewModel_HiltModules_KeyModule_ProvideFactory.provide(), MessagesViewModel_HiltModules_KeyModule_ProvideFactory.provide(), NotificationsViewModel_HiltModules_KeyModule_ProvideFactory.provide(), ProfileViewModel_HiltModules_KeyModule_ProvideFactory.provide(), StoryPostViewModel_HiltModules_KeyModule_ProvideFactory.provide(), StoryViewViewModel_HiltModules_KeyModule_ProvideFactory.provide());
     }
 
     @Override
@@ -430,6 +434,8 @@ public final class DaggerSnapConnectApplication_HiltComponents_SingletonC {
     private final ViewModelCImpl viewModelCImpl = this;
 
     private Provider<AuthViewModel> authViewModelProvider;
+
+    private Provider<CameraViewModel> cameraViewModelProvider;
 
     private Provider<ChatViewModel> chatViewModelProvider;
 
@@ -463,20 +469,21 @@ public final class DaggerSnapConnectApplication_HiltComponents_SingletonC {
     private void initialize(final SavedStateHandle savedStateHandleParam,
         final ViewModelLifecycle viewModelLifecycleParam) {
       this.authViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 0);
-      this.chatViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 1);
-      this.friendsViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 2);
-      this.homeViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 3);
-      this.mediaSendViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 4);
-      this.messagesViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 5);
-      this.notificationsViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 6);
-      this.profileViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 7);
-      this.storyPostViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 8);
-      this.storyViewViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 9);
+      this.cameraViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 1);
+      this.chatViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 2);
+      this.friendsViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 3);
+      this.homeViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 4);
+      this.mediaSendViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 5);
+      this.messagesViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 6);
+      this.notificationsViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 7);
+      this.profileViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 8);
+      this.storyPostViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 9);
+      this.storyViewViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 10);
     }
 
     @Override
     public Map<String, Provider<ViewModel>> getHiltViewModelMap() {
-      return ImmutableMap.<String, Provider<ViewModel>>builderWithExpectedSize(10).put("com.example.snapconnect.ui.screens.auth.AuthViewModel", ((Provider) authViewModelProvider)).put("com.example.snapconnect.ui.screens.chat.ChatViewModel", ((Provider) chatViewModelProvider)).put("com.example.snapconnect.ui.screens.friends.FriendsViewModel", ((Provider) friendsViewModelProvider)).put("com.example.snapconnect.ui.screens.home.HomeViewModel", ((Provider) homeViewModelProvider)).put("com.example.snapconnect.ui.screens.camera.MediaSendViewModel", ((Provider) mediaSendViewModelProvider)).put("com.example.snapconnect.ui.screens.messages.MessagesViewModel", ((Provider) messagesViewModelProvider)).put("com.example.snapconnect.ui.screens.notifications.NotificationsViewModel", ((Provider) notificationsViewModelProvider)).put("com.example.snapconnect.ui.screens.profile.ProfileViewModel", ((Provider) profileViewModelProvider)).put("com.example.snapconnect.ui.screens.camera.StoryPostViewModel", ((Provider) storyPostViewModelProvider)).put("com.example.snapconnect.ui.screens.story.StoryViewViewModel", ((Provider) storyViewViewModelProvider)).build();
+      return ImmutableMap.<String, Provider<ViewModel>>builderWithExpectedSize(11).put("com.example.snapconnect.ui.screens.auth.AuthViewModel", ((Provider) authViewModelProvider)).put("com.example.snapconnect.ui.screens.camera.CameraViewModel", ((Provider) cameraViewModelProvider)).put("com.example.snapconnect.ui.screens.chat.ChatViewModel", ((Provider) chatViewModelProvider)).put("com.example.snapconnect.ui.screens.friends.FriendsViewModel", ((Provider) friendsViewModelProvider)).put("com.example.snapconnect.ui.screens.home.HomeViewModel", ((Provider) homeViewModelProvider)).put("com.example.snapconnect.ui.screens.camera.MediaSendViewModel", ((Provider) mediaSendViewModelProvider)).put("com.example.snapconnect.ui.screens.messages.MessagesViewModel", ((Provider) messagesViewModelProvider)).put("com.example.snapconnect.ui.screens.notifications.NotificationsViewModel", ((Provider) notificationsViewModelProvider)).put("com.example.snapconnect.ui.screens.profile.ProfileViewModel", ((Provider) profileViewModelProvider)).put("com.example.snapconnect.ui.screens.camera.StoryPostViewModel", ((Provider) storyPostViewModelProvider)).put("com.example.snapconnect.ui.screens.story.StoryViewViewModel", ((Provider) storyViewViewModelProvider)).build();
     }
 
     private static final class SwitchingProvider<T> implements Provider<T> {
@@ -503,31 +510,34 @@ public final class DaggerSnapConnectApplication_HiltComponents_SingletonC {
           case 0: // com.example.snapconnect.ui.screens.auth.AuthViewModel 
           return (T) new AuthViewModel(singletonCImpl.authRepositoryProvider.get());
 
-          case 1: // com.example.snapconnect.ui.screens.chat.ChatViewModel 
+          case 1: // com.example.snapconnect.ui.screens.camera.CameraViewModel 
+          return (T) new CameraViewModel(singletonCImpl.filtersRepositoryProvider.get(), singletonCImpl.filterProcessorProvider.get());
+
+          case 2: // com.example.snapconnect.ui.screens.chat.ChatViewModel 
           return (T) new ChatViewModel(singletonCImpl.messagesRepositoryProvider.get(), singletonCImpl.userRepositoryProvider.get(), singletonCImpl.authRepositoryProvider.get(), viewModelCImpl.savedStateHandle);
 
-          case 2: // com.example.snapconnect.ui.screens.friends.FriendsViewModel 
+          case 3: // com.example.snapconnect.ui.screens.friends.FriendsViewModel 
           return (T) new FriendsViewModel(singletonCImpl.friendRepositoryProvider.get(), singletonCImpl.messagesRepositoryProvider.get());
 
-          case 3: // com.example.snapconnect.ui.screens.home.HomeViewModel 
+          case 4: // com.example.snapconnect.ui.screens.home.HomeViewModel 
           return (T) new HomeViewModel(singletonCImpl.storyRepositoryProvider.get(), singletonCImpl.userRepositoryProvider.get());
 
-          case 4: // com.example.snapconnect.ui.screens.camera.MediaSendViewModel 
+          case 5: // com.example.snapconnect.ui.screens.camera.MediaSendViewModel 
           return (T) new MediaSendViewModel(singletonCImpl.friendRepositoryProvider.get(), singletonCImpl.messagesRepositoryProvider.get(), singletonCImpl.storageRepositoryProvider.get(), singletonCImpl.authRepositoryProvider.get());
 
-          case 5: // com.example.snapconnect.ui.screens.messages.MessagesViewModel 
+          case 6: // com.example.snapconnect.ui.screens.messages.MessagesViewModel 
           return (T) new MessagesViewModel(singletonCImpl.messagesRepositoryProvider.get(), singletonCImpl.userRepositoryProvider.get(), singletonCImpl.authRepositoryProvider.get());
 
-          case 6: // com.example.snapconnect.ui.screens.notifications.NotificationsViewModel 
+          case 7: // com.example.snapconnect.ui.screens.notifications.NotificationsViewModel 
           return (T) new NotificationsViewModel(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
 
-          case 7: // com.example.snapconnect.ui.screens.profile.ProfileViewModel 
+          case 8: // com.example.snapconnect.ui.screens.profile.ProfileViewModel 
           return (T) new ProfileViewModel(singletonCImpl.authRepositoryProvider.get(), singletonCImpl.userRepositoryProvider.get(), singletonCImpl.storyRepositoryProvider.get(), singletonCImpl.friendRepositoryProvider.get(), singletonCImpl.storageRepositoryProvider.get());
 
-          case 8: // com.example.snapconnect.ui.screens.camera.StoryPostViewModel 
+          case 9: // com.example.snapconnect.ui.screens.camera.StoryPostViewModel 
           return (T) new StoryPostViewModel(singletonCImpl.storyRepositoryProvider.get(), singletonCImpl.storageRepositoryProvider.get(), singletonCImpl.authRepositoryProvider.get(), singletonCImpl.messagesRepositoryProvider.get());
 
-          case 9: // com.example.snapconnect.ui.screens.story.StoryViewViewModel 
+          case 10: // com.example.snapconnect.ui.screens.story.StoryViewViewModel 
           return (T) new StoryViewViewModel(singletonCImpl.storyRepositoryProvider.get(), singletonCImpl.userRepositoryProvider.get(), singletonCImpl.authRepositoryProvider.get(), singletonCImpl.commentsRepositoryProvider.get(), viewModelCImpl.savedStateHandle);
 
           default: throw new AssertionError(id);
@@ -613,6 +623,10 @@ public final class DaggerSnapConnectApplication_HiltComponents_SingletonC {
 
     private Provider<AuthRepository> authRepositoryProvider;
 
+    private Provider<FiltersRepository> filtersRepositoryProvider;
+
+    private Provider<FilterProcessor> filterProcessorProvider;
+
     private Provider<MessagesRepository> messagesRepositoryProvider;
 
     private Provider<UserRepository> userRepositoryProvider;
@@ -635,12 +649,14 @@ public final class DaggerSnapConnectApplication_HiltComponents_SingletonC {
     private void initialize(final ApplicationContextModule applicationContextModuleParam) {
       this.provideSupabaseClientProvider = DoubleCheck.provider(new SwitchingProvider<SupabaseClient>(singletonCImpl, 1));
       this.authRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<AuthRepository>(singletonCImpl, 0));
-      this.messagesRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<MessagesRepository>(singletonCImpl, 2));
-      this.userRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<UserRepository>(singletonCImpl, 3));
-      this.friendRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<FriendRepository>(singletonCImpl, 4));
-      this.storyRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<StoryRepository>(singletonCImpl, 5));
-      this.storageRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<StorageRepository>(singletonCImpl, 6));
-      this.commentsRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<CommentsRepository>(singletonCImpl, 7));
+      this.filtersRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<FiltersRepository>(singletonCImpl, 2));
+      this.filterProcessorProvider = DoubleCheck.provider(new SwitchingProvider<FilterProcessor>(singletonCImpl, 3));
+      this.messagesRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<MessagesRepository>(singletonCImpl, 4));
+      this.userRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<UserRepository>(singletonCImpl, 5));
+      this.friendRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<FriendRepository>(singletonCImpl, 6));
+      this.storyRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<StoryRepository>(singletonCImpl, 7));
+      this.storageRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<StorageRepository>(singletonCImpl, 8));
+      this.commentsRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<CommentsRepository>(singletonCImpl, 9));
     }
 
     @Override
@@ -682,22 +698,28 @@ public final class DaggerSnapConnectApplication_HiltComponents_SingletonC {
           case 1: // io.github.jan.supabase.SupabaseClient 
           return (T) AppModule_ProvideSupabaseClientFactory.provideSupabaseClient();
 
-          case 2: // com.example.snapconnect.data.repository.MessagesRepository 
+          case 2: // com.example.snapconnect.data.repository.FiltersRepository 
+          return (T) new FiltersRepository();
+
+          case 3: // com.example.snapconnect.utils.FilterProcessor 
+          return (T) new FilterProcessor(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
+
+          case 4: // com.example.snapconnect.data.repository.MessagesRepository 
           return (T) new MessagesRepository(singletonCImpl.provideSupabaseClientProvider.get());
 
-          case 3: // com.example.snapconnect.data.repository.UserRepository 
+          case 5: // com.example.snapconnect.data.repository.UserRepository 
           return (T) new UserRepository(singletonCImpl.provideSupabaseClientProvider.get());
 
-          case 4: // com.example.snapconnect.data.repository.FriendRepository 
+          case 6: // com.example.snapconnect.data.repository.FriendRepository 
           return (T) new FriendRepository(singletonCImpl.provideSupabaseClientProvider.get());
 
-          case 5: // com.example.snapconnect.data.repository.StoryRepository 
+          case 7: // com.example.snapconnect.data.repository.StoryRepository 
           return (T) new StoryRepository(singletonCImpl.provideSupabaseClientProvider.get());
 
-          case 6: // com.example.snapconnect.data.repository.StorageRepository 
+          case 8: // com.example.snapconnect.data.repository.StorageRepository 
           return (T) new StorageRepository(singletonCImpl.provideSupabaseClientProvider.get(), ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
 
-          case 7: // com.example.snapconnect.data.repository.CommentsRepository 
+          case 9: // com.example.snapconnect.data.repository.CommentsRepository 
           return (T) new CommentsRepository(singletonCImpl.provideSupabaseClientProvider.get());
 
           default: throw new AssertionError(id);
