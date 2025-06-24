@@ -13,6 +13,7 @@ import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.realtime.Realtime
 import io.github.jan.supabase.storage.Storage
 import javax.inject.Singleton
+import com.example.snapconnect.services.NotificationService
 
 @Module
 @InstallIn(SingletonComponent::class)

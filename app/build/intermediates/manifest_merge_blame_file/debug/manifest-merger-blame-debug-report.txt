@@ -18,183 +18,192 @@
 14    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 14-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:7:5-71
 14-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:7:22-68
-15
-16    <uses-feature
-16-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:8:5-84
-17        android:name="android.hardware.camera"
-17-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:8:19-57
-18        android:required="true" />
-18-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:8:58-81
-19    <uses-feature android:name="android.hardware.camera.autofocus" />
-19-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:9:5-70
-19-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:9:19-67
-20
-21    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-21-->[androidx.media3:media3-common:1.2.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\d8a19fd59f5bd6d655de37dd683736f5\transformed\media3-common-1.2.0\AndroidManifest.xml:22:5-79
-21-->[androidx.media3:media3-common:1.2.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\d8a19fd59f5bd6d655de37dd683736f5\transformed\media3-common-1.2.0\AndroidManifest.xml:22:22-76
-22
-23    <permission
-23-->[androidx.core:core:1.12.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\90da2efa79bbb982acc4540cc64aa195\transformed\core-1.12.0\AndroidManifest.xml:22:5-24:47
-24        android:name="com.example.snapconnect.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
-24-->[androidx.core:core:1.12.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\90da2efa79bbb982acc4540cc64aa195\transformed\core-1.12.0\AndroidManifest.xml:23:9-81
-25        android:protectionLevel="signature" />
-25-->[androidx.core:core:1.12.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\90da2efa79bbb982acc4540cc64aa195\transformed\core-1.12.0\AndroidManifest.xml:24:9-44
+15    <uses-permission
+15-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:8:5-9:38
+16        android:name="android.permission.READ_EXTERNAL_STORAGE"
+16-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:8:22-77
+17        android:maxSdkVersion="32" />
+17-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:9:9-35
+18    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+18-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:10:5-77
+18-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:10:22-74
+19
+20    <uses-feature
+20-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:11:5-84
+21        android:name="android.hardware.camera"
+21-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:11:19-57
+22        android:required="true" />
+22-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:11:58-81
+23    <uses-feature android:name="android.hardware.camera.autofocus" />
+23-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:12:5-70
+23-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:12:19-67
+24
+25    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+25-->[androidx.media3:media3-common:1.2.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\d8a19fd59f5bd6d655de37dd683736f5\transformed\media3-common-1.2.0\AndroidManifest.xml:22:5-79
+25-->[androidx.media3:media3-common:1.2.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\d8a19fd59f5bd6d655de37dd683736f5\transformed\media3-common-1.2.0\AndroidManifest.xml:22:22-76
 26
-27    <uses-permission android:name="com.example.snapconnect.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
-27-->[androidx.core:core:1.12.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\90da2efa79bbb982acc4540cc64aa195\transformed\core-1.12.0\AndroidManifest.xml:26:5-97
-27-->[androidx.core:core:1.12.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\90da2efa79bbb982acc4540cc64aa195\transformed\core-1.12.0\AndroidManifest.xml:26:22-94
-28
-29    <application
-29-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:11:5-28:19
-30        android:name="com.example.snapconnect.SnapConnectApplication"
-30-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:12:9-47
-31        android:allowBackup="true"
-31-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:13:9-35
-32        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
-32-->[androidx.core:core:1.12.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\90da2efa79bbb982acc4540cc64aa195\transformed\core-1.12.0\AndroidManifest.xml:28:18-86
-33        android:debuggable="true"
-34        android:extractNativeLibs="false"
-35        android:icon="@drawable/gauntlet_liquid_glass"
-35-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:14:9-55
-36        android:label="@string/app_name"
-36-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:15:9-41
-37        android:supportsRtl="true"
-37-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:16:9-35
-38        android:testOnly="true"
-39        android:theme="@style/Theme.SnapConnect" >
-39-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:17:9-49
-40        <activity
-40-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:18:9-27:20
-41            android:name="com.example.snapconnect.MainActivity"
-41-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:19:13-41
-42            android:exported="true"
-42-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:20:13-36
-43            android:theme="@style/Theme.SnapConnect" >
-43-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:21:13-53
-44            <intent-filter>
-44-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:22:13-26:29
-45                <action android:name="android.intent.action.MAIN" />
-45-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:23:17-69
-45-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:23:25-66
-46
-47                <category android:name="android.intent.category.LAUNCHER" />
-47-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:25:17-77
-47-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:25:27-74
-48            </intent-filter>
-49        </activity>
+27    <permission
+27-->[androidx.core:core:1.12.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\90da2efa79bbb982acc4540cc64aa195\transformed\core-1.12.0\AndroidManifest.xml:22:5-24:47
+28        android:name="com.example.snapconnect.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+28-->[androidx.core:core:1.12.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\90da2efa79bbb982acc4540cc64aa195\transformed\core-1.12.0\AndroidManifest.xml:23:9-81
+29        android:protectionLevel="signature" />
+29-->[androidx.core:core:1.12.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\90da2efa79bbb982acc4540cc64aa195\transformed\core-1.12.0\AndroidManifest.xml:24:9-44
+30
+31    <uses-permission android:name="com.example.snapconnect.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+31-->[androidx.core:core:1.12.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\90da2efa79bbb982acc4540cc64aa195\transformed\core-1.12.0\AndroidManifest.xml:26:5-97
+31-->[androidx.core:core:1.12.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\90da2efa79bbb982acc4540cc64aa195\transformed\core-1.12.0\AndroidManifest.xml:26:22-94
+32
+33    <application
+33-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:14:5-31:19
+34        android:name="com.example.snapconnect.SnapConnectApplication"
+34-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:15:9-47
+35        android:allowBackup="true"
+35-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:16:9-35
+36        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+36-->[androidx.core:core:1.12.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\90da2efa79bbb982acc4540cc64aa195\transformed\core-1.12.0\AndroidManifest.xml:28:18-86
+37        android:debuggable="true"
+38        android:extractNativeLibs="false"
+39        android:icon="@drawable/gauntlet_liquid_glass"
+39-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:17:9-55
+40        android:label="@string/app_name"
+40-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:18:9-41
+41        android:supportsRtl="true"
+41-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:19:9-35
+42        android:testOnly="true"
+43        android:theme="@style/Theme.SnapConnect" >
+43-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:20:9-49
+44        <activity
+44-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:21:9-30:20
+45            android:name="com.example.snapconnect.MainActivity"
+45-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:22:13-41
+46            android:exported="true"
+46-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:23:13-36
+47            android:theme="@style/Theme.SnapConnect" >
+47-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:24:13-53
+48            <intent-filter>
+48-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:25:13-29:29
+49                <action android:name="android.intent.action.MAIN" />
+49-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:26:17-69
+49-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:26:25-66
 50
-51        <service
-51-->[androidx.camera:camera-camera2:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\a0f3d52a309b90738b9a7d606b57c3f3\transformed\camera-camera2-1.3.1\AndroidManifest.xml:24:9-33:19
-52            android:name="androidx.camera.core.impl.MetadataHolderService"
-52-->[androidx.camera:camera-camera2:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\a0f3d52a309b90738b9a7d606b57c3f3\transformed\camera-camera2-1.3.1\AndroidManifest.xml:25:13-75
-53            android:enabled="false"
-53-->[androidx.camera:camera-camera2:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\a0f3d52a309b90738b9a7d606b57c3f3\transformed\camera-camera2-1.3.1\AndroidManifest.xml:26:13-36
-54            android:exported="false" >
-54-->[androidx.camera:camera-camera2:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\a0f3d52a309b90738b9a7d606b57c3f3\transformed\camera-camera2-1.3.1\AndroidManifest.xml:27:13-37
-55            <meta-data
-55-->[androidx.camera:camera-camera2:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\a0f3d52a309b90738b9a7d606b57c3f3\transformed\camera-camera2-1.3.1\AndroidManifest.xml:30:13-32:89
-56                android:name="androidx.camera.core.impl.MetadataHolderService.DEFAULT_CONFIG_PROVIDER"
-56-->[androidx.camera:camera-camera2:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\a0f3d52a309b90738b9a7d606b57c3f3\transformed\camera-camera2-1.3.1\AndroidManifest.xml:31:17-103
-57                android:value="androidx.camera.camera2.Camera2Config$DefaultProvider" />
-57-->[androidx.camera:camera-camera2:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\a0f3d52a309b90738b9a7d606b57c3f3\transformed\camera-camera2-1.3.1\AndroidManifest.xml:32:17-86
-58        </service>
-59
-60        <provider
-60-->[io.github.jan-tennert.supabase:storage-kt-android-debug:2.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\5fc734526e215fbbd2636ad7130a5a30\transformed\storage-kt-debug\AndroidManifest.xml:9:9-17:20
-61            android:name="androidx.startup.InitializationProvider"
-61-->[io.github.jan-tennert.supabase:storage-kt-android-debug:2.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\5fc734526e215fbbd2636ad7130a5a30\transformed\storage-kt-debug\AndroidManifest.xml:10:13-67
-62            android:authorities="com.example.snapconnect.androidx-startup"
-62-->[io.github.jan-tennert.supabase:storage-kt-android-debug:2.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\5fc734526e215fbbd2636ad7130a5a30\transformed\storage-kt-debug\AndroidManifest.xml:11:13-68
-63            android:exported="false" >
-63-->[io.github.jan-tennert.supabase:storage-kt-android-debug:2.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\5fc734526e215fbbd2636ad7130a5a30\transformed\storage-kt-debug\AndroidManifest.xml:12:13-37
-64            <meta-data
-64-->[io.github.jan-tennert.supabase:storage-kt-android-debug:2.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\5fc734526e215fbbd2636ad7130a5a30\transformed\storage-kt-debug\AndroidManifest.xml:14:13-16:52
-65                android:name="io.github.jan.supabase.storage.SupabaseInitializer"
-65-->[io.github.jan-tennert.supabase:storage-kt-android-debug:2.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\5fc734526e215fbbd2636ad7130a5a30\transformed\storage-kt-debug\AndroidManifest.xml:15:17-82
-66                android:value="androidx.startup" />
-66-->[io.github.jan-tennert.supabase:storage-kt-android-debug:2.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\5fc734526e215fbbd2636ad7130a5a30\transformed\storage-kt-debug\AndroidManifest.xml:16:17-49
-67            <meta-data
-67-->[io.github.jan-tennert.supabase:gotrue-kt-android-debug:2.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\a886e18a62fc14ffd587cf63972c5c5c\transformed\gotrue-kt-debug\AndroidManifest.xml:14:13-16:52
-68                android:name="io.github.jan.supabase.gotrue.SupabaseInitializer"
-68-->[io.github.jan-tennert.supabase:gotrue-kt-android-debug:2.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\a886e18a62fc14ffd587cf63972c5c5c\transformed\gotrue-kt-debug\AndroidManifest.xml:15:17-81
-69                android:value="androidx.startup" />
-69-->[io.github.jan-tennert.supabase:gotrue-kt-android-debug:2.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\a886e18a62fc14ffd587cf63972c5c5c\transformed\gotrue-kt-debug\AndroidManifest.xml:16:17-49
-70            <meta-data
-70-->[androidx.emoji2:emoji2:1.4.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\43e90df2f0a183a58a38b89cace4c725\transformed\emoji2-1.4.0\AndroidManifest.xml:29:13-31:52
-71                android:name="androidx.emoji2.text.EmojiCompatInitializer"
-71-->[androidx.emoji2:emoji2:1.4.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\43e90df2f0a183a58a38b89cace4c725\transformed\emoji2-1.4.0\AndroidManifest.xml:30:17-75
-72                android:value="androidx.startup" />
-72-->[androidx.emoji2:emoji2:1.4.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\43e90df2f0a183a58a38b89cace4c725\transformed\emoji2-1.4.0\AndroidManifest.xml:31:17-49
-73            <meta-data
-73-->[androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\1b8ddaf06947b726fdc550bb5ea41ee9\transformed\lifecycle-process-2.7.0\AndroidManifest.xml:29:13-31:52
-74                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
-74-->[androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\1b8ddaf06947b726fdc550bb5ea41ee9\transformed\lifecycle-process-2.7.0\AndroidManifest.xml:30:17-78
-75                android:value="androidx.startup" />
-75-->[androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\1b8ddaf06947b726fdc550bb5ea41ee9\transformed\lifecycle-process-2.7.0\AndroidManifest.xml:31:17-49
-76            <meta-data
-76-->[com.russhwolf:multiplatform-settings-no-arg-android-debug:1.1.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\294815d16f05a62f79d3fbe76bd03be3\transformed\multiplatform-settings-no-arg-debug\AndroidManifest.xml:29:13-31:52
-77                android:name="com.russhwolf.settings.SettingsInitializer"
-77-->[com.russhwolf:multiplatform-settings-no-arg-android-debug:1.1.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\294815d16f05a62f79d3fbe76bd03be3\transformed\multiplatform-settings-no-arg-debug\AndroidManifest.xml:30:17-74
-78                android:value="androidx.startup" />
-78-->[com.russhwolf:multiplatform-settings-no-arg-android-debug:1.1.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\294815d16f05a62f79d3fbe76bd03be3\transformed\multiplatform-settings-no-arg-debug\AndroidManifest.xml:31:17-49
-79            <meta-data
-79-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:29:13-31:52
-80                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
-80-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:30:17-85
-81                android:value="androidx.startup" />
-81-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:31:17-49
-82        </provider>
-83
-84        <activity
-84-->[androidx.compose.ui:ui-test-manifest:1.5.4] C:\Users\drury\Documents\Gradle\caches\transforms-3\f952525a01b543550cc44654149149f0\transformed\ui-test-manifest-1.5.4\AndroidManifest.xml:23:9-25:39
-85            android:name="androidx.activity.ComponentActivity"
-85-->[androidx.compose.ui:ui-test-manifest:1.5.4] C:\Users\drury\Documents\Gradle\caches\transforms-3\f952525a01b543550cc44654149149f0\transformed\ui-test-manifest-1.5.4\AndroidManifest.xml:24:13-63
-86            android:exported="true" />
-86-->[androidx.compose.ui:ui-test-manifest:1.5.4] C:\Users\drury\Documents\Gradle\caches\transforms-3\f952525a01b543550cc44654149149f0\transformed\ui-test-manifest-1.5.4\AndroidManifest.xml:25:13-36
-87        <activity
-87-->[androidx.compose.ui:ui-tooling-android:1.5.4] C:\Users\drury\Documents\Gradle\caches\transforms-3\960ce9aa70c3e44b0ea6d114816a1aec\transformed\ui-tooling-release\AndroidManifest.xml:23:9-25:39
-88            android:name="androidx.compose.ui.tooling.PreviewActivity"
-88-->[androidx.compose.ui:ui-tooling-android:1.5.4] C:\Users\drury\Documents\Gradle\caches\transforms-3\960ce9aa70c3e44b0ea6d114816a1aec\transformed\ui-tooling-release\AndroidManifest.xml:24:13-71
-89            android:exported="true" />
-89-->[androidx.compose.ui:ui-tooling-android:1.5.4] C:\Users\drury\Documents\Gradle\caches\transforms-3\960ce9aa70c3e44b0ea6d114816a1aec\transformed\ui-tooling-release\AndroidManifest.xml:25:13-36
-90
-91        <receiver
-91-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:34:9-52:20
-92            android:name="androidx.profileinstaller.ProfileInstallReceiver"
-92-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:35:13-76
-93            android:directBootAware="false"
-93-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:36:13-44
-94            android:enabled="true"
-94-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:37:13-35
-95            android:exported="true"
-95-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:38:13-36
-96            android:permission="android.permission.DUMP" >
-96-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:39:13-57
-97            <intent-filter>
-97-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:40:13-42:29
-98                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
-98-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:41:17-91
-98-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:41:25-88
-99            </intent-filter>
-100            <intent-filter>
-100-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:43:13-45:29
-101                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
-101-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:44:17-85
-101-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:44:25-82
-102            </intent-filter>
-103            <intent-filter>
-103-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:46:13-48:29
-104                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
-104-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:47:17-88
-104-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:47:25-85
-105            </intent-filter>
-106            <intent-filter>
-106-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:49:13-51:29
-107                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
-107-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:50:17-95
-107-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:50:25-92
-108            </intent-filter>
-109        </receiver>
-110    </application>
-111
-112</manifest>
+51                <category android:name="android.intent.category.LAUNCHER" />
+51-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:28:17-77
+51-->C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:28:27-74
+52            </intent-filter>
+53        </activity>
+54
+55        <service
+55-->[androidx.camera:camera-camera2:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\a0f3d52a309b90738b9a7d606b57c3f3\transformed\camera-camera2-1.3.1\AndroidManifest.xml:24:9-33:19
+56            android:name="androidx.camera.core.impl.MetadataHolderService"
+56-->[androidx.camera:camera-camera2:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\a0f3d52a309b90738b9a7d606b57c3f3\transformed\camera-camera2-1.3.1\AndroidManifest.xml:25:13-75
+57            android:enabled="false"
+57-->[androidx.camera:camera-camera2:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\a0f3d52a309b90738b9a7d606b57c3f3\transformed\camera-camera2-1.3.1\AndroidManifest.xml:26:13-36
+58            android:exported="false" >
+58-->[androidx.camera:camera-camera2:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\a0f3d52a309b90738b9a7d606b57c3f3\transformed\camera-camera2-1.3.1\AndroidManifest.xml:27:13-37
+59            <meta-data
+59-->[androidx.camera:camera-camera2:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\a0f3d52a309b90738b9a7d606b57c3f3\transformed\camera-camera2-1.3.1\AndroidManifest.xml:30:13-32:89
+60                android:name="androidx.camera.core.impl.MetadataHolderService.DEFAULT_CONFIG_PROVIDER"
+60-->[androidx.camera:camera-camera2:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\a0f3d52a309b90738b9a7d606b57c3f3\transformed\camera-camera2-1.3.1\AndroidManifest.xml:31:17-103
+61                android:value="androidx.camera.camera2.Camera2Config$DefaultProvider" />
+61-->[androidx.camera:camera-camera2:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\a0f3d52a309b90738b9a7d606b57c3f3\transformed\camera-camera2-1.3.1\AndroidManifest.xml:32:17-86
+62        </service>
+63
+64        <provider
+64-->[io.github.jan-tennert.supabase:storage-kt-android-debug:2.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\5fc734526e215fbbd2636ad7130a5a30\transformed\storage-kt-debug\AndroidManifest.xml:9:9-17:20
+65            android:name="androidx.startup.InitializationProvider"
+65-->[io.github.jan-tennert.supabase:storage-kt-android-debug:2.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\5fc734526e215fbbd2636ad7130a5a30\transformed\storage-kt-debug\AndroidManifest.xml:10:13-67
+66            android:authorities="com.example.snapconnect.androidx-startup"
+66-->[io.github.jan-tennert.supabase:storage-kt-android-debug:2.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\5fc734526e215fbbd2636ad7130a5a30\transformed\storage-kt-debug\AndroidManifest.xml:11:13-68
+67            android:exported="false" >
+67-->[io.github.jan-tennert.supabase:storage-kt-android-debug:2.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\5fc734526e215fbbd2636ad7130a5a30\transformed\storage-kt-debug\AndroidManifest.xml:12:13-37
+68            <meta-data
+68-->[io.github.jan-tennert.supabase:storage-kt-android-debug:2.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\5fc734526e215fbbd2636ad7130a5a30\transformed\storage-kt-debug\AndroidManifest.xml:14:13-16:52
+69                android:name="io.github.jan.supabase.storage.SupabaseInitializer"
+69-->[io.github.jan-tennert.supabase:storage-kt-android-debug:2.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\5fc734526e215fbbd2636ad7130a5a30\transformed\storage-kt-debug\AndroidManifest.xml:15:17-82
+70                android:value="androidx.startup" />
+70-->[io.github.jan-tennert.supabase:storage-kt-android-debug:2.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\5fc734526e215fbbd2636ad7130a5a30\transformed\storage-kt-debug\AndroidManifest.xml:16:17-49
+71            <meta-data
+71-->[io.github.jan-tennert.supabase:gotrue-kt-android-debug:2.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\a886e18a62fc14ffd587cf63972c5c5c\transformed\gotrue-kt-debug\AndroidManifest.xml:14:13-16:52
+72                android:name="io.github.jan.supabase.gotrue.SupabaseInitializer"
+72-->[io.github.jan-tennert.supabase:gotrue-kt-android-debug:2.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\a886e18a62fc14ffd587cf63972c5c5c\transformed\gotrue-kt-debug\AndroidManifest.xml:15:17-81
+73                android:value="androidx.startup" />
+73-->[io.github.jan-tennert.supabase:gotrue-kt-android-debug:2.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\a886e18a62fc14ffd587cf63972c5c5c\transformed\gotrue-kt-debug\AndroidManifest.xml:16:17-49
+74            <meta-data
+74-->[androidx.emoji2:emoji2:1.4.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\43e90df2f0a183a58a38b89cace4c725\transformed\emoji2-1.4.0\AndroidManifest.xml:29:13-31:52
+75                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+75-->[androidx.emoji2:emoji2:1.4.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\43e90df2f0a183a58a38b89cace4c725\transformed\emoji2-1.4.0\AndroidManifest.xml:30:17-75
+76                android:value="androidx.startup" />
+76-->[androidx.emoji2:emoji2:1.4.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\43e90df2f0a183a58a38b89cace4c725\transformed\emoji2-1.4.0\AndroidManifest.xml:31:17-49
+77            <meta-data
+77-->[androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\1b8ddaf06947b726fdc550bb5ea41ee9\transformed\lifecycle-process-2.7.0\AndroidManifest.xml:29:13-31:52
+78                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+78-->[androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\1b8ddaf06947b726fdc550bb5ea41ee9\transformed\lifecycle-process-2.7.0\AndroidManifest.xml:30:17-78
+79                android:value="androidx.startup" />
+79-->[androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\1b8ddaf06947b726fdc550bb5ea41ee9\transformed\lifecycle-process-2.7.0\AndroidManifest.xml:31:17-49
+80            <meta-data
+80-->[com.russhwolf:multiplatform-settings-no-arg-android-debug:1.1.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\294815d16f05a62f79d3fbe76bd03be3\transformed\multiplatform-settings-no-arg-debug\AndroidManifest.xml:29:13-31:52
+81                android:name="com.russhwolf.settings.SettingsInitializer"
+81-->[com.russhwolf:multiplatform-settings-no-arg-android-debug:1.1.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\294815d16f05a62f79d3fbe76bd03be3\transformed\multiplatform-settings-no-arg-debug\AndroidManifest.xml:30:17-74
+82                android:value="androidx.startup" />
+82-->[com.russhwolf:multiplatform-settings-no-arg-android-debug:1.1.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\294815d16f05a62f79d3fbe76bd03be3\transformed\multiplatform-settings-no-arg-debug\AndroidManifest.xml:31:17-49
+83            <meta-data
+83-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:29:13-31:52
+84                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+84-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:30:17-85
+85                android:value="androidx.startup" />
+85-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:31:17-49
+86        </provider>
+87
+88        <activity
+88-->[androidx.compose.ui:ui-test-manifest:1.5.4] C:\Users\drury\Documents\Gradle\caches\transforms-3\f952525a01b543550cc44654149149f0\transformed\ui-test-manifest-1.5.4\AndroidManifest.xml:23:9-25:39
+89            android:name="androidx.activity.ComponentActivity"
+89-->[androidx.compose.ui:ui-test-manifest:1.5.4] C:\Users\drury\Documents\Gradle\caches\transforms-3\f952525a01b543550cc44654149149f0\transformed\ui-test-manifest-1.5.4\AndroidManifest.xml:24:13-63
+90            android:exported="true" />
+90-->[androidx.compose.ui:ui-test-manifest:1.5.4] C:\Users\drury\Documents\Gradle\caches\transforms-3\f952525a01b543550cc44654149149f0\transformed\ui-test-manifest-1.5.4\AndroidManifest.xml:25:13-36
+91        <activity
+91-->[androidx.compose.ui:ui-tooling-android:1.5.4] C:\Users\drury\Documents\Gradle\caches\transforms-3\960ce9aa70c3e44b0ea6d114816a1aec\transformed\ui-tooling-release\AndroidManifest.xml:23:9-25:39
+92            android:name="androidx.compose.ui.tooling.PreviewActivity"
+92-->[androidx.compose.ui:ui-tooling-android:1.5.4] C:\Users\drury\Documents\Gradle\caches\transforms-3\960ce9aa70c3e44b0ea6d114816a1aec\transformed\ui-tooling-release\AndroidManifest.xml:24:13-71
+93            android:exported="true" />
+93-->[androidx.compose.ui:ui-tooling-android:1.5.4] C:\Users\drury\Documents\Gradle\caches\transforms-3\960ce9aa70c3e44b0ea6d114816a1aec\transformed\ui-tooling-release\AndroidManifest.xml:25:13-36
+94
+95        <receiver
+95-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:34:9-52:20
+96            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+96-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:35:13-76
+97            android:directBootAware="false"
+97-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:36:13-44
+98            android:enabled="true"
+98-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:37:13-35
+99            android:exported="true"
+99-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:38:13-36
+100            android:permission="android.permission.DUMP" >
+100-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:39:13-57
+101            <intent-filter>
+101-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:40:13-42:29
+102                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+102-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:41:17-91
+102-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:41:25-88
+103            </intent-filter>
+104            <intent-filter>
+104-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:43:13-45:29
+105                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+105-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:44:17-85
+105-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:44:25-82
+106            </intent-filter>
+107            <intent-filter>
+107-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:46:13-48:29
+108                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+108-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:47:17-88
+108-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:47:25-85
+109            </intent-filter>
+110            <intent-filter>
+110-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:49:13-51:29
+111                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+111-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:50:17-95
+111-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\46c1d78691f5ff5c37f18eee5abfba5a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:50:25-92
+112            </intent-filter>
+113        </receiver>
+114    </application>
+115
+116</manifest>

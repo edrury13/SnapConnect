@@ -16,6 +16,7 @@ import io.github.jan.supabase.realtime.realtime
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.Clock
+import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
@@ -115,19 +116,40 @@ class StoryRepository @Inject constructor(
     
     suspend fun getMyStories(): Result<List<Story>> {
         return try {
-            val userId = supabase.auth.currentUserOrNull()?.id 
+            val userId = supabase.auth.currentUserOrNull()?.id
                 ?: return Result.failure(Exception("User not authenticated"))
             
             val stories = supabase.from("stories")
                 .select() {
                     filter {
                         eq("user_id", userId)
+                        gt("expires_at", Clock.System.now().toString())
                     }
-                    order(column = "created_at", order = Order.DESCENDING)
+                    order("created_at", Order.DESCENDING)
                 }
                 .decodeList<Story>()
             
             Result.success(stories)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+    
+    suspend fun getMyStoriesCount(): Result<Int> {
+        return try {
+            val userId = supabase.auth.currentUserOrNull()?.id
+                ?: return Result.failure(Exception("User not authenticated"))
+            
+            val stories = supabase.from("stories")
+                .select(columns = Columns.list("id")) {
+                    filter {
+                        eq("user_id", userId)
+                        gt("expires_at", Clock.System.now().toString())
+                    }
+                }
+                .decodeList<JsonObject>()
+            
+            Result.success(stories.size)
         } catch (e: Exception) {
             Result.failure(e)
         }

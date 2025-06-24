@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:2:1-30:12
-INJECTED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:2:1-30:12
-INJECTED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:2:1-30:12
-INJECTED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:2:1-30:12
+ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:2:1-33:12
+INJECTED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:2:1-33:12
+INJECTED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:2:1-33:12
+INJECTED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:2:1-33:12
 MERGED from [com.google.android.material:material:1.11.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\870fd22741f9baec316e3cbcc9e31385\transformed\material-1.11.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.camera:camera-view:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\073e5dad13191e7589ee56d5cb4216b1\transformed\camera-view-1.3.1\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.camera:camera-video:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\c35c0be26284d4bb716823d4e4409dc8\transformed\camera-video-1.3.1\AndroidManifest.xml:2:1-7:12
@@ -96,10 +96,12 @@ MERGED from [androidx.autofill:autofill:1.0.0] C:\Users\drury\Documents\Gradle\c
 MERGED from [androidx.core:core:1.12.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\90da2efa79bbb982acc4540cc64aa195\transformed\core-1.12.0\AndroidManifest.xml:17:1-30:12
 MERGED from [androidx.customview:customview-poolingcontainer:1.0.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\4898ce626c83d172f01731ef374c68ef\transformed\customview-poolingcontainer-1.0.0\AndroidManifest.xml:17:1-23:12
 MERGED from [androidx.core:core-ktx:1.12.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\192749d14e6ef90a4896024e43795ead\transformed\core-ktx-1.12.0\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.datastore:datastore-preferences:1.0.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\41103aa29f5e6f6d6a3263d4479fb00f\transformed\datastore-preferences-1.0.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.annotation:annotation-experimental:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\48899cfc2bda907ff34ab76e5f6f4670\transformed\annotation-experimental-1.3.1\AndroidManifest.xml:17:1-22:12
 MERGED from [com.soywiz.korlibs.krypto:krypto-android:4.0.10] C:\Users\drury\Documents\Gradle\caches\transforms-3\c261e8748ead7d010fe3e2fa3395ee76\transformed\krypto-debug\AndroidManifest.xml:2:1-9:12
 MERGED from [co.touchlab:kermit-android-debug:2.0.2] C:\Users\drury\Documents\Gradle\caches\transforms-3\34a5f50ed5f716431b3ff482a8496194\transformed\kermit-debug\AndroidManifest.xml:2:1-7:12
 MERGED from [co.touchlab:kermit-core-android-debug:2.0.2] C:\Users\drury\Documents\Gradle\caches\transforms-3\5f17ec9e30b3de608e31c37dea60b06b\transformed\kermit-core-debug\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.datastore:datastore:1.0.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\b34b403619f3f1da3bcba0805155c356\transformed\datastore-1.0.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.compose.runtime:runtime-saveable-android:1.5.4] C:\Users\drury\Documents\Gradle\caches\transforms-3\135bd350f6df36bf622a3771f8b485e6\transformed\runtime-saveable-release\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.compose.runtime:runtime-android:1.5.4] C:\Users\drury\Documents\Gradle\caches\transforms-3\fbc0653dd330ccff1cff56c1bcec7fb2\transformed\runtime-release\AndroidManifest.xml:2:1-7:12
 MERGED from [io.github.aakira:napier-android-debug:1.4.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\8095f7441762a5c50c827a4ee585297f\transformed\napier-debug\AndroidManifest.xml:2:1-11:12
@@ -139,19 +141,29 @@ uses-permission#android.permission.RECORD_AUDIO
 ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:7:5-71
 	android:name
 		ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:7:22-68
+uses-permission#android.permission.READ_EXTERNAL_STORAGE
+ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:8:5-9:38
+	android:maxSdkVersion
+		ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:9:9-35
+	android:name
+		ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:8:22-77
+uses-permission#android.permission.POST_NOTIFICATIONS
+ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:10:5-77
+	android:name
+		ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:10:22-74
 uses-feature#android.hardware.camera
-ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:8:5-84
+ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:11:5-84
 	android:required
-		ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:8:58-81
+		ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:11:58-81
 	android:name
-		ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:8:19-57
+		ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:11:19-57
 uses-feature#android.hardware.camera.autofocus
-ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:9:5-70
+ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:12:5-70
 	android:name
-		ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:9:19-67
+		ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:12:19-67
 application
-ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:11:5-28:19
-INJECTED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:11:5-28:19
+ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:14:5-31:19
+INJECTED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:14:5-31:19
 MERGED from [com.google.android.material:material:1.11.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\870fd22741f9baec316e3cbcc9e31385\transformed\material-1.11.0\AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.material:material:1.11.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\870fd22741f9baec316e3cbcc9e31385\transformed\material-1.11.0\AndroidManifest.xml:22:5-20
 MERGED from [androidx.camera:camera-camera2:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\a0f3d52a309b90738b9a7d606b57c3f3\transformed\camera-camera2-1.3.1\AndroidManifest.xml:23:5-34:19
@@ -187,35 +199,35 @@ MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\drury\Documents\Gr
 	android:appComponentFactory
 		ADDED from [androidx.core:core:1.12.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\90da2efa79bbb982acc4540cc64aa195\transformed\core-1.12.0\AndroidManifest.xml:28:18-86
 	android:supportsRtl
-		ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:16:9-35
+		ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:19:9-35
 	android:label
-		ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:15:9-41
+		ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:18:9-41
 	android:icon
-		ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:14:9-55
+		ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:17:9-55
 	android:allowBackup
-		ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:13:9-35
+		ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:16:9-35
 	android:theme
-		ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:17:9-49
+		ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:20:9-49
 	android:name
-		ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:12:9-47
+		ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:15:9-47
 activity#com.example.snapconnect.MainActivity
-ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:18:9-27:20
+ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:21:9-30:20
 	android:exported
-		ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:20:13-36
+		ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:23:13-36
 	android:theme
-		ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:21:13-53
+		ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:24:13-53
 	android:name
-		ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:19:13-41
+		ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:22:13-41
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:22:13-26:29
+ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:25:13-29:29
 action#android.intent.action.MAIN
-ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:23:17-69
+ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:26:17-69
 	android:name
-		ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:23:25-66
+		ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:26:25-66
 category#android.intent.category.LAUNCHER
-ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:25:17-77
+ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:28:17-77
 	android:name
-		ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:25:27-74
+		ADDED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml:28:27-74
 uses-sdk
 INJECTED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from C:\Users\drury\Documents\GitHub\SnapConnect\app\src\main\AndroidManifest.xml
@@ -404,6 +416,8 @@ MERGED from [androidx.customview:customview-poolingcontainer:1.0.0] C:\Users\dru
 MERGED from [androidx.customview:customview-poolingcontainer:1.0.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\4898ce626c83d172f01731ef374c68ef\transformed\customview-poolingcontainer-1.0.0\AndroidManifest.xml:20:5-21:38
 MERGED from [androidx.core:core-ktx:1.12.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\192749d14e6ef90a4896024e43795ead\transformed\core-ktx-1.12.0\AndroidManifest.xml:5:5-44
 MERGED from [androidx.core:core-ktx:1.12.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\192749d14e6ef90a4896024e43795ead\transformed\core-ktx-1.12.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.datastore:datastore-preferences:1.0.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\41103aa29f5e6f6d6a3263d4479fb00f\transformed\datastore-preferences-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.datastore:datastore-preferences:1.0.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\41103aa29f5e6f6d6a3263d4479fb00f\transformed\datastore-preferences-1.0.0\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.annotation:annotation-experimental:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\48899cfc2bda907ff34ab76e5f6f4670\transformed\annotation-experimental-1.3.1\AndroidManifest.xml:20:5-44
 MERGED from [androidx.annotation:annotation-experimental:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\48899cfc2bda907ff34ab76e5f6f4670\transformed\annotation-experimental-1.3.1\AndroidManifest.xml:20:5-44
 MERGED from [com.soywiz.korlibs.krypto:krypto-android:4.0.10] C:\Users\drury\Documents\Gradle\caches\transforms-3\c261e8748ead7d010fe3e2fa3395ee76\transformed\krypto-debug\AndroidManifest.xml:5:5-7:41
@@ -412,6 +426,8 @@ MERGED from [co.touchlab:kermit-android-debug:2.0.2] C:\Users\drury\Documents\Gr
 MERGED from [co.touchlab:kermit-android-debug:2.0.2] C:\Users\drury\Documents\Gradle\caches\transforms-3\34a5f50ed5f716431b3ff482a8496194\transformed\kermit-debug\AndroidManifest.xml:5:5-44
 MERGED from [co.touchlab:kermit-core-android-debug:2.0.2] C:\Users\drury\Documents\Gradle\caches\transforms-3\5f17ec9e30b3de608e31c37dea60b06b\transformed\kermit-core-debug\AndroidManifest.xml:5:5-44
 MERGED from [co.touchlab:kermit-core-android-debug:2.0.2] C:\Users\drury\Documents\Gradle\caches\transforms-3\5f17ec9e30b3de608e31c37dea60b06b\transformed\kermit-core-debug\AndroidManifest.xml:5:5-44
+MERGED from [androidx.datastore:datastore:1.0.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\b34b403619f3f1da3bcba0805155c356\transformed\datastore-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.datastore:datastore:1.0.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\b34b403619f3f1da3bcba0805155c356\transformed\datastore-1.0.0\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.compose.runtime:runtime-saveable-android:1.5.4] C:\Users\drury\Documents\Gradle\caches\transforms-3\135bd350f6df36bf622a3771f8b485e6\transformed\runtime-saveable-release\AndroidManifest.xml:5:5-44
 MERGED from [androidx.compose.runtime:runtime-saveable-android:1.5.4] C:\Users\drury\Documents\Gradle\caches\transforms-3\135bd350f6df36bf622a3771f8b485e6\transformed\runtime-saveable-release\AndroidManifest.xml:5:5-44
 MERGED from [androidx.compose.runtime:runtime-android:1.5.4] C:\Users\drury\Documents\Gradle\caches\transforms-3\fbc0653dd330ccff1cff56c1bcec7fb2\transformed\runtime-release\AndroidManifest.xml:5:5-44

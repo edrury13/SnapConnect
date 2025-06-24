@@ -4,6 +4,8 @@ import com.example.snapconnect.data.model.User
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.from
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -82,27 +84,46 @@ class UserRepository @Inject constructor(
         }
     }
     
-    suspend fun updateProfile(
-        displayName: String? = null,
-        avatarUrl: String? = null
-    ): Result<User> {
+    suspend fun updateProfile(displayName: String?, username: String?): Result<Unit> {
         return try {
-            val userId = supabase.auth.currentUserOrNull()?.id 
+            val userId = supabase.auth.currentUserOrNull()?.id
                 ?: return Result.failure(Exception("User not authenticated"))
             
-            val updates = mutableMapOf<String, Any?>()
-            displayName?.let { updates["display_name"] = it }
-            avatarUrl?.let { updates["avatar_url"] = it }
+            val updateData = buildJsonObject {
+                displayName?.let { put("display_name", it) }
+                username?.let { put("username", it) }
+            }
             
-            val updatedUser = supabase.from("users")
-                .update(updates) {
+            supabase.from("users")
+                .update(updateData) {
                     filter {
                         eq("id", userId)
                     }
                 }
-                .decodeSingle<User>()
             
-            Result.success(updatedUser)
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+    
+    suspend fun updateAvatar(avatarUrl: String): Result<Unit> {
+        return try {
+            val userId = supabase.auth.currentUserOrNull()?.id
+                ?: return Result.failure(Exception("User not authenticated"))
+            
+            supabase.from("users")
+                .update(
+                    buildJsonObject {
+                        put("avatar_url", avatarUrl)
+                    }
+                ) {
+                    filter {
+                        eq("id", userId)
+                    }
+                }
+            
+            Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
         }

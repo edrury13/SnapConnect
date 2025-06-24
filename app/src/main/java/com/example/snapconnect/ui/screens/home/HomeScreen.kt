@@ -18,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -26,23 +25,23 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.example.snapconnect.data.model.MediaType
 import com.example.snapconnect.data.model.Story
 import com.example.snapconnect.data.model.User
 import com.example.snapconnect.navigation.Screen
+import com.example.snapconnect.ui.components.SnapConnectBottomBar
 import com.example.snapconnect.ui.theme.SnapBlue
 import com.example.snapconnect.ui.theme.SnapRed
 import com.example.snapconnect.ui.theme.SnapYellow
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
-
-data class BottomNavItem(
-    val title: String,
-    val selectedIcon: ImageVector,
-    val unselectedIcon: ImageVector,
-    val route: String
-)
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,41 +49,7 @@ fun HomeScreen(
     navController: NavController,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
-    var selectedTab by remember { mutableStateOf(2) } // Default to Stories tab
     val uiState by viewModel.uiState.collectAsState()
-    
-    val bottomNavItems = listOf(
-        BottomNavItem(
-            title = "Messages",
-            selectedIcon = Icons.Filled.Message,
-            unselectedIcon = Icons.Outlined.Message,
-            route = Screen.Messages.route
-        ),
-        BottomNavItem(
-            title = "Camera",
-            selectedIcon = Icons.Filled.CameraAlt,
-            unselectedIcon = Icons.Outlined.CameraAlt,
-            route = Screen.Camera.route
-        ),
-        BottomNavItem(
-            title = "Stories",
-            selectedIcon = Icons.Filled.CollectionsBookmark,
-            unselectedIcon = Icons.Outlined.CollectionsBookmark,
-            route = Screen.Home.route
-        ),
-        BottomNavItem(
-            title = "Friends",
-            selectedIcon = Icons.Filled.People,
-            unselectedIcon = Icons.Outlined.People,
-            route = Screen.Friends.route
-        ),
-        BottomNavItem(
-            title = "Profile",
-            selectedIcon = Icons.Filled.Person,
-            unselectedIcon = Icons.Outlined.Person,
-            route = Screen.Profile.route
-        )
-    )
     
     Scaffold(
         topBar = {
@@ -101,45 +66,18 @@ fun HomeScreen(
                     titleContentColor = MaterialTheme.colorScheme.onPrimary
                 ),
                 actions = {
-                    if (selectedTab == 2) { // Stories tab
-                        IconButton(onClick = { viewModel.loadStories() }) {
-                            Icon(
-                                imageVector = Icons.Default.Refresh,
-                                contentDescription = "Refresh",
-                                tint = MaterialTheme.colorScheme.onPrimary
-                            )
-                        }
+                    IconButton(onClick = { viewModel.loadStories() }) {
+                        Icon(
+                            imageVector = Icons.Default.Refresh,
+                            contentDescription = "Refresh",
+                            tint = MaterialTheme.colorScheme.onPrimary
+                        )
                     }
                 }
             )
         },
         bottomBar = {
-            NavigationBar(
-                containerColor = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.onSurface
-            ) {
-                bottomNavItems.forEachIndexed { index, item ->
-                    NavigationBarItem(
-                        icon = {
-                            Icon(
-                                imageVector = if (selectedTab == index) item.selectedIcon else item.unselectedIcon,
-                                contentDescription = item.title
-                            )
-                        },
-                        label = { Text(item.title) },
-                        selected = selectedTab == index,
-                        onClick = {
-                            selectedTab = index
-                            when (index) {
-                                0 -> navController.navigate(Screen.Messages.route)
-                                1 -> navController.navigate(Screen.Camera.route)
-                                3 -> navController.navigate(Screen.Friends.route)
-                                4 -> navController.navigate(Screen.Profile.route)
-                            }
-                        }
-                    )
-                }
-            }
+            SnapConnectBottomBar(navController = navController)
         }
     ) { paddingValues ->
         Box(
@@ -147,28 +85,12 @@ fun HomeScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            when (selectedTab) {
-                0 -> {
-                    // Messages content (handled by navigation)
-                }
-                1 -> {
-                    // Camera content (handled by navigation)
-                }
-                2 -> {
-                    // Stories content
-                    StoriesContent(
-                        navController = navController,
-                        uiState = uiState,
-                        onRefresh = { viewModel.loadStories() }
-                    )
-                }
-                3 -> {
-                    // Friends content (handled by navigation)
-                }
-                4 -> {
-                    // Profile content (handled by navigation)
-                }
-            }
+            // Stories content
+            StoriesContent(
+                navController = navController,
+                uiState = uiState,
+                onRefresh = { viewModel.loadStories() }
+            )
             
             // Error handling
             uiState.errorMessage?.let { error ->

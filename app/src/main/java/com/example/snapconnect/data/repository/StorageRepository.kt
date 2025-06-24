@@ -2,6 +2,7 @@ package com.example.snapconnect.data.repository
 
 import android.content.Context
 import android.net.Uri
+import dagger.hilt.android.qualifiers.ApplicationContext
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.storage.storage
 import kotlinx.coroutines.Dispatchers
@@ -14,43 +15,58 @@ import javax.inject.Singleton
 @Singleton
 class StorageRepository @Inject constructor(
     private val supabase: SupabaseClient,
-    private val context: Context
+    @ApplicationContext private val context: Context
 ) {
     
-    suspend fun uploadStoryMedia(
-        fileUri: Uri,
-        userId: String,
-        isVideo: Boolean
-    ): Result<String> = withContext(Dispatchers.IO) {
-        try {
-            val file = File(fileUri.path ?: return@withContext Result.failure(Exception("Invalid file URI")))
-            val fileName = "${UUID.randomUUID()}.${if (isVideo) "mp4" else "jpg"}"
-            val path = "$userId/$fileName"
-            
-            val bucket = supabase.storage.from("stories")
-            bucket.upload(path, file.readBytes(), upsert = false)
-            
-            val publicUrl = bucket.publicUrl(path)
-            Result.success(publicUrl)
+    suspend fun uploadStoryMedia(uri: Uri, userId: String, isVideo: Boolean): Result<String> {
+        return try {
+            withContext(Dispatchers.IO) {
+                val fileName = "${System.currentTimeMillis()}.${if (isVideo) "mp4" else "jpg"}"
+                val path = "$userId/$fileName"
+                
+                val contentResolver = context.contentResolver
+                val inputStream = contentResolver.openInputStream(uri)
+                    ?: return@withContext Result.failure(Exception("Failed to open file"))
+                
+                val bytes = inputStream.use { it.readBytes() }
+                
+                supabase.storage
+                    .from("stories")
+                    .upload(path, bytes, upsert = false)
+                
+                val publicUrl = supabase.storage
+                    .from("stories")
+                    .publicUrl(path)
+                
+                Result.success(publicUrl)
+            }
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
     
-    suspend fun uploadAvatar(
-        fileUri: Uri,
-        userId: String
-    ): Result<String> = withContext(Dispatchers.IO) {
-        try {
-            val file = File(fileUri.path ?: return@withContext Result.failure(Exception("Invalid file URI")))
-            val fileName = "avatar_${System.currentTimeMillis()}.jpg"
-            val path = "$userId/$fileName"
-            
-            val bucket = supabase.storage.from("avatars")
-            bucket.upload(path, file.readBytes(), upsert = true)
-            
-            val publicUrl = bucket.publicUrl(path)
-            Result.success(publicUrl)
+    suspend fun uploadAvatar(uri: Uri, userId: String): Result<String> {
+        return try {
+            withContext(Dispatchers.IO) {
+                val fileName = "avatar_${System.currentTimeMillis()}.jpg"
+                val path = "$userId/$fileName"
+                
+                val contentResolver = context.contentResolver
+                val inputStream = contentResolver.openInputStream(uri)
+                    ?: return@withContext Result.failure(Exception("Failed to open file"))
+                
+                val bytes = inputStream.use { it.readBytes() }
+                
+                supabase.storage
+                    .from("avatars")
+                    .upload(path, bytes, upsert = true)
+                
+                val publicUrl = supabase.storage
+                    .from("avatars")
+                    .publicUrl(path)
+                
+                Result.success(publicUrl)
+            }
         } catch (e: Exception) {
             Result.failure(e)
         }

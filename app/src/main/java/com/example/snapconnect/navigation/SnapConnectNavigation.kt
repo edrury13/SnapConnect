@@ -17,6 +17,7 @@ import com.example.snapconnect.ui.screens.messages.MessagesScreen
 import com.example.snapconnect.ui.screens.profile.ProfileScreen
 import com.example.snapconnect.ui.screens.story.StoryViewScreen
 import com.example.snapconnect.ui.screens.chat.ChatScreen
+import com.example.snapconnect.ui.screens.notifications.NotificationsScreen
 
 sealed class Screen(val route: String) {
     object Login : Screen("login")
@@ -40,6 +41,7 @@ sealed class Screen(val route: String) {
     object Chat : Screen("chat/{groupId}") {
         fun createRoute(groupId: String) = "chat/$groupId"
     }
+    object Notifications : Screen("notifications")
 }
 
 @Composable
@@ -90,6 +92,10 @@ fun SnapConnectNavigation(
         
         composable(Screen.Profile.route) {
             ProfileScreen(navController = navController)
+        }
+        
+        composable(Screen.Notifications.route) {
+            NotificationsScreen(navController = navController)
         }
         
         composable(
