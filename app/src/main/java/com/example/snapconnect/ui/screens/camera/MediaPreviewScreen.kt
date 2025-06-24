@@ -27,6 +27,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.snapconnect.navigation.Screen
 import com.example.snapconnect.ui.theme.SnapYellow
+import com.example.snapconnect.ui.components.VideoPlayer
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -56,20 +57,11 @@ fun MediaPreviewScreen(
     Box(modifier = Modifier.fillMaxSize()) {
         // Media preview
         if (isVideo) {
-            // TODO: Implement video player
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Black),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.Default.PlayArrow,
-                    contentDescription = "Play Video",
-                    modifier = Modifier.size(80.dp),
-                    tint = Color.White
-                )
-            }
+            VideoPlayer(
+                videoUrl = uri.toString(),
+                modifier = Modifier.fillMaxSize(),
+                shouldPlay = true
+            )
         } else {
             AsyncImage(
                 model = ImageRequest.Builder(context)

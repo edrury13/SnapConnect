@@ -10,6 +10,14 @@ MERGED from [androidx.camera:camera-video:1.3.1] C:\Users\drury\Documents\Gradle
 MERGED from [androidx.camera:camera-lifecycle:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\9f7f3c7ce5c9899c817fefc648926b1b\transformed\camera-lifecycle-1.3.1\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.camera:camera-camera2:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\a0f3d52a309b90738b9a7d606b57c3f3\transformed\camera-camera2-1.3.1\AndroidManifest.xml:17:1-36:12
 MERGED from [androidx.camera:camera-core:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\9fef95f12a0a7458be467a1e499f2a03\transformed\camera-core-1.3.1\AndroidManifest.xml:17:1-36:12
+MERGED from [androidx.media3:media3-ui:1.2.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\76cf1e475be7e33fbf7e0ecbe275b55c\transformed\media3-ui-1.2.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.media3:media3-extractor:1.2.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\908b68456a926474da0ef1eb52d14d9f\transformed\media3-extractor-1.2.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.media3:media3-container:1.2.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\6b3c1429358838447db72c689524fc3d\transformed\media3-container-1.2.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.media3:media3-datasource:1.2.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\730363b41c186e2713dfbdd120a990fc\transformed\media3-datasource-1.2.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.media3:media3-decoder:1.2.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\b5ae319a50bc0d692f9cdde3be1a0867\transformed\media3-decoder-1.2.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.media3:media3-database:1.2.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\c40be7e4c96ffda00efd58e166e4fdca\transformed\media3-database-1.2.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.media3:media3-common:1.2.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\d8a19fd59f5bd6d655de37dd683736f5\transformed\media3-common-1.2.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.media3:media3-exoplayer:1.2.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\721e7566445dc7287eb00ec336cc4779\transformed\media3-exoplayer-1.2.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\0bdd47bfe04fcb84e28e477d6c34cc8b\transformed\constraintlayout-2.0.1\AndroidManifest.xml:2:1-11:12
 MERGED from [io.coil-kt:coil-compose:2.5.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\5ef3a20b058f9b62dfd67e908acf288e\transformed\coil-compose-2.5.0\AndroidManifest.xml:2:1-7:12
 MERGED from [io.coil-kt:coil-compose-base:2.5.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\311be2c08feb7605834ea3def326ccf5\transformed\coil-compose-base-2.5.0\AndroidManifest.xml:2:1-7:12
@@ -79,7 +87,8 @@ MERGED from [androidx.compose.ui:ui-android:1.5.4] C:\Users\drury\Documents\Grad
 MERGED from [androidx.activity:activity-ktx:1.8.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\961610846133bb7dcb7ea22840ff6862\transformed\activity-ktx-1.8.0\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.activity:activity-compose:1.8.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\4b507fc352a65806ae29d01b65af82fa\transformed\activity-compose-1.8.0\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.activity:activity:1.8.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\37bcf1635683013f8bf3a4370bf7e61c\transformed\activity-1.8.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.recyclerview:recyclerview:1.1.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\4266d0d479ac7147d98de53866a61d4c\transformed\recyclerview-1.1.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.recyclerview:recyclerview:1.3.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\d28318a5948b5063640fc923ff5ed08d\transformed\recyclerview-1.3.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.media:media:1.6.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\2fd99d2813f48a9dd9221fadbad1be91\transformed\media-1.6.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\bd822cfdca3905b7260f415490dd5daf\transformed\viewpager-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.customview:customview:1.1.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\3659a14825c5e1129710a61d5ee088db\transformed\customview-1.1.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.browser:browser:1.7.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\55e90112456880aea04ef31a0cac7dd4\transformed\browser-1.7.0\AndroidManifest.xml:2:1-7:12
@@ -97,6 +106,7 @@ MERGED from [io.github.aakira:napier-android-debug:1.4.1] C:\Users\drury\Documen
 MERGED from [com.russhwolf:multiplatform-settings-no-arg-android-debug:1.1.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\294815d16f05a62f79d3fbe76bd03be3\transformed\multiplatform-settings-no-arg-debug\AndroidManifest.xml:17:1-35:12
 MERGED from [com.russhwolf:multiplatform-settings-coroutines-android-debug:1.1.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\7ebf38ec748a26b9ee1446cf464cd7d9\transformed\multiplatform-settings-coroutines-debug\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.cardview:cardview:1.0.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\a9c9db07b8a26030db95114120befe41\transformed\cardview-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.exifinterface:exifinterface:1.3.6] C:\Users\drury\Documents\Gradle\caches\transforms-3\a156288791127222825b08d5b3c0ca8e\transformed\exifinterface-1.3.6\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\c3e6e0acbbaaadebf49b8d4592eaafbb\transformed\interpolator-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\89b5a4d014765c5fa2a765987753e338\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:17:1-27:12
 MERGED from [androidx.arch.core:core-runtime:2.2.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\7283c40dcc385ae6509d0cf762497ca8\transformed\core-runtime-2.2.0\AndroidManifest.xml:17:1-22:12
@@ -107,7 +117,6 @@ MERGED from [androidx.tracing:tracing:1.0.0] C:\Users\drury\Documents\Gradle\cac
 MERGED from [androidx.documentfile:documentfile:1.0.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\c893100e943553a736f928372c4594dc\transformed\documentfile-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\fa21cb3b6f7087ab367ff0c4535a4d4f\transformed\localbroadcastmanager-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.print:print:1.0.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\d92453203b0ef5eefd833d7a41ac2a4c\transformed\print-1.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.exifinterface:exifinterface:1.3.6] C:\Users\drury\Documents\Gradle\caches\transforms-3\a156288791127222825b08d5b3c0ca8e\transformed\exifinterface-1.3.6\AndroidManifest.xml:17:1-24:12
 MERGED from [com.russhwolf:multiplatform-settings-android-debug:1.1.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\643d2056d3dcedb5e5cc3beef7813933\transformed\multiplatform-settings-debug\AndroidManifest.xml:2:1-7:12
 MERGED from [com.google.dagger:dagger-lint-aar:2.48] C:\Users\drury\Documents\Gradle\caches\transforms-3\ae2b811130bcedce354d624648c5ab66\transformed\dagger-lint-aar-2.48\AndroidManifest.xml:16:1-19:12
 	package
@@ -223,6 +232,22 @@ MERGED from [androidx.camera:camera-camera2:1.3.1] C:\Users\drury\Documents\Grad
 MERGED from [androidx.camera:camera-camera2:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\a0f3d52a309b90738b9a7d606b57c3f3\transformed\camera-camera2-1.3.1\AndroidManifest.xml:21:5-44
 MERGED from [androidx.camera:camera-core:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\9fef95f12a0a7458be467a1e499f2a03\transformed\camera-core-1.3.1\AndroidManifest.xml:21:5-44
 MERGED from [androidx.camera:camera-core:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\9fef95f12a0a7458be467a1e499f2a03\transformed\camera-core-1.3.1\AndroidManifest.xml:21:5-44
+MERGED from [androidx.media3:media3-ui:1.2.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\76cf1e475be7e33fbf7e0ecbe275b55c\transformed\media3-ui-1.2.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-ui:1.2.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\76cf1e475be7e33fbf7e0ecbe275b55c\transformed\media3-ui-1.2.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-extractor:1.2.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\908b68456a926474da0ef1eb52d14d9f\transformed\media3-extractor-1.2.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-extractor:1.2.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\908b68456a926474da0ef1eb52d14d9f\transformed\media3-extractor-1.2.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-container:1.2.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\6b3c1429358838447db72c689524fc3d\transformed\media3-container-1.2.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-container:1.2.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\6b3c1429358838447db72c689524fc3d\transformed\media3-container-1.2.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-datasource:1.2.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\730363b41c186e2713dfbdd120a990fc\transformed\media3-datasource-1.2.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-datasource:1.2.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\730363b41c186e2713dfbdd120a990fc\transformed\media3-datasource-1.2.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-decoder:1.2.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\b5ae319a50bc0d692f9cdde3be1a0867\transformed\media3-decoder-1.2.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-decoder:1.2.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\b5ae319a50bc0d692f9cdde3be1a0867\transformed\media3-decoder-1.2.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-database:1.2.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\c40be7e4c96ffda00efd58e166e4fdca\transformed\media3-database-1.2.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-database:1.2.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\c40be7e4c96ffda00efd58e166e4fdca\transformed\media3-database-1.2.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-common:1.2.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\d8a19fd59f5bd6d655de37dd683736f5\transformed\media3-common-1.2.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-common:1.2.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\d8a19fd59f5bd6d655de37dd683736f5\transformed\media3-common-1.2.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-exoplayer:1.2.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\721e7566445dc7287eb00ec336cc4779\transformed\media3-exoplayer-1.2.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-exoplayer:1.2.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\721e7566445dc7287eb00ec336cc4779\transformed\media3-exoplayer-1.2.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\0bdd47bfe04fcb84e28e477d6c34cc8b\transformed\constraintlayout-2.0.1\AndroidManifest.xml:5:5-7:41
 MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\0bdd47bfe04fcb84e28e477d6c34cc8b\transformed\constraintlayout-2.0.1\AndroidManifest.xml:5:5-7:41
 MERGED from [io.coil-kt:coil-compose:2.5.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\5ef3a20b058f9b62dfd67e908acf288e\transformed\coil-compose-2.5.0\AndroidManifest.xml:5:5-44
@@ -361,8 +386,10 @@ MERGED from [androidx.activity:activity-compose:1.8.0] C:\Users\drury\Documents\
 MERGED from [androidx.activity:activity-compose:1.8.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\4b507fc352a65806ae29d01b65af82fa\transformed\activity-compose-1.8.0\AndroidManifest.xml:5:5-44
 MERGED from [androidx.activity:activity:1.8.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\37bcf1635683013f8bf3a4370bf7e61c\transformed\activity-1.8.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.activity:activity:1.8.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\37bcf1635683013f8bf3a4370bf7e61c\transformed\activity-1.8.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.recyclerview:recyclerview:1.1.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\4266d0d479ac7147d98de53866a61d4c\transformed\recyclerview-1.1.0\AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.recyclerview:recyclerview:1.1.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\4266d0d479ac7147d98de53866a61d4c\transformed\recyclerview-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.recyclerview:recyclerview:1.3.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\d28318a5948b5063640fc923ff5ed08d\transformed\recyclerview-1.3.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.recyclerview:recyclerview:1.3.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\d28318a5948b5063640fc923ff5ed08d\transformed\recyclerview-1.3.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media:media:1.6.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\2fd99d2813f48a9dd9221fadbad1be91\transformed\media-1.6.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.media:media:1.6.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\2fd99d2813f48a9dd9221fadbad1be91\transformed\media-1.6.0\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\bd822cfdca3905b7260f415490dd5daf\transformed\viewpager-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\bd822cfdca3905b7260f415490dd5daf\transformed\viewpager-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.customview:customview:1.1.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\3659a14825c5e1129710a61d5ee088db\transformed\customview-1.1.0\AndroidManifest.xml:20:5-22:41
@@ -397,6 +424,8 @@ MERGED from [com.russhwolf:multiplatform-settings-coroutines-android-debug:1.1.1
 MERGED from [com.russhwolf:multiplatform-settings-coroutines-android-debug:1.1.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\7ebf38ec748a26b9ee1446cf464cd7d9\transformed\multiplatform-settings-coroutines-debug\AndroidManifest.xml:5:5-44
 MERGED from [androidx.cardview:cardview:1.0.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\a9c9db07b8a26030db95114120befe41\transformed\cardview-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.cardview:cardview:1.0.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\a9c9db07b8a26030db95114120befe41\transformed\cardview-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.exifinterface:exifinterface:1.3.6] C:\Users\drury\Documents\Gradle\caches\transforms-3\a156288791127222825b08d5b3c0ca8e\transformed\exifinterface-1.3.6\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.exifinterface:exifinterface:1.3.6] C:\Users\drury\Documents\Gradle\caches\transforms-3\a156288791127222825b08d5b3c0ca8e\transformed\exifinterface-1.3.6\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\c3e6e0acbbaaadebf49b8d4592eaafbb\transformed\interpolator-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\c3e6e0acbbaaadebf49b8d4592eaafbb\transformed\interpolator-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\89b5a4d014765c5fa2a765987753e338\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:20:5-22:41
@@ -417,8 +446,6 @@ MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] C:\User
 MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\fa21cb3b6f7087ab367ff0c4535a4d4f\transformed\localbroadcastmanager-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.print:print:1.0.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\d92453203b0ef5eefd833d7a41ac2a4c\transformed\print-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.print:print:1.0.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\d92453203b0ef5eefd833d7a41ac2a4c\transformed\print-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.exifinterface:exifinterface:1.3.6] C:\Users\drury\Documents\Gradle\caches\transforms-3\a156288791127222825b08d5b3c0ca8e\transformed\exifinterface-1.3.6\AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.exifinterface:exifinterface:1.3.6] C:\Users\drury\Documents\Gradle\caches\transforms-3\a156288791127222825b08d5b3c0ca8e\transformed\exifinterface-1.3.6\AndroidManifest.xml:20:5-22:41
 MERGED from [com.russhwolf:multiplatform-settings-android-debug:1.1.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\643d2056d3dcedb5e5cc3beef7813933\transformed\multiplatform-settings-debug\AndroidManifest.xml:5:5-44
 MERGED from [com.russhwolf:multiplatform-settings-android-debug:1.1.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\643d2056d3dcedb5e5cc3beef7813933\transformed\multiplatform-settings-debug\AndroidManifest.xml:5:5-44
 MERGED from [com.google.dagger:dagger-lint-aar:2.48] C:\Users\drury\Documents\Gradle\caches\transforms-3\ae2b811130bcedce354d624648c5ab66\transformed\dagger-lint-aar-2.48\AndroidManifest.xml:18:3-42
@@ -447,6 +474,12 @@ ADDED from [androidx.camera:camera-camera2:1.3.1] C:\Users\drury\Documents\Gradl
 		ADDED from [androidx.camera:camera-camera2:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\a0f3d52a309b90738b9a7d606b57c3f3\transformed\camera-camera2-1.3.1\AndroidManifest.xml:32:17-86
 	android:name
 		ADDED from [androidx.camera:camera-camera2:1.3.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\a0f3d52a309b90738b9a7d606b57c3f3\transformed\camera-camera2-1.3.1\AndroidManifest.xml:31:17-103
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from [androidx.media3:media3-common:1.2.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\d8a19fd59f5bd6d655de37dd683736f5\transformed\media3-common-1.2.0\AndroidManifest.xml:22:5-79
+MERGED from [androidx.media3:media3-exoplayer:1.2.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\721e7566445dc7287eb00ec336cc4779\transformed\media3-exoplayer-1.2.0\AndroidManifest.xml:22:5-79
+MERGED from [androidx.media3:media3-exoplayer:1.2.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\721e7566445dc7287eb00ec336cc4779\transformed\media3-exoplayer-1.2.0\AndroidManifest.xml:22:5-79
+	android:name
+		ADDED from [androidx.media3:media3-common:1.2.0] C:\Users\drury\Documents\Gradle\caches\transforms-3\d8a19fd59f5bd6d655de37dd683736f5\transformed\media3-common-1.2.0\AndroidManifest.xml:22:22-76
 provider#androidx.startup.InitializationProvider
 ADDED from [io.github.jan-tennert.supabase:storage-kt-android-debug:2.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\5fc734526e215fbbd2636ad7130a5a30\transformed\storage-kt-debug\AndroidManifest.xml:9:9-17:20
 MERGED from [io.github.jan-tennert.supabase:gotrue-kt-android-debug:2.0.1] C:\Users\drury\Documents\Gradle\caches\transforms-3\a886e18a62fc14ffd587cf63972c5c5c\transformed\gotrue-kt-debug\AndroidManifest.xml:9:9-17:20

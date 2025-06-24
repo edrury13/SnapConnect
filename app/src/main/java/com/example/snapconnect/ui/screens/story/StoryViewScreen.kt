@@ -31,6 +31,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.snapconnect.data.model.MediaType
 import com.example.snapconnect.ui.screens.home.getTimeAgo
+import com.example.snapconnect.ui.components.VideoPlayer
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -45,25 +46,29 @@ fun StoryViewScreen(
     // Auto-advance timer
     var progress by remember { mutableStateOf(0f) }
     var isPaused by remember { mutableStateOf(false) }
+    var isVideoPlaying by remember { mutableStateOf(true) }
     
     // Handle story navigation
     LaunchedEffect(uiState.currentStory) {
         val story = uiState.currentStory
         if (story != null && !isPaused) {
             progress = 0f
-            val duration = if (story.mediaType == MediaType.VIDEO) 10000L else 5000L
-            
-            while (progress < 1f && !isPaused) {
-                delay(50)
-                progress += 50f / duration
+            // For videos, we'll wait for the video to end instead of using a timer
+            if (story.mediaType == MediaType.IMAGE) {
+                val duration = 5000L
                 
-                if (progress >= 1f) {
-                    if (viewModel.hasNextStory()) {
-                        viewModel.nextStory()
-                    } else {
-                        navController.navigateUp()
+                while (progress < 1f && !isPaused) {
+                    delay(50)
+                    progress += 50f / duration
+                    
+                    if (progress >= 1f) {
+                        if (viewModel.hasNextStory()) {
+                            viewModel.nextStory()
+                        } else {
+                            navController.navigateUp()
+                        }
+                        break
                     }
-                    break
                 }
             }
         }
@@ -93,8 +98,10 @@ fun StoryViewScreen(
                         detectTapGestures(
                             onPress = {
                                 isPaused = true
+                                isVideoPlaying = false
                                 tryAwaitRelease()
                                 isPaused = false
+                                isVideoPlaying = true
                             },
                             onTap = { offset ->
                                 val screenWidth = size.width
@@ -102,12 +109,14 @@ fun StoryViewScreen(
                                     offset.x < screenWidth * 0.3f -> {
                                         // Left side - previous story
                                         if (viewModel.hasPreviousStory()) {
+                                            isVideoPlaying = true
                                             viewModel.previousStory()
                                         }
                                     }
                                     offset.x > screenWidth * 0.7f -> {
                                         // Right side - next story
                                         if (viewModel.hasNextStory()) {
+                                            isVideoPlaying = true
                                             viewModel.nextStory()
                                         } else {
                                             navController.navigateUp()
@@ -120,20 +129,18 @@ fun StoryViewScreen(
             ) {
                 // Media display
                 if (currentStory.mediaType == MediaType.VIDEO) {
-                    // TODO: Implement video player
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(Color.Black),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.PlayArrow,
-                            contentDescription = "Play Video",
-                            modifier = Modifier.size(80.dp),
-                            tint = Color.White
-                        )
-                    }
+                    VideoPlayer(
+                        videoUrl = currentStory.mediaUrl,
+                        modifier = Modifier.fillMaxSize(),
+                        shouldPlay = !isPaused && isVideoPlaying,
+                        onVideoEnd = {
+                            if (viewModel.hasNextStory()) {
+                                viewModel.nextStory()
+                            } else {
+                                navController.navigateUp()
+                            }
+                        }
+                    )
                 } else {
                     AsyncImage(
                         model = currentStory.mediaUrl,
@@ -167,11 +174,18 @@ fun StoryViewScreen(
                         .align(Alignment.TopCenter),
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    uiState.allUserStories.forEachIndexed { index, _ ->
+                    uiState.allUserStories.forEachIndexed { index, story ->
                         LinearProgressIndicator(
                             progress = when {
                                 index < uiState.currentIndex -> 1f
-                                index == uiState.currentIndex -> progress
+                                index == uiState.currentIndex -> {
+                                    // For videos, show a simple loading state instead of progress
+                                    if (story.mediaType == MediaType.VIDEO) {
+                                        0f
+                                    } else {
+                                        progress
+                                    }
+                                }
                                 else -> 0f
                             },
                             modifier = Modifier

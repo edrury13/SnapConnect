@@ -33,6 +33,8 @@ import com.example.snapconnect.ui.screens.profile.ProfileViewModel;
 import com.example.snapconnect.ui.screens.profile.ProfileViewModel_HiltModules_KeyModule_ProvideFactory;
 import com.example.snapconnect.ui.screens.story.StoryViewViewModel;
 import com.example.snapconnect.ui.screens.story.StoryViewViewModel_HiltModules_KeyModule_ProvideFactory;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import dagger.hilt.android.ActivityRetainedLifecycle;
 import dagger.hilt.android.ViewModelLifecycle;
 import dagger.hilt.android.flags.HiltWrapper_FragmentGetContextFix_FragmentGetContextFixModule;
@@ -50,11 +52,8 @@ import dagger.hilt.android.internal.modules.ApplicationContextModule;
 import dagger.hilt.android.internal.modules.ApplicationContextModule_ProvideContextFactory;
 import dagger.internal.DaggerGenerated;
 import dagger.internal.DoubleCheck;
-import dagger.internal.MapBuilder;
 import dagger.internal.Preconditions;
-import dagger.internal.SetBuilder;
 import io.github.jan.supabase.SupabaseClient;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import javax.annotation.processing.Generated;
@@ -400,7 +399,7 @@ public final class DaggerSnapConnectApplication_HiltComponents_SingletonC {
 
     @Override
     public Set<String> getViewModelKeys() {
-      return SetBuilder.<String>newSetBuilder(8).add(AuthViewModel_HiltModules_KeyModule_ProvideFactory.provide()).add(ChatViewModel_HiltModules_KeyModule_ProvideFactory.provide()).add(FriendsViewModel_HiltModules_KeyModule_ProvideFactory.provide()).add(HomeViewModel_HiltModules_KeyModule_ProvideFactory.provide()).add(MessagesViewModel_HiltModules_KeyModule_ProvideFactory.provide()).add(ProfileViewModel_HiltModules_KeyModule_ProvideFactory.provide()).add(StoryPostViewModel_HiltModules_KeyModule_ProvideFactory.provide()).add(StoryViewViewModel_HiltModules_KeyModule_ProvideFactory.provide()).build();
+      return ImmutableSet.<String>of(AuthViewModel_HiltModules_KeyModule_ProvideFactory.provide(), ChatViewModel_HiltModules_KeyModule_ProvideFactory.provide(), FriendsViewModel_HiltModules_KeyModule_ProvideFactory.provide(), HomeViewModel_HiltModules_KeyModule_ProvideFactory.provide(), MessagesViewModel_HiltModules_KeyModule_ProvideFactory.provide(), ProfileViewModel_HiltModules_KeyModule_ProvideFactory.provide(), StoryPostViewModel_HiltModules_KeyModule_ProvideFactory.provide(), StoryViewViewModel_HiltModules_KeyModule_ProvideFactory.provide());
     }
 
     @Override
@@ -469,7 +468,7 @@ public final class DaggerSnapConnectApplication_HiltComponents_SingletonC {
 
     @Override
     public Map<String, Provider<ViewModel>> getHiltViewModelMap() {
-      return MapBuilder.<String, Provider<ViewModel>>newMapBuilder(8).put("com.example.snapconnect.ui.screens.auth.AuthViewModel", ((Provider) authViewModelProvider)).put("com.example.snapconnect.ui.screens.chat.ChatViewModel", ((Provider) chatViewModelProvider)).put("com.example.snapconnect.ui.screens.friends.FriendsViewModel", ((Provider) friendsViewModelProvider)).put("com.example.snapconnect.ui.screens.home.HomeViewModel", ((Provider) homeViewModelProvider)).put("com.example.snapconnect.ui.screens.messages.MessagesViewModel", ((Provider) messagesViewModelProvider)).put("com.example.snapconnect.ui.screens.profile.ProfileViewModel", ((Provider) profileViewModelProvider)).put("com.example.snapconnect.ui.screens.camera.StoryPostViewModel", ((Provider) storyPostViewModelProvider)).put("com.example.snapconnect.ui.screens.story.StoryViewViewModel", ((Provider) storyViewViewModelProvider)).build();
+      return ImmutableMap.<String, Provider<ViewModel>>builderWithExpectedSize(8).put("com.example.snapconnect.ui.screens.auth.AuthViewModel", ((Provider) authViewModelProvider)).put("com.example.snapconnect.ui.screens.chat.ChatViewModel", ((Provider) chatViewModelProvider)).put("com.example.snapconnect.ui.screens.friends.FriendsViewModel", ((Provider) friendsViewModelProvider)).put("com.example.snapconnect.ui.screens.home.HomeViewModel", ((Provider) homeViewModelProvider)).put("com.example.snapconnect.ui.screens.messages.MessagesViewModel", ((Provider) messagesViewModelProvider)).put("com.example.snapconnect.ui.screens.profile.ProfileViewModel", ((Provider) profileViewModelProvider)).put("com.example.snapconnect.ui.screens.camera.StoryPostViewModel", ((Provider) storyPostViewModelProvider)).put("com.example.snapconnect.ui.screens.story.StoryViewViewModel", ((Provider) storyViewViewModelProvider)).build();
     }
 
     private static final class SwitchingProvider<T> implements Provider<T> {
@@ -634,12 +633,12 @@ public final class DaggerSnapConnectApplication_HiltComponents_SingletonC {
     }
 
     @Override
-    public void injectSnapConnectApplication(SnapConnectApplication snapConnectApplication) {
+    public void injectSnapConnectApplication(SnapConnectApplication arg0) {
     }
 
     @Override
     public Set<Boolean> getDisableFragmentGetContextFix() {
-      return Collections.<Boolean>emptySet();
+      return ImmutableSet.<Boolean>of();
     }
 
     @Override
