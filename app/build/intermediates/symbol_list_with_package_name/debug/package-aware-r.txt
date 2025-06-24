@@ -3141,6 +3141,7 @@ drawable exo_styled_controls_speed
 drawable exo_styled_controls_subtitle_off
 drawable exo_styled_controls_subtitle_on
 drawable exo_styled_controls_vr
+drawable frame
 drawable gauntlet_liquid_glass
 drawable googleg_disabled_color_18
 drawable googleg_standard_color_18

@@ -54,6 +54,19 @@ fun FilterOverlayView(
     }
     
     Canvas(modifier = modifier.fillMaxSize()) {
+        // First, draw any full-screen overlays
+        selectedFilter.overlays
+            .filter { it.landmark == FaceLandmarkType.FULL_SCREEN }
+            .forEach { overlay ->
+                val overlayImage = overlayImages[overlay] ?: return@forEach
+                drawFullScreenOverlay(
+                    overlayImage = overlayImage,
+                    viewSize = viewSize,
+                    overlay = overlay
+                )
+            }
+        
+        // Then draw face-based overlays
         faces.forEach { face ->
             drawFaceOverlays(
                 face = face,
@@ -64,6 +77,34 @@ fun FilterOverlayView(
                 isFrontCamera = isFrontCamera
             )
         }
+    }
+}
+
+private fun DrawScope.drawFullScreenOverlay(
+    overlayImage: ImageBitmap,
+    viewSize: Size,
+    overlay: FilterOverlay
+) {
+    // Scale based on height to maintain full height coverage
+    val scaleY = viewSize.height / overlayImage.height
+    
+    // Apply width ratio to compress horizontally while keeping full height
+    val scaledWidth = overlayImage.width * scaleY * overlay.widthRatio
+    val scaledHeight = overlayImage.height * scaleY
+    
+    // Center and apply offsets
+    val offsetX = ((viewSize.width - scaledWidth) / 2f) + overlay.offsetX
+    val offsetY = ((viewSize.height - scaledHeight) / 2f) + overlay.offsetY
+    
+    // Draw the overlay
+    translate(offsetX, offsetY) {
+        drawImage(
+            image = overlayImage,
+            dstSize = androidx.compose.ui.unit.IntSize(
+                scaledWidth.toInt(),
+                scaledHeight.toInt()
+            )
+        )
     }
 }
 
@@ -85,6 +126,9 @@ private fun DrawScope.drawFaceOverlays(
 
     
     filter.overlays.forEach { overlay ->
+        // Skip full-screen overlays as they're handled separately
+        if (overlay.landmark == FaceLandmarkType.FULL_SCREEN) return@forEach
+        
         val overlayImage = overlayImages[overlay] ?: return@forEach
         
         // Get landmark position

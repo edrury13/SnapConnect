@@ -26,5 +26,6 @@ enum class FaceLandmarkType {
     LEFT_EAR,
     RIGHT_EAR,
     FOREHEAD,
-    BETWEEN_EYES
+    BETWEEN_EYES,
+    FULL_SCREEN  // For overlays that cover the entire image
 } 

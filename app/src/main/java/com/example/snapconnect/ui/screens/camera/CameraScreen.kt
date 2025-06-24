@@ -42,11 +42,12 @@ import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
-import com.example.snapconnect.data.model.ARFilter
 import com.example.snapconnect.data.repository.FiltersRepository
+import com.example.snapconnect.data.model.ARFilter
 import com.example.snapconnect.navigation.Screen
 import com.example.snapconnect.ui.components.FilterOverlayView
 import com.example.snapconnect.ui.theme.SnapBlue
+import com.example.snapconnect.ui.theme.SnapYellow
 import com.example.snapconnect.utils.FilterProcessor
 import com.google.accompanist.permissions.*
 import com.google.mlkit.vision.face.Face
@@ -100,6 +101,14 @@ fun CameraScreen(
     var detectedFaces by remember { mutableStateOf<List<Face>>(emptyList()) }
     var selectedFilter by remember { mutableStateOf<ARFilter?>(null) }
     val availableFilters = viewModel.availableFilters
+    
+    // Set the default filter to "No Filter" (first in the list)
+    LaunchedEffect(availableFilters) {
+        if (selectedFilter == null && availableFilters.isNotEmpty()) {
+            selectedFilter = availableFilters.first()
+        }
+    }
+    
     var viewSize by remember { mutableStateOf(Size.Zero) }
     var imageSize by remember { mutableStateOf(Size(1920f, 1080f)) } // Default to 1080p
     var imageRotation by remember { mutableStateOf(0) }
@@ -254,13 +263,13 @@ fun CameraScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    contentPadding = PaddingValues(horizontal = 16.dp)
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     items(availableFilters) { filter ->
                         FilterChip(
                             onClick = { 
-                                selectedFilter = if (selectedFilter?.id == filter.id) null else filter
+                                selectedFilter = filter
                             },
                             label = {
                                 Text(
@@ -270,7 +279,9 @@ fun CameraScreen(
                                 )
                             },
                             selected = selectedFilter?.id == filter.id,
-                            modifier = Modifier.width(80.dp),
+                            modifier = Modifier
+                                .width(80.dp)
+                                .padding(horizontal = 4.dp),
                             shape = RoundedCornerShape(16.dp),
                             colors = FilterChipDefaults.filterChipColors(
                                 selectedContainerColor = SnapBlue,
@@ -336,7 +347,15 @@ fun CameraScreen(
                                     scope = scope,
                                     onPhotoCaptured = { uri ->
                                         val encodedUri = URLEncoder.encode(uri.toString(), StandardCharsets.UTF_8.toString())
-                                        navController.navigate(Screen.MediaPreview.createRoute(encodedUri, false, groupId))
+                                        val filterId = selectedFilter?.id
+                                        navController.navigate(
+                                            Screen.MediaPreview.createRoute(
+                                                mediaUri = encodedUri,
+                                                isVideo = false,
+                                                groupId = groupId,
+                                                filterId = filterId
+                                            )
+                                        )
                                     },
                                     onError = { exception ->
                                         Toast.makeText(context, "Capture failed: ${exception.message}", Toast.LENGTH_SHORT).show()
@@ -351,9 +370,18 @@ fun CameraScreen(
                                             context = context,
                                             videoCapture = videoCapture,
                                             executor = executor,
+                                            selectedFilter = selectedFilter,
                                             onVideoSaved = { uri ->
                                                 val encodedUri = URLEncoder.encode(uri.toString(), StandardCharsets.UTF_8.toString())
-                                                navController.navigate(Screen.MediaPreview.createRoute(encodedUri, true, groupId))
+                                                val filterId = selectedFilter?.id
+                                                navController.navigate(
+                                                    Screen.MediaPreview.createRoute(
+                                                        mediaUri = encodedUri,
+                                                        isVideo = true,
+                                                        groupId = groupId,
+                                                        filterId = filterId
+                                                    )
+                                                )
                                             },
                                             onError = { recordEvent ->
                                                 Toast.makeText(context, "Recording failed", Toast.LENGTH_SHORT).show()
@@ -696,6 +724,7 @@ private fun startVideoRecording(
     context: Context,
     videoCapture: VideoCapture<Recorder>?,
     executor: Executor,
+    selectedFilter: ARFilter?,
     onVideoSaved: (Uri) -> Unit,
     onError: (VideoRecordEvent) -> Unit
 ): Recording? {

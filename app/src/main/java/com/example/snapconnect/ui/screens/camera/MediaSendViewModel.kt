@@ -74,7 +74,7 @@ class MediaSendViewModel @Inject constructor(
         )
     }
     
-    fun sendToSelectedFriends(mediaUri: Uri, isVideo: Boolean, caption: String?) {
+    fun sendToSelectedFriends(mediaUri: Uri, isVideo: Boolean, caption: String?, filterId: String? = null) {
         viewModelScope.launch {
             val selectedFriends = _uiState.value.selectedFriends
             if (selectedFriends.isEmpty()) return@launch

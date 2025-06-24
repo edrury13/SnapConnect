@@ -3,6 +3,7 @@ package com.example.snapconnect.ui.screens.camera
 import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -33,6 +34,11 @@ import com.example.snapconnect.ui.theme.SnapYellow
 import com.example.snapconnect.ui.components.VideoPlayer
 import com.example.snapconnect.data.model.User
 import com.example.snapconnect.data.repository.FriendRepository
+import com.example.snapconnect.data.repository.FiltersRepository
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.res.imageResource
+import com.example.snapconnect.R
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -44,6 +50,7 @@ fun MediaPreviewScreen(
     mediaUri: String,
     isVideo: Boolean = false,
     groupId: String? = null,
+    filterId: String? = null,
     viewModel: StoryPostViewModel = hiltViewModel(),
     sendViewModel: MediaSendViewModel = hiltViewModel()
 ) {
@@ -55,14 +62,25 @@ fun MediaPreviewScreen(
     val sendUiState by sendViewModel.uiState.collectAsState()
     val scope = rememberCoroutineScope()
     
+    // Get the frame overlay if filterId is "frame"
+    val frameOverlay = remember(filterId) {
+        if (filterId == "frame" && isVideo) {
+            try {
+                ImageBitmap.imageResource(context.resources, R.drawable.frame)
+            } catch (e: Exception) {
+                null
+            }
+        } else null
+    }
+    
     // If we have a groupId, we're sending to a specific chat
-    val isChatMode = groupId != null
+    val isChatMode = !groupId.isNullOrEmpty()
     
     // Handle navigation when story is posted successfully
     LaunchedEffect(uiState.isSuccess) {
         if (uiState.isSuccess) {
-            if (isChatMode) {
-                navController.navigate(Screen.Chat.createRoute(groupId!!)) {
+            if (isChatMode && !groupId.isNullOrEmpty()) {
+                navController.navigate(Screen.Chat.createRoute(groupId)) {
                     popUpTo(Screen.Camera.route) { inclusive = true }
                 }
             } else {
@@ -76,12 +94,29 @@ fun MediaPreviewScreen(
     Box(modifier = Modifier.fillMaxSize()) {
         // Media preview
         if (isVideo) {
-            VideoPlayer(
-                videoUrl = uri.toString(),
-                modifier = Modifier.fillMaxSize(),
-                shouldPlay = true,
-                shouldLoop = true
-            )
+            Box(modifier = Modifier.fillMaxSize()) {
+                VideoPlayer(
+                    videoUrl = uri.toString(),
+                    modifier = Modifier.fillMaxSize(),
+                    shouldPlay = true,
+                    shouldLoop = true
+                )
+                
+                // Frame overlay for videos
+                frameOverlay?.let { frame ->
+                    Canvas(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        drawImage(
+                            image = frame,
+                            dstSize = androidx.compose.ui.unit.IntSize(
+                                size.width.toInt(),
+                                size.height.toInt()
+                            )
+                        )
+                    }
+                }
+            }
         } else {
             AsyncImage(
                 model = ImageRequest.Builder(context)
@@ -227,11 +262,11 @@ fun MediaPreviewScreen(
             Spacer(modifier = Modifier.height(16.dp))
             
             // Send options
-            if (isChatMode) {
+            if (isChatMode && !groupId.isNullOrEmpty()) {
                 // In chat mode, show only send button
                 Button(
                     onClick = {
-                        viewModel.sendToChat(uri, isVideo, caption, groupId!!)
+                        viewModel.sendToChat(uri, isVideo, caption, groupId, filterId)
                     },
                     modifier = Modifier.fillMaxWidth(),
                     enabled = !uiState.isLoading,
@@ -275,7 +310,7 @@ fun MediaPreviewScreen(
                         icon = Icons.Default.AddCircle,
                         label = "My Story",
                         onClick = { 
-                            viewModel.postStory(uri, isVideo, caption)
+                            viewModel.postStory(uri, isVideo, caption, filterId)
                         },
                         enabled = !uiState.isLoading
                     )
@@ -315,7 +350,7 @@ fun MediaPreviewScreen(
                     uiState = sendUiState,
                     onToggleFriend = sendViewModel::toggleFriendSelection,
                     onSend = {
-                        sendViewModel.sendToSelectedFriends(uri, isVideo, caption)
+                        sendViewModel.sendToSelectedFriends(uri, isVideo, caption, filterId)
                         showSendOptions = false
                     },
                     onCancel = { showSendOptions = false }

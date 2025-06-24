@@ -33,10 +33,20 @@ sealed class Screen(val route: String) {
     object StoryView : Screen("story/{storyId}") {
         fun createRoute(storyId: String) = "story/$storyId"
     }
-    object MediaPreview : Screen("media_preview/{mediaUri}/{isVideo}?groupId={groupId}") {
-        fun createRoute(mediaUri: String, isVideo: Boolean, groupId: String? = null) = 
-            if (groupId != null) "media_preview/$mediaUri/$isVideo?groupId=$groupId" 
-            else "media_preview/$mediaUri/$isVideo"
+    object MediaPreview : Screen("media_preview/{mediaUri}/{isVideo}?groupId={groupId}&filterId={filterId}") {
+        fun createRoute(mediaUri: String, isVideo: Boolean, groupId: String? = null, filterId: String? = null): String {
+            val baseRoute = "media_preview/$mediaUri/$isVideo"
+            val params = mutableListOf<String>()
+            
+            groupId?.let { if (it.isNotEmpty()) params.add("groupId=$it") }
+            filterId?.let { if (it.isNotEmpty()) params.add("filterId=$it") }
+            
+            return if (params.isNotEmpty()) {
+                "$baseRoute?${params.joinToString("&")}"
+            } else {
+                baseRoute
+            }
+        }
     }
     object Chat : Screen("chat/{groupId}") {
         fun createRoute(groupId: String) = "chat/$groupId"
@@ -114,17 +124,24 @@ fun SnapConnectNavigation(
                     type = NavType.StringType
                     nullable = true
                     defaultValue = null
+                },
+                navArgument("filterId") { 
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
                 }
             )
         ) { backStackEntry ->
             val mediaUri = backStackEntry.arguments?.getString("mediaUri") ?: ""
             val isVideo = backStackEntry.arguments?.getBoolean("isVideo") ?: false
             val groupId = backStackEntry.arguments?.getString("groupId")
+            val filterId = backStackEntry.arguments?.getString("filterId")
             MediaPreviewScreen(
                 navController = navController,
                 mediaUri = mediaUri,
                 isVideo = isVideo,
-                groupId = groupId
+                groupId = groupId,
+                filterId = filterId
             )
         }
         

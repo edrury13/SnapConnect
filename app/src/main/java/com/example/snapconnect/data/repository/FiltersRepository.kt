@@ -32,46 +32,16 @@ class FiltersRepository @Inject constructor() {
             )
         ),
         ARFilter(
-            id = "cat",
-            name = "Cat Face",
-            iconRes = R.drawable.ic_launcher,  // Will be replaced with cat icon
+            id = "frame",
+            name = "Frame",
+            iconRes = R.drawable.frame,
             overlays = listOf(
                 FilterOverlay(
-                    imageRes = R.drawable.ic_launcher, // Will be replaced with cat_ears.png
-                    landmark = FaceLandmarkType.FOREHEAD,
-                    widthRatio = 1.3f,
-                    offsetY = -50f
-                ),
-                FilterOverlay(
-                    imageRes = R.drawable.ic_launcher, // Will be replaced with cat_nose.png
-                    landmark = FaceLandmarkType.NOSE_BASE,
-                    widthRatio = 0.3f,
-                    offsetY = -10f
-                ),
-                FilterOverlay(
-                    imageRes = R.drawable.ic_launcher, // Will be replaced with cat_whiskers.png
-                    landmark = FaceLandmarkType.NOSE_BASE,
-                    widthRatio = 1.0f,
-                    offsetY = 0f
-                )
-            )
-        ),
-        ARFilter(
-            id = "party",
-            name = "Party Time",
-            iconRes = R.drawable.ic_launcher,  // Will be replaced with party icon
-            overlays = listOf(
-                FilterOverlay(
-                    imageRes = R.drawable.ic_launcher, // Will be replaced with party_hat.png
-                    landmark = FaceLandmarkType.FOREHEAD,
-                    widthRatio = 1.0f,
-                    offsetY = -80f
-                ),
-                FilterOverlay(
-                    imageRes = R.drawable.ic_launcher, // Will be replaced with party_glasses.png
-                    landmark = FaceLandmarkType.BETWEEN_EYES,
-                    widthRatio = 0.9f,
-                    offsetY = -20f
+                    imageRes = R.drawable.frame,
+                    landmark = FaceLandmarkType.FULL_SCREEN,
+                    widthRatio = 0.5f,  // 50% of image width for a skinnier frame
+                    offsetX = 0f,  // Adjust this to move frame left/right
+                    offsetY = 0f   // Adjust this to move frame up/down
                 )
             )
         )

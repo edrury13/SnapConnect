@@ -32,7 +32,7 @@ class StoryPostViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(StoryPostUiState())
     val uiState: StateFlow<StoryPostUiState> = _uiState.asStateFlow()
     
-    fun postStory(mediaUri: Uri, isVideo: Boolean, caption: String?) {
+    fun postStory(mediaUri: Uri, isVideo: Boolean, caption: String?, filterId: String? = null) {
         viewModelScope.launch {
             _uiState.value = StoryPostUiState(isLoading = true)
             
@@ -68,7 +68,7 @@ class StoryPostViewModel @Inject constructor(
         }
     }
     
-    fun sendToChat(mediaUri: Uri, isVideo: Boolean, caption: String?, groupId: String) {
+    fun sendToChat(mediaUri: Uri, isVideo: Boolean, caption: String?, groupId: String, filterId: String? = null) {
         viewModelScope.launch {
             _uiState.value = StoryPostUiState(isLoading = true)
             

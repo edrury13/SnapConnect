@@ -16,6 +16,7 @@ color snap_yellow_dark
 color teal_200
 color teal_700
 color white
+drawable frame
 drawable gauntlet_liquid_glass
 drawable ic_launcher
 drawable sunglasses

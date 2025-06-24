@@ -5,6 +5,7 @@ import android.graphics.*
 import androidx.core.graphics.scale
 import com.example.snapconnect.data.model.ARFilter
 import com.example.snapconnect.data.model.FaceLandmarkType
+import com.example.snapconnect.data.model.FilterOverlay
 import com.google.mlkit.vision.face.Face
 import com.google.mlkit.vision.face.FaceLandmark
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -27,12 +28,63 @@ class FilterProcessor @Inject constructor(
         val resultBitmap = originalBitmap.copy(Bitmap.Config.ARGB_8888, true)
         val canvas = Canvas(resultBitmap)
         
-        // Apply filter to each detected face
+        // First, apply full-screen overlays
+        filter.overlays
+            .filter { it.landmark == FaceLandmarkType.FULL_SCREEN }
+            .forEach { overlay ->
+                applyFullScreenOverlay(canvas, overlay, resultBitmap.width, resultBitmap.height)
+            }
+        
+        // Then apply filter to each detected face
         faces.forEach { face ->
             applyFilterToFace(canvas, face, filter, isFrontCamera, resultBitmap.width, resultBitmap.height)
         }
         
         return resultBitmap
+    }
+    
+    private fun applyFullScreenOverlay(
+        canvas: Canvas,
+        overlay: FilterOverlay,
+        imageWidth: Int,
+        imageHeight: Int
+    ) {
+        val paint = Paint().apply {
+            isAntiAlias = true
+            isFilterBitmap = true
+        }
+        
+        try {
+            // Get the overlay bitmap
+            val overlayBitmap = BitmapFactory.decodeResource(
+                context.resources,
+                overlay.imageRes
+            ) ?: return
+            
+            // Scale based on height to maintain full height coverage
+            val scaleY = imageHeight.toFloat() / overlayBitmap.height
+            
+            // Apply width ratio to compress horizontally while keeping full height
+            val scaledWidth = (overlayBitmap.width * scaleY * overlay.widthRatio).toInt()
+            val scaledHeight = (overlayBitmap.height * scaleY).toInt()
+            
+            // Scale the overlay bitmap
+            val scaledBitmap = overlayBitmap.scale(scaledWidth, scaledHeight)
+            
+            // Center the frame on the image and apply offsets
+            val offsetX = ((imageWidth - scaledWidth) / 2f) + overlay.offsetX
+            val offsetY = ((imageHeight - scaledHeight) / 2f) + overlay.offsetY
+            
+            // Draw the overlay
+            canvas.drawBitmap(scaledBitmap, offsetX, offsetY, paint)
+            
+            // Clean up
+            if (scaledBitmap != overlayBitmap) {
+                scaledBitmap.recycle()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
     
     private fun applyFilterToFace(
@@ -49,6 +101,9 @@ class FilterProcessor @Inject constructor(
         }
         
         filter.overlays.forEach { overlay ->
+            // Skip full-screen overlays as they're handled separately
+            if (overlay.landmark == FaceLandmarkType.FULL_SCREEN) return@forEach
+            
             try {
                 // Get the overlay bitmap
                 val overlayBitmap = BitmapFactory.decodeResource(

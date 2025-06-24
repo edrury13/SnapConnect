@@ -1,6 +1,7 @@
 package com.example.snapconnect.ui.screens.chat
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -230,6 +231,8 @@ fun MessageItem(
     isCurrentUser: Boolean,
     showAvatar: Boolean
 ) {
+    var showVideoPlayer by remember { mutableStateOf(false) }
+    
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -279,22 +282,75 @@ fun MessageItem(
                         ) {
                             when (message.mediaType) {
                                 MediaType.VIDEO -> {
-                                    // Show video thumbnail with play button overlay
-                                    Box {
-                                        AsyncImage(
-                                            model = mediaUrl,
-                                            contentDescription = "Video message",
-                                            modifier = Modifier.fillMaxWidth(),
-                                            contentScale = ContentScale.Crop
-                                        )
-                                        Icon(
-                                            imageVector = Icons.Default.PlayCircleOutline,
-                                            contentDescription = "Play video",
+                                    if (showVideoPlayer) {
+                                        Box(
                                             modifier = Modifier
-                                                .size(48.dp)
-                                                .align(Alignment.Center),
-                                            tint = Color.White.copy(alpha = 0.9f)
-                                        )
+                                                .fillMaxWidth()
+                                                .heightIn(min = 200.dp, max = 300.dp)
+                                        ) {
+                                            VideoPlayer(
+                                                videoUrl = mediaUrl,
+                                                modifier = Modifier.fillMaxSize(),
+                                                shouldPlay = true,
+                                                shouldLoop = true
+                                            )
+                                            // Close button
+                                            IconButton(
+                                                onClick = { showVideoPlayer = false },
+                                                modifier = Modifier
+                                                    .align(Alignment.TopEnd)
+                                                    .padding(4.dp)
+                                                    .size(32.dp)
+                                                    .background(
+                                                        Color.Black.copy(alpha = 0.5f),
+                                                        CircleShape
+                                                    )
+                                            ) {
+                                                Icon(
+                                                    imageVector = Icons.Default.Close,
+                                                    contentDescription = "Close video",
+                                                    tint = Color.White,
+                                                    modifier = Modifier.size(20.dp)
+                                                )
+                                            }
+                                        }
+                                    } else {
+                                        // Show video thumbnail with play button overlay
+                                        Box(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .heightIn(min = 150.dp, max = 300.dp)
+                                                .background(Color.Black)
+                                                .clickable { showVideoPlayer = true }
+                                        ) {
+                                            // Video placeholder
+                                            Icon(
+                                                imageVector = Icons.Default.Videocam,
+                                                contentDescription = "Video",
+                                                modifier = Modifier
+                                                    .size(64.dp)
+                                                    .align(Alignment.Center),
+                                                tint = Color.White.copy(alpha = 0.3f)
+                                            )
+                                            
+                                            // Play button
+                                            Surface(
+                                                modifier = Modifier
+                                                    .size(48.dp)
+                                                    .align(Alignment.Center),
+                                                shape = CircleShape,
+                                                color = Color.White.copy(alpha = 0.9f)
+                                            ) {
+                                                Icon(
+                                                    imageVector = Icons.Default.PlayArrow,
+                                                    contentDescription = "Play video",
+                                                    modifier = Modifier
+                                                        .fillMaxSize()
+                                                        .padding(8.dp),
+                                                    tint = Color.Black
+                                                )
+                                            }
+                                        }
                                     }
                                 }
                                 MediaType.IMAGE -> {
