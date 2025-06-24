@@ -7,6 +7,7 @@ import com.example.snapconnect.data.model.MediaType
 import com.example.snapconnect.data.repository.AuthRepository
 import com.example.snapconnect.data.repository.StorageRepository
 import com.example.snapconnect.data.repository.StoryRepository
+import com.example.snapconnect.data.repository.MessagesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,7 +25,8 @@ data class StoryPostUiState(
 class StoryPostViewModel @Inject constructor(
     private val storyRepository: StoryRepository,
     private val storageRepository: StorageRepository,
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val messagesRepository: MessagesRepository
 ) : ViewModel() {
     
     private val _uiState = MutableStateFlow(StoryPostUiState())
@@ -55,6 +57,43 @@ class StoryPostViewModel @Inject constructor(
                         .onFailure { error ->
                             _uiState.value = StoryPostUiState(
                                 errorMessage = error.message ?: "Failed to post story"
+                            )
+                        }
+                }
+                .onFailure { error ->
+                    _uiState.value = StoryPostUiState(
+                        errorMessage = error.message ?: "Failed to upload media"
+                    )
+                }
+        }
+    }
+    
+    fun sendToChat(mediaUri: Uri, isVideo: Boolean, caption: String?, groupId: String) {
+        viewModelScope.launch {
+            _uiState.value = StoryPostUiState(isLoading = true)
+            
+            val userId = authRepository.getCurrentUser()?.id
+            if (userId == null) {
+                _uiState.value = StoryPostUiState(errorMessage = "User not authenticated")
+                return@launch
+            }
+            
+            // Upload media to storage
+            storageRepository.uploadStoryMedia(mediaUri, userId, isVideo)
+                .onSuccess { mediaUrl ->
+                    // Send as message
+                    messagesRepository.sendMessage(
+                        groupId = groupId,
+                        content = caption ?: "",
+                        mediaUrl = mediaUrl,
+                        mediaType = if (isVideo) MediaType.VIDEO else MediaType.IMAGE
+                    )
+                        .onSuccess {
+                            _uiState.value = StoryPostUiState(isSuccess = true)
+                        }
+                        .onFailure { error ->
+                            _uiState.value = StoryPostUiState(
+                                errorMessage = error.message ?: "Failed to send message"
                             )
                         }
                 }

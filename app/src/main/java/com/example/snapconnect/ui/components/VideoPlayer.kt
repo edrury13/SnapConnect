@@ -23,6 +23,7 @@ fun VideoPlayer(
     videoUrl: String,
     modifier: Modifier = Modifier,
     shouldPlay: Boolean = true,
+    shouldLoop: Boolean = false,
     onVideoEnd: () -> Unit = {}
 ) {
     val context = LocalContext.current
@@ -35,11 +36,11 @@ fun VideoPlayer(
                 setMediaItem(MediaItem.fromUri(videoUrl))
                 prepare()
                 playWhenReady = shouldPlay
-                repeatMode = Player.REPEAT_MODE_OFF
+                repeatMode = if (shouldLoop) Player.REPEAT_MODE_ONE else Player.REPEAT_MODE_OFF
                 
                 addListener(object : Player.Listener {
                     override fun onPlaybackStateChanged(playbackState: Int) {
-                        if (playbackState == Player.STATE_ENDED) {
+                        if (playbackState == Player.STATE_ENDED && !shouldLoop) {
                             onVideoEnd()
                         }
                     }
@@ -47,10 +48,11 @@ fun VideoPlayer(
             }
     }
     
-    DisposableEffect(videoUrl) {
+    DisposableEffect(videoUrl, shouldLoop) {
         exoPlayer.setMediaItem(MediaItem.fromUri(videoUrl))
         exoPlayer.prepare()
         exoPlayer.playWhenReady = shouldPlay
+        exoPlayer.repeatMode = if (shouldLoop) Player.REPEAT_MODE_ONE else Player.REPEAT_MODE_OFF
         
         onDispose { }
     }

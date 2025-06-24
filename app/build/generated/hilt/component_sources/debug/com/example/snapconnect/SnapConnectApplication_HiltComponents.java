@@ -2,6 +2,7 @@ package com.example.snapconnect;
 
 import com.example.snapconnect.di.AppModule;
 import com.example.snapconnect.ui.screens.auth.AuthViewModel_HiltModules;
+import com.example.snapconnect.ui.screens.camera.MediaSendViewModel_HiltModules;
 import com.example.snapconnect.ui.screens.camera.StoryPostViewModel_HiltModules;
 import com.example.snapconnect.ui.screens.chat.ChatViewModel_HiltModules;
 import com.example.snapconnect.ui.screens.friends.FriendsViewModel_HiltModules;
@@ -164,6 +165,7 @@ public final class SnapConnectApplication_HiltComponents {
           FriendsViewModel_HiltModules.KeyModule.class,
           HiltWrapper_ActivityRetainedComponentManager_LifecycleModule.class,
           HomeViewModel_HiltModules.KeyModule.class,
+          MediaSendViewModel_HiltModules.KeyModule.class,
           MessagesViewModel_HiltModules.KeyModule.class,
           ProfileViewModel_HiltModules.KeyModule.class,
           ActivityCBuilderModule.class,
@@ -210,6 +212,7 @@ public final class SnapConnectApplication_HiltComponents {
           FriendsViewModel_HiltModules.BindsModule.class,
           HiltWrapper_HiltViewModelFactory_ViewModelModule.class,
           HomeViewModel_HiltModules.BindsModule.class,
+          MediaSendViewModel_HiltModules.BindsModule.class,
           MessagesViewModel_HiltModules.BindsModule.class,
           ProfileViewModel_HiltModules.BindsModule.class,
           StoryPostViewModel_HiltModules.BindsModule.class,

@@ -22,15 +22,20 @@ sealed class Screen(val route: String) {
     object Login : Screen("login")
     object SignUp : Screen("signup")
     object Home : Screen("home")
-    object Camera : Screen("camera")
+    object Camera : Screen("camera?groupId={groupId}") {
+        fun createRoute(groupId: String? = null) = 
+            if (groupId != null) "camera?groupId=$groupId" else "camera"
+    }
     object Friends : Screen("friends")
     object Messages : Screen("messages")
     object Profile : Screen("profile")
     object StoryView : Screen("story/{storyId}") {
         fun createRoute(storyId: String) = "story/$storyId"
     }
-    object MediaPreview : Screen("media_preview/{mediaUri}/{isVideo}") {
-        fun createRoute(mediaUri: String, isVideo: Boolean) = "media_preview/$mediaUri/$isVideo"
+    object MediaPreview : Screen("media_preview/{mediaUri}/{isVideo}?groupId={groupId}") {
+        fun createRoute(mediaUri: String, isVideo: Boolean, groupId: String? = null) = 
+            if (groupId != null) "media_preview/$mediaUri/$isVideo?groupId=$groupId" 
+            else "media_preview/$mediaUri/$isVideo"
     }
     object Chat : Screen("chat/{groupId}") {
         fun createRoute(groupId: String) = "chat/$groupId"
@@ -58,8 +63,21 @@ fun SnapConnectNavigation(
             HomeScreen(navController = navController)
         }
         
-        composable(Screen.Camera.route) {
-            CameraScreen(navController = navController)
+        composable(
+            route = Screen.Camera.route,
+            arguments = listOf(
+                navArgument("groupId") { 
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
+                }
+            )
+        ) { backStackEntry ->
+            val groupId = backStackEntry.arguments?.getString("groupId")
+            CameraScreen(
+                navController = navController,
+                groupId = groupId
+            )
         }
         
         composable(Screen.Friends.route) {
@@ -85,15 +103,22 @@ fun SnapConnectNavigation(
             route = Screen.MediaPreview.route,
             arguments = listOf(
                 navArgument("mediaUri") { type = NavType.StringType },
-                navArgument("isVideo") { type = NavType.BoolType }
+                navArgument("isVideo") { type = NavType.BoolType },
+                navArgument("groupId") { 
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
+                }
             )
         ) { backStackEntry ->
             val mediaUri = backStackEntry.arguments?.getString("mediaUri") ?: ""
             val isVideo = backStackEntry.arguments?.getBoolean("isVideo") ?: false
+            val groupId = backStackEntry.arguments?.getString("groupId")
             MediaPreviewScreen(
                 navController = navController,
                 mediaUri = mediaUri,
-                isVideo = isVideo
+                isVideo = isVideo,
+                groupId = groupId
             )
         }
         
@@ -101,7 +126,11 @@ fun SnapConnectNavigation(
             route = Screen.Chat.route,
             arguments = listOf(navArgument("groupId") { type = NavType.StringType })
         ) { backStackEntry ->
-            ChatScreen(navController = navController)
+            val groupId = backStackEntry.arguments?.getString("groupId") ?: ""
+            ChatScreen(
+                navController = navController,
+                groupId = groupId
+            )
         }
     }
 } 

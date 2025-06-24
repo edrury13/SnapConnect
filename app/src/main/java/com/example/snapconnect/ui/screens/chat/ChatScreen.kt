@@ -28,7 +28,10 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.snapconnect.data.model.Message
 import com.example.snapconnect.data.model.User
+import com.example.snapconnect.data.model.MediaType
 import com.example.snapconnect.ui.theme.SnapYellow
+import com.example.snapconnect.navigation.Screen
+import com.example.snapconnect.ui.components.VideoPlayer
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
@@ -40,6 +43,7 @@ import java.util.Locale
 @Composable
 fun ChatScreen(
     navController: NavController,
+    groupId: String,
     viewModel: ChatViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -146,7 +150,9 @@ fun ChatScreen(
                 value = uiState.messageInput,
                 onValueChange = viewModel::updateMessageInput,
                 onSend = viewModel::sendMessage,
-                isSending = uiState.isSending
+                isSending = uiState.isSending,
+                navController = navController,
+                groupId = groupId
             )
         }
     ) { paddingValues ->
@@ -263,27 +269,55 @@ fun MessageItem(
                 Column(
                     modifier = Modifier.padding(12.dp)
                 ) {
+                    // Media content
                     message.mediaUrl?.let { mediaUrl ->
-                        // TODO: Handle media messages
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .heightIn(max = 300.dp)
+                                .clip(RoundedCornerShape(8.dp))
                         ) {
-                            Icon(
-                                imageVector = Icons.Default.Photo,
-                                contentDescription = null,
-                                modifier = Modifier.size(16.dp),
-                                tint = if (isCurrentUser) Color.Black else MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text(
-                                text = if (message.mediaType?.name == "VIDEO") "Video" else "Photo",
-                                color = if (isCurrentUser) Color.Black else MaterialTheme.colorScheme.onSurfaceVariant,
-                                fontSize = 14.sp,
-                                fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
-                            )
+                            when (message.mediaType) {
+                                MediaType.VIDEO -> {
+                                    // Show video thumbnail with play button overlay
+                                    Box {
+                                        AsyncImage(
+                                            model = mediaUrl,
+                                            contentDescription = "Video message",
+                                            modifier = Modifier.fillMaxWidth(),
+                                            contentScale = ContentScale.Crop
+                                        )
+                                        Icon(
+                                            imageVector = Icons.Default.PlayCircleOutline,
+                                            contentDescription = "Play video",
+                                            modifier = Modifier
+                                                .size(48.dp)
+                                                .align(Alignment.Center),
+                                            tint = Color.White.copy(alpha = 0.9f)
+                                        )
+                                    }
+                                }
+                                MediaType.IMAGE -> {
+                                    AsyncImage(
+                                        model = mediaUrl,
+                                        contentDescription = "Image message",
+                                        modifier = Modifier.fillMaxWidth(),
+                                        contentScale = ContentScale.FillWidth
+                                    )
+                                }
+                                null -> {
+                                    // Fallback for unknown media type
+                                    AsyncImage(
+                                        model = mediaUrl,
+                                        contentDescription = "Media message",
+                                        modifier = Modifier.fillMaxWidth(),
+                                        contentScale = ContentScale.FillWidth
+                                    )
+                                }
+                            }
                         }
                         if (message.content.isNotEmpty()) {
-                            Spacer(modifier = Modifier.height(4.dp))
+                            Spacer(modifier = Modifier.height(8.dp))
                         }
                     }
                     
@@ -316,7 +350,9 @@ fun ChatInput(
     value: String,
     onValueChange: (String) -> Unit,
     onSend: () -> Unit,
-    isSending: Boolean
+    isSending: Boolean,
+    navController: NavController,
+    groupId: String
 ) {
     Surface(
         tonalElevation = 3.dp
@@ -349,7 +385,9 @@ fun ChatInput(
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
-                        IconButton(onClick = { /* TODO: Camera */ }) {
+                        IconButton(onClick = { 
+                            navController.navigate(Screen.Camera.createRoute(groupId))
+                        }) {
                             Icon(
                                 imageVector = Icons.Default.CameraAlt,
                                 contentDescription = "Camera",

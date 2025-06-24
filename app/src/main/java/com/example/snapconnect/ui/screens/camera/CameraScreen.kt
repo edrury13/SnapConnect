@@ -40,7 +40,8 @@ import java.util.concurrent.Executor
 @OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun CameraScreen(
-    navController: NavController
+    navController: NavController,
+    groupId: String? = null
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -218,7 +219,7 @@ fun CameraScreen(
                                     executor = executor,
                                     onPhotoCaptured = { uri ->
                                         val encodedUri = URLEncoder.encode(uri.toString(), StandardCharsets.UTF_8.toString())
-                                        navController.navigate(Screen.MediaPreview.createRoute(encodedUri, false))
+                                        navController.navigate(Screen.MediaPreview.createRoute(encodedUri, false, groupId))
                                     },
                                     onError = { exception ->
                                         Toast.makeText(context, "Capture failed: ${exception.message}", Toast.LENGTH_SHORT).show()
@@ -235,7 +236,7 @@ fun CameraScreen(
                                             executor = executor,
                                             onVideoSaved = { uri ->
                                                 val encodedUri = URLEncoder.encode(uri.toString(), StandardCharsets.UTF_8.toString())
-                                                navController.navigate(Screen.MediaPreview.createRoute(encodedUri, true))
+                                                navController.navigate(Screen.MediaPreview.createRoute(encodedUri, true, groupId))
                                             },
                                             onError = { recordEvent ->
                                                 Toast.makeText(context, "Recording failed", Toast.LENGTH_SHORT).show()

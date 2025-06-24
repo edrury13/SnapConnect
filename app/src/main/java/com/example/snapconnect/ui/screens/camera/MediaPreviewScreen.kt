@@ -2,7 +2,10 @@ package com.example.snapconnect.ui.screens.camera
 
 import android.net.Uri
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -28,6 +31,10 @@ import coil.request.ImageRequest
 import com.example.snapconnect.navigation.Screen
 import com.example.snapconnect.ui.theme.SnapYellow
 import com.example.snapconnect.ui.components.VideoPlayer
+import com.example.snapconnect.data.model.User
+import com.example.snapconnect.data.repository.FriendRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -36,20 +43,32 @@ fun MediaPreviewScreen(
     navController: NavController,
     mediaUri: String,
     isVideo: Boolean = false,
-    viewModel: StoryPostViewModel = hiltViewModel()
+    groupId: String? = null,
+    viewModel: StoryPostViewModel = hiltViewModel(),
+    sendViewModel: MediaSendViewModel = hiltViewModel()
 ) {
     var caption by remember { mutableStateOf("") }
     var showSendOptions by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val uri = remember { Uri.parse(mediaUri) }
     val uiState by viewModel.uiState.collectAsState()
+    val sendUiState by sendViewModel.uiState.collectAsState()
     val scope = rememberCoroutineScope()
+    
+    // If we have a groupId, we're sending to a specific chat
+    val isChatMode = groupId != null
     
     // Handle navigation when story is posted successfully
     LaunchedEffect(uiState.isSuccess) {
         if (uiState.isSuccess) {
-            navController.navigate(Screen.Home.route) {
-                popUpTo(Screen.Camera.route) { inclusive = true }
+            if (isChatMode) {
+                navController.navigate(Screen.Chat.createRoute(groupId!!)) {
+                    popUpTo(Screen.Camera.route) { inclusive = true }
+                }
+            } else {
+                navController.navigate(Screen.Home.route) {
+                    popUpTo(Screen.Camera.route) { inclusive = true }
+                }
             }
         }
     }
@@ -60,7 +79,8 @@ fun MediaPreviewScreen(
             VideoPlayer(
                 videoUrl = uri.toString(),
                 modifier = Modifier.fillMaxSize(),
-                shouldPlay = true
+                shouldPlay = true,
+                shouldLoop = true
             )
         } else {
             AsyncImage(
@@ -207,35 +227,67 @@ fun MediaPreviewScreen(
             Spacer(modifier = Modifier.height(16.dp))
             
             // Send options
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                // Send to friends
-                SendOptionButton(
-                    icon = Icons.Default.Send,
-                    label = "Send to",
-                    onClick = { showSendOptions = true },
-                    enabled = !uiState.isLoading
-                )
-                
-                // Add to story
-                SendOptionButton(
-                    icon = Icons.Default.AddCircle,
-                    label = "My Story",
-                    onClick = { 
-                        viewModel.postStory(uri, isVideo, caption)
+            if (isChatMode) {
+                // In chat mode, show only send button
+                Button(
+                    onClick = {
+                        viewModel.sendToChat(uri, isVideo, caption, groupId!!)
                     },
-                    enabled = !uiState.isLoading
-                )
-                
-                // Save to memories (future feature)
-                SendOptionButton(
-                    icon = Icons.Default.BookmarkBorder,
-                    label = "Memories",
-                    onClick = { /* TODO: Save to memories */ },
-                    enabled = !uiState.isLoading
-                )
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = !uiState.isLoading,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = SnapYellow,
+                        contentColor = Color.Black
+                    )
+                ) {
+                    if (uiState.isLoading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(20.dp),
+                            color = Color.Black,
+                            strokeWidth = 2.dp
+                        )
+                    } else {
+                        Icon(
+                            imageVector = Icons.Default.Send,
+                            contentDescription = "Send",
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Send")
+                    }
+                }
+            } else {
+                // Normal mode - show all options
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    // Send to friends
+                    SendOptionButton(
+                        icon = Icons.Default.Send,
+                        label = "Send to",
+                        onClick = { showSendOptions = true },
+                        enabled = !uiState.isLoading
+                    )
+                    
+                    // Add to story
+                    SendOptionButton(
+                        icon = Icons.Default.AddCircle,
+                        label = "My Story",
+                        onClick = { 
+                            viewModel.postStory(uri, isVideo, caption)
+                        },
+                        enabled = !uiState.isLoading
+                    )
+                    
+                    // Save to memories (future feature)
+                    SendOptionButton(
+                        icon = Icons.Default.BookmarkBorder,
+                        label = "Memories",
+                        onClick = { /* TODO: Save to memories */ },
+                        enabled = !uiState.isLoading
+                    )
+                }
             }
         }
         
@@ -260,16 +312,23 @@ fun MediaPreviewScreen(
                 containerColor = MaterialTheme.colorScheme.surface
             ) {
                 SendOptionsContent(
-                    onSendToFriends = { selectedFriends ->
-                        // TODO: Send to selected friends
-                        showSendOptions = false
-                    },
-                    onSendToGroup = { selectedGroup ->
-                        // TODO: Send to group
+                    uiState = sendUiState,
+                    onToggleFriend = sendViewModel::toggleFriendSelection,
+                    onSend = {
+                        sendViewModel.sendToSelectedFriends(uri, isVideo, caption)
                         showSendOptions = false
                     },
                     onCancel = { showSendOptions = false }
                 )
+            }
+        }
+        
+        // Handle send success
+        LaunchedEffect(sendUiState.successCount, sendUiState.totalCount, sendUiState.isSending) {
+            if (!sendUiState.isSending && sendUiState.successCount > 0 && sendUiState.successCount == sendUiState.totalCount) {
+                navController.navigate(Screen.Messages.route) {
+                    popUpTo(Screen.Camera.route) { inclusive = true }
+                }
             }
         }
     }
@@ -310,8 +369,9 @@ private fun SendOptionButton(
 
 @Composable
 private fun SendOptionsContent(
-    onSendToFriends: (List<String>) -> Unit,
-    onSendToGroup: (String) -> Unit,
+    uiState: MediaSendUiState,
+    onToggleFriend: (String) -> Unit,
+    onSend: () -> Unit,
     onCancel: () -> Unit
 ) {
     Column(
@@ -326,13 +386,97 @@ private fun SendOptionsContent(
             modifier = Modifier.padding(bottom = 16.dp)
         )
         
-        // TODO: Implement friend list and group list
-        Text(
-            text = "Friend and group selection coming soon!",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(vertical = 32.dp)
-        )
+        when {
+            uiState.isLoading -> {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 32.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(color = SnapYellow)
+                }
+            }
+            uiState.friends.isEmpty() -> {
+                Text(
+                    text = "No friends to send to. Add friends first!",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(vertical = 32.dp)
+                )
+            }
+            else -> {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(max = 400.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(uiState.friends) { friend ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    onToggleFriend(friend.id)
+                                }
+                                .padding(vertical = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            // Checkbox
+                            Checkbox(
+                                checked = uiState.selectedFriends.contains(friend.id),
+                                onCheckedChange = { _ ->
+                                    onToggleFriend(friend.id)
+                                },
+                                colors = CheckboxDefaults.colors(
+                                    checkedColor = SnapYellow,
+                                    uncheckedColor = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            )
+                            
+                            Spacer(modifier = Modifier.width(12.dp))
+                            
+                            // Avatar
+                            if (friend.avatarUrl != null) {
+                                AsyncImage(
+                                    model = friend.avatarUrl,
+                                    contentDescription = "${friend.username}'s avatar",
+                                    modifier = Modifier
+                                        .size(40.dp)
+                                        .clip(CircleShape),
+                                    contentScale = ContentScale.Crop
+                                )
+                            } else {
+                                Box(
+                                    modifier = Modifier
+                                        .size(40.dp)
+                                        .clip(CircleShape)
+                                        .background(SnapYellow),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = friend.username.firstOrNull()?.uppercase() ?: "?",
+                                        fontSize = 16.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color.Black
+                                    )
+                                }
+                            }
+                            
+                            Spacer(modifier = Modifier.width(12.dp))
+                            
+                            // Name
+                            Text(
+                                text = friend.displayName ?: friend.username,
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                        }
+                    }
+                }
+            }
+        }
+        
+        Spacer(modifier = Modifier.height(16.dp))
         
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -343,14 +487,39 @@ private fun SendOptionsContent(
             }
             Spacer(modifier = Modifier.width(8.dp))
             Button(
-                onClick = { onSendToFriends(emptyList()) },
+                onClick = onSend,
+                enabled = uiState.selectedFriends.isNotEmpty() && !uiState.isSending,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = SnapYellow,
                     contentColor = Color.Black
                 )
             ) {
-                Text("Send")
+                if (uiState.isSending) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(20.dp),
+                        color = Color.Black,
+                        strokeWidth = 2.dp
+                    )
+                } else {
+                    Text("Send (${uiState.selectedFriends.size})")
+                }
             }
+        }
+        
+        // Show progress
+        if (uiState.isSending && uiState.totalCount > 0) {
+            Spacer(modifier = Modifier.height(8.dp))
+            LinearProgressIndicator(
+                progress = uiState.successCount.toFloat() / uiState.totalCount,
+                modifier = Modifier.fillMaxWidth(),
+                color = SnapYellow
+            )
+            Text(
+                text = "Sending... ${uiState.successCount}/${uiState.totalCount}",
+                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(top = 4.dp)
+            )
         }
         
         Spacer(modifier = Modifier.height(16.dp))
