@@ -52,6 +52,7 @@ sealed class Screen(val route: String) {
         fun createRoute(groupId: String) = "chat/$groupId"
     }
     object Notifications : Screen("notifications")
+    object Inspiration : Screen("inspiration")
 }
 
 @Composable
@@ -102,6 +103,10 @@ fun SnapConnectNavigation(
         
         composable(Screen.Profile.route) {
             ProfileScreen(navController = navController)
+        }
+        
+        composable(Screen.Inspiration.route) {
+            com.example.snapconnect.ui.screens.inspiration.InspirationScreen(navController = navController)
         }
         
         composable(Screen.Notifications.route) {

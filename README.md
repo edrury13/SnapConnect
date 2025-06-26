@@ -99,4 +99,18 @@ app/
 
 ## License
 
-This project is for educational purposes. 
+This project is for educational purposes.
+
+## Backend Micro-Service (RAG)
+
+A lightweight FastAPI service (`snapconnect-backend/`) now powers the
+Inspiration & Reference Engine.
+
+**Key endpoints (protected by `X-API-Key`)**
+
+| Method | Path | Description |
+|--------|------|-------------|
+| POST | `/api/v1/inspiration/moodboard` | Generate mood board from a text prompt |
+| POST | `/api/v1/inspiration/style-analysis` | Analyse artistic style from caption text |
+
+See the backend README for setup, seed scripts, and deployment notes. 

@@ -12,6 +12,7 @@ import com.example.snapconnect.ui.screens.messages.MessagesViewModel_HiltModules
 import com.example.snapconnect.ui.screens.notifications.NotificationsViewModel_HiltModules;
 import com.example.snapconnect.ui.screens.profile.ProfileViewModel_HiltModules;
 import com.example.snapconnect.ui.screens.story.StoryViewViewModel_HiltModules;
+import com.example.snapconnect.ui.viewmodel.InspirationViewModel_HiltModules;
 import dagger.Binds;
 import dagger.Component;
 import dagger.Module;
@@ -168,6 +169,7 @@ public final class SnapConnectApplication_HiltComponents {
           FriendsViewModel_HiltModules.KeyModule.class,
           HiltWrapper_ActivityRetainedComponentManager_LifecycleModule.class,
           HomeViewModel_HiltModules.KeyModule.class,
+          InspirationViewModel_HiltModules.KeyModule.class,
           MediaSendViewModel_HiltModules.KeyModule.class,
           MessagesViewModel_HiltModules.KeyModule.class,
           NotificationsViewModel_HiltModules.KeyModule.class,
@@ -217,6 +219,7 @@ public final class SnapConnectApplication_HiltComponents {
           FriendsViewModel_HiltModules.BindsModule.class,
           HiltWrapper_HiltViewModelFactory_ViewModelModule.class,
           HomeViewModel_HiltModules.BindsModule.class,
+          InspirationViewModel_HiltModules.BindsModule.class,
           MediaSendViewModel_HiltModules.BindsModule.class,
           MessagesViewModel_HiltModules.BindsModule.class,
           NotificationsViewModel_HiltModules.BindsModule.class,

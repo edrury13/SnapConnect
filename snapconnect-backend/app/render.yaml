@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: snapconnect-rag-api
+    env: docker
+    region: oregon
+    plan: free
+    # These paths assume your service's "Root Directory" is set
+    # to 'snapconnect-backend' in the Render Dashboard.
+    dockerfilePath: Dockerfile
+    dockerContext: .
+    healthCheck:
+      path: /health
+      initialDelaySeconds: 120
+    envVars:
+      # The port must match the CMD in the Dockerfile
+      - key: PORT
+        value: "10000"
+      - key: OPENAI_API_KEY
+        fromGroup: snapconnect-secrets
+      - key: PINECONE_API_KEY
+        fromGroup: snapconnect-secrets
+      - key: API_KEY
+        fromGroup: snapconnect-secrets
+      - key: PINECONE_ENVIRONMENT
+        value: us-east-1 

@@ -52,6 +52,12 @@ fun SnapConnectBottomBar(
             selectedIcon = Icons.Filled.Person,
             unselectedIcon = Icons.Outlined.Person,
             route = Screen.Profile.route
+        ),
+        BottomNavItem(
+            title = "Inspire",
+            selectedIcon = Icons.Filled.Lightbulb,
+            unselectedIcon = Icons.Outlined.Lightbulb,
+            route = Screen.Inspiration.route
         )
     )
     

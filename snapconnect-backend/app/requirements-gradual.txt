@@ -1,0 +1,28 @@
+# Gradual dependency addition plan for Render deployment
+
+# === PHASE 1: Basic deployment (current requirements.txt) ===
+fastapi==0.104.1
+uvicorn==0.24.0  # Without [standard] to avoid compilation
+python-dotenv==1.0.0
+pydantic==2.5.0
+pydantic-settings==2.1.0
+python-multipart==0.0.6
+
+# === PHASE 2: Add HTTP client ===
+# httpx==0.25.2
+
+# === PHASE 3: Add OpenAI ===
+# openai==1.12.0
+
+# === PHASE 4: Try adding Pinecone ===
+# Option 1: Older version
+# pinecone-client==2.2.2
+
+# Option 2: Latest with binary only
+# Run: pip install --only-binary :all: pinecone-client==3.0.0
+
+# === PHASE 5: Optional uvicorn extras ===
+# uvicorn[standard]==0.24.0  # Only if WebSocket support needed
+
+# === ALTERNATIVE: Use ChromaDB instead of Pinecone ===
+# chromadb==0.4.22  # Pure Python, no compilation needed 

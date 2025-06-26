@@ -15,6 +15,16 @@ import io.github.jan.supabase.storage.Storage
 import javax.inject.Singleton
 import com.example.snapconnect.services.NotificationService
 
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.android.Android
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.logging.*
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.json.Json
+
+import com.example.snapconnect.data.remote.InspirationApi
+import com.example.snapconnect.data.repository.InspirationRepository
+
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
@@ -40,4 +50,35 @@ object AppModule {
     @Provides
     @Singleton
     fun provideContext(@ApplicationContext context: Context): Context = context
+
+    // ---------------- RAG Backend ----------------
+
+    private const val BACKEND_BASE_URL = "https://snapconnect-backend.onrender.com"
+    private const val API_KEY = "RT5PrU6c8dnk5UUaP1dyDIqQjY6KuV2IXXKZvKvkMiz8N2AwrZhHJwYm8GZlCjQWPqaAB9UAMqwYkzPx67DQnx6muHfXscKpmmJVVVp9FWoyWIudwx35Qrv5H3TqwCnm" // TODO move to secure config
+
+    @Provides
+    @Singleton
+    fun provideHttpClient(): HttpClient = HttpClient(Android) {
+        install(ContentNegotiation) {
+            json(Json { ignoreUnknownKeys = true })
+        }
+        install(Logging) {
+            logger = object : Logger {
+                override fun log(message: String) {
+                    android.util.Log.d("InspirationHTTP", message)
+                }
+            }
+            level = LogLevel.ALL
+        }
+    }
+
+    @Provides
+    @Singleton
+    fun provideInspirationApi(client: HttpClient): InspirationApi =
+        InspirationApi(client, BACKEND_BASE_URL, API_KEY)
+
+    @Provides
+    @Singleton
+    fun provideInspirationRepository(api: InspirationApi): InspirationRepository =
+        InspirationRepository(api)
 } 
