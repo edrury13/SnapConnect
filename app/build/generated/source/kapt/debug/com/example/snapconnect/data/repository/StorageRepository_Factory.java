@@ -27,23 +27,27 @@ public final class StorageRepository_Factory implements Factory<StorageRepositor
 
   private final Provider<Context> contextProvider;
 
+  private final Provider<EmbeddingRepository> embeddingRepoProvider;
+
   public StorageRepository_Factory(Provider<SupabaseClient> supabaseProvider,
-      Provider<Context> contextProvider) {
+      Provider<Context> contextProvider, Provider<EmbeddingRepository> embeddingRepoProvider) {
     this.supabaseProvider = supabaseProvider;
     this.contextProvider = contextProvider;
+    this.embeddingRepoProvider = embeddingRepoProvider;
   }
 
   @Override
   public StorageRepository get() {
-    return newInstance(supabaseProvider.get(), contextProvider.get());
+    return newInstance(supabaseProvider.get(), contextProvider.get(), embeddingRepoProvider.get());
   }
 
   public static StorageRepository_Factory create(Provider<SupabaseClient> supabaseProvider,
-      Provider<Context> contextProvider) {
-    return new StorageRepository_Factory(supabaseProvider, contextProvider);
+      Provider<Context> contextProvider, Provider<EmbeddingRepository> embeddingRepoProvider) {
+    return new StorageRepository_Factory(supabaseProvider, contextProvider, embeddingRepoProvider);
   }
 
-  public static StorageRepository newInstance(SupabaseClient supabase, Context context) {
-    return new StorageRepository(supabase, context);
+  public static StorageRepository newInstance(SupabaseClient supabase, Context context,
+      EmbeddingRepository embeddingRepo) {
+    return new StorageRepository(supabase, context, embeddingRepo);
   }
 }

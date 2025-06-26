@@ -81,4 +81,27 @@ object AppModule {
     @Singleton
     fun provideInspirationRepository(api: InspirationApi): InspirationRepository =
         InspirationRepository(api)
+
+    // ---------- Embedding / RAG ingest ----------
+
+    @Provides
+    @Singleton
+    fun provideEmbeddingApi(client: HttpClient): com.example.snapconnect.data.remote.EmbeddingApi =
+        com.example.snapconnect.data.remote.EmbeddingApi(client, BACKEND_BASE_URL, API_KEY)
+
+    @Provides
+    @Singleton
+    fun provideEmbeddingRepository(api: com.example.snapconnect.data.remote.EmbeddingApi): com.example.snapconnect.data.repository.EmbeddingRepository =
+        com.example.snapconnect.data.repository.EmbeddingRepository(api)
+
+    // Langchain
+    @Provides
+    @Singleton
+    fun provideLangchainApi(client: HttpClient): com.example.snapconnect.data.remote.LangchainApi =
+        com.example.snapconnect.data.remote.LangchainApi(client, BACKEND_BASE_URL, API_KEY)
+
+    @Provides
+    @Singleton
+    fun provideLangchainRepository(api: com.example.snapconnect.data.remote.LangchainApi): com.example.snapconnect.data.repository.LangchainRepository =
+        com.example.snapconnect.data.repository.LangchainRepository(api)
 } 

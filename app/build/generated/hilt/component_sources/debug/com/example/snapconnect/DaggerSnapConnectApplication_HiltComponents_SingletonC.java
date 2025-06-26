@@ -6,20 +6,28 @@ import android.view.View;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModel;
+import com.example.snapconnect.data.remote.EmbeddingApi;
 import com.example.snapconnect.data.remote.InspirationApi;
+import com.example.snapconnect.data.remote.LangchainApi;
 import com.example.snapconnect.data.repository.AuthRepository;
 import com.example.snapconnect.data.repository.CommentsRepository;
+import com.example.snapconnect.data.repository.EmbeddingRepository;
 import com.example.snapconnect.data.repository.FiltersRepository;
 import com.example.snapconnect.data.repository.FriendRepository;
 import com.example.snapconnect.data.repository.InspirationRepository;
+import com.example.snapconnect.data.repository.LangchainRepository;
 import com.example.snapconnect.data.repository.MessagesRepository;
 import com.example.snapconnect.data.repository.StorageRepository;
 import com.example.snapconnect.data.repository.StoryRepository;
 import com.example.snapconnect.data.repository.UserRepository;
 import com.example.snapconnect.di.AppModule;
+import com.example.snapconnect.di.AppModule_ProvideEmbeddingApiFactory;
+import com.example.snapconnect.di.AppModule_ProvideEmbeddingRepositoryFactory;
 import com.example.snapconnect.di.AppModule_ProvideHttpClientFactory;
 import com.example.snapconnect.di.AppModule_ProvideInspirationApiFactory;
 import com.example.snapconnect.di.AppModule_ProvideInspirationRepositoryFactory;
+import com.example.snapconnect.di.AppModule_ProvideLangchainApiFactory;
+import com.example.snapconnect.di.AppModule_ProvideLangchainRepositoryFactory;
 import com.example.snapconnect.di.AppModule_ProvideSupabaseClientFactory;
 import com.example.snapconnect.ui.screens.auth.AuthViewModel;
 import com.example.snapconnect.ui.screens.auth.AuthViewModel_HiltModules_KeyModule_ProvideFactory;
@@ -647,9 +655,17 @@ public final class DaggerSnapConnectApplication_HiltComponents_SingletonC {
 
     private Provider<FriendRepository> friendRepositoryProvider;
 
-    private Provider<StoryRepository> storyRepositoryProvider;
-
     private Provider<HttpClient> provideHttpClientProvider;
+
+    private Provider<EmbeddingApi> provideEmbeddingApiProvider;
+
+    private Provider<EmbeddingRepository> provideEmbeddingRepositoryProvider;
+
+    private Provider<LangchainApi> provideLangchainApiProvider;
+
+    private Provider<LangchainRepository> provideLangchainRepositoryProvider;
+
+    private Provider<StoryRepository> storyRepositoryProvider;
 
     private Provider<InspirationApi> provideInspirationApiProvider;
 
@@ -674,12 +690,16 @@ public final class DaggerSnapConnectApplication_HiltComponents_SingletonC {
       this.messagesRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<MessagesRepository>(singletonCImpl, 4));
       this.userRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<UserRepository>(singletonCImpl, 5));
       this.friendRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<FriendRepository>(singletonCImpl, 6));
-      this.storyRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<StoryRepository>(singletonCImpl, 7));
       this.provideHttpClientProvider = DoubleCheck.provider(new SwitchingProvider<HttpClient>(singletonCImpl, 10));
-      this.provideInspirationApiProvider = DoubleCheck.provider(new SwitchingProvider<InspirationApi>(singletonCImpl, 9));
-      this.provideInspirationRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<InspirationRepository>(singletonCImpl, 8));
-      this.storageRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<StorageRepository>(singletonCImpl, 11));
-      this.commentsRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<CommentsRepository>(singletonCImpl, 12));
+      this.provideEmbeddingApiProvider = DoubleCheck.provider(new SwitchingProvider<EmbeddingApi>(singletonCImpl, 9));
+      this.provideEmbeddingRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<EmbeddingRepository>(singletonCImpl, 8));
+      this.provideLangchainApiProvider = DoubleCheck.provider(new SwitchingProvider<LangchainApi>(singletonCImpl, 12));
+      this.provideLangchainRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<LangchainRepository>(singletonCImpl, 11));
+      this.storyRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<StoryRepository>(singletonCImpl, 7));
+      this.provideInspirationApiProvider = DoubleCheck.provider(new SwitchingProvider<InspirationApi>(singletonCImpl, 14));
+      this.provideInspirationRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<InspirationRepository>(singletonCImpl, 13));
+      this.storageRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<StorageRepository>(singletonCImpl, 15));
+      this.commentsRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<CommentsRepository>(singletonCImpl, 16));
     }
 
     @Override
@@ -737,21 +757,33 @@ public final class DaggerSnapConnectApplication_HiltComponents_SingletonC {
           return (T) new FriendRepository(singletonCImpl.provideSupabaseClientProvider.get());
 
           case 7: // com.example.snapconnect.data.repository.StoryRepository 
-          return (T) new StoryRepository(singletonCImpl.provideSupabaseClientProvider.get());
+          return (T) new StoryRepository(singletonCImpl.provideSupabaseClientProvider.get(), singletonCImpl.provideEmbeddingRepositoryProvider.get(), singletonCImpl.provideLangchainRepositoryProvider.get());
 
-          case 8: // com.example.snapconnect.data.repository.InspirationRepository 
-          return (T) AppModule_ProvideInspirationRepositoryFactory.provideInspirationRepository(singletonCImpl.provideInspirationApiProvider.get());
+          case 8: // com.example.snapconnect.data.repository.EmbeddingRepository 
+          return (T) AppModule_ProvideEmbeddingRepositoryFactory.provideEmbeddingRepository(singletonCImpl.provideEmbeddingApiProvider.get());
 
-          case 9: // com.example.snapconnect.data.remote.InspirationApi 
-          return (T) AppModule_ProvideInspirationApiFactory.provideInspirationApi(singletonCImpl.provideHttpClientProvider.get());
+          case 9: // com.example.snapconnect.data.remote.EmbeddingApi 
+          return (T) AppModule_ProvideEmbeddingApiFactory.provideEmbeddingApi(singletonCImpl.provideHttpClientProvider.get());
 
           case 10: // io.ktor.client.HttpClient 
           return (T) AppModule_ProvideHttpClientFactory.provideHttpClient();
 
-          case 11: // com.example.snapconnect.data.repository.StorageRepository 
-          return (T) new StorageRepository(singletonCImpl.provideSupabaseClientProvider.get(), ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
+          case 11: // com.example.snapconnect.data.repository.LangchainRepository 
+          return (T) AppModule_ProvideLangchainRepositoryFactory.provideLangchainRepository(singletonCImpl.provideLangchainApiProvider.get());
 
-          case 12: // com.example.snapconnect.data.repository.CommentsRepository 
+          case 12: // com.example.snapconnect.data.remote.LangchainApi 
+          return (T) AppModule_ProvideLangchainApiFactory.provideLangchainApi(singletonCImpl.provideHttpClientProvider.get());
+
+          case 13: // com.example.snapconnect.data.repository.InspirationRepository 
+          return (T) AppModule_ProvideInspirationRepositoryFactory.provideInspirationRepository(singletonCImpl.provideInspirationApiProvider.get());
+
+          case 14: // com.example.snapconnect.data.remote.InspirationApi 
+          return (T) AppModule_ProvideInspirationApiFactory.provideInspirationApi(singletonCImpl.provideHttpClientProvider.get());
+
+          case 15: // com.example.snapconnect.data.repository.StorageRepository 
+          return (T) new StorageRepository(singletonCImpl.provideSupabaseClientProvider.get(), ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule), singletonCImpl.provideEmbeddingRepositoryProvider.get());
+
+          case 16: // com.example.snapconnect.data.repository.CommentsRepository 
           return (T) new CommentsRepository(singletonCImpl.provideSupabaseClientProvider.get());
 
           default: throw new AssertionError(id);

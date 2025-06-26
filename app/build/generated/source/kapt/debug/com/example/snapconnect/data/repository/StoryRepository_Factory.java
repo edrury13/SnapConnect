@@ -24,20 +24,31 @@ import javax.inject.Provider;
 public final class StoryRepository_Factory implements Factory<StoryRepository> {
   private final Provider<SupabaseClient> supabaseProvider;
 
-  public StoryRepository_Factory(Provider<SupabaseClient> supabaseProvider) {
+  private final Provider<EmbeddingRepository> embeddingRepoProvider;
+
+  private final Provider<LangchainRepository> langchainRepoProvider;
+
+  public StoryRepository_Factory(Provider<SupabaseClient> supabaseProvider,
+      Provider<EmbeddingRepository> embeddingRepoProvider,
+      Provider<LangchainRepository> langchainRepoProvider) {
     this.supabaseProvider = supabaseProvider;
+    this.embeddingRepoProvider = embeddingRepoProvider;
+    this.langchainRepoProvider = langchainRepoProvider;
   }
 
   @Override
   public StoryRepository get() {
-    return newInstance(supabaseProvider.get());
+    return newInstance(supabaseProvider.get(), embeddingRepoProvider.get(), langchainRepoProvider.get());
   }
 
-  public static StoryRepository_Factory create(Provider<SupabaseClient> supabaseProvider) {
-    return new StoryRepository_Factory(supabaseProvider);
+  public static StoryRepository_Factory create(Provider<SupabaseClient> supabaseProvider,
+      Provider<EmbeddingRepository> embeddingRepoProvider,
+      Provider<LangchainRepository> langchainRepoProvider) {
+    return new StoryRepository_Factory(supabaseProvider, embeddingRepoProvider, langchainRepoProvider);
   }
 
-  public static StoryRepository newInstance(SupabaseClient supabase) {
-    return new StoryRepository(supabase);
+  public static StoryRepository newInstance(SupabaseClient supabase,
+      EmbeddingRepository embeddingRepo, LangchainRepository langchainRepo) {
+    return new StoryRepository(supabase, embeddingRepo, langchainRepo);
   }
 }

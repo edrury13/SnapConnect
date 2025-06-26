@@ -15,7 +15,8 @@ import javax.inject.Singleton
 @Singleton
 class StorageRepository @Inject constructor(
     private val supabase: SupabaseClient,
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val embeddingRepo: EmbeddingRepository,
 ) {
     
     suspend fun uploadStoryMedia(uri: Uri, userId: String, isVideo: Boolean): Result<String> {
@@ -29,6 +30,18 @@ class StorageRepository @Inject constructor(
                     ?: return@withContext Result.failure(Exception("Failed to open file"))
                 
                 val bytes = inputStream.use { it.readBytes() }
+                
+                // Fire-and-forget: embed image if not video
+                if (!isVideo) {
+                    kotlin.runCatching {
+                        embeddingRepo.embedImage(
+                            bytes = bytes,
+                            fileName = fileName,
+                            userId = userId,
+                            tags = emptyList()
+                        )
+                    }
+                }
                 
                 supabase.storage
                     .from("stories")

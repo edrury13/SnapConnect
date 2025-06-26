@@ -24,10 +24,16 @@ import kotlinx.serialization.json.putJsonArray
 import kotlin.time.Duration.Companion.hours
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.Dispatchers
+import com.example.snapconnect.data.repository.EmbeddingRepository
+import com.example.snapconnect.data.repository.LangchainRepository
 
 @Singleton
 class StoryRepository @Inject constructor(
-    private val supabase: SupabaseClient
+    private val supabase: SupabaseClient,
+    private val embeddingRepo: EmbeddingRepository,
+    private val langchainRepo: LangchainRepository,
 ) {
     
     suspend fun createStory(
@@ -63,8 +69,25 @@ class StoryRepository @Inject constructor(
                 .decodeList<Story>()
             
             if (stories.isNotEmpty()) {
-                Result.success(stories.first())
+                val story = stories.first()
+                // If user provided caption, let backend handle embedding & style processing
+                if (!caption.isNullOrBlank()) {
+                    kotlin.runCatching {
+                        langchainRepo.processPost(
+                            userId = userId,
+                            storyId = story.id,
+                            caption = caption,
+                            tags = listOf(mediaType.name.lowercase())
+                        )
+                    }
+                }
+                // Trigger AI auto-caption based on tags (using media type as simple tag)
+                kotlin.runCatching {
+                    langchainRepo.autoCaption(userId, mediaType.name.lowercase())
+                }
+                Result.success(story)
             } else {
+                // No story returned; skip embedding because ID is unknown
                 // If we can't fetch it back, create a dummy story object
                 Result.success(
                     Story(

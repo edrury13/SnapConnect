@@ -37,3 +37,11 @@ snapconnect-backend/app/app/main.py
 snapconnect-backend/app/app/models/__init__.py
 snapconnect-backend/app/app/models/schemas.py
 snapconnect-backend/app/app/services/__init__.py
+.gradle/file-system.probe
+.gradle/buildOutputCleanup/outputFiles.bin
+.gradle/buildOutputCleanup/buildOutputCleanup.lock
+.gradle/8.2/fileHashes/resourceHashesCache.bin
+.gradle/8.2/fileHashes/fileHashes.lock
+.gradle/8.2/fileHashes/fileHashes.bin
+.gradle/8.2/executionHistory/executionHistory.lock
+.gradle/8.2/executionHistory/executionHistory.bin
