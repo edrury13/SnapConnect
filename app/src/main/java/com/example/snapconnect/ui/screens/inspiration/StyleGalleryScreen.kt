@@ -17,6 +17,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.snapconnect.data.model.Story
+import com.example.snapconnect.navigation.Screen
 import com.example.snapconnect.ui.theme.SnapYellow
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -109,8 +110,10 @@ fun StyleGalleryScreen(
                             StoryGridItem(
                                 story = story,
                                 onClick = {
-                                    // Navigate to story view
-                                    navController.navigate("story_view/${story.userId}")
+                                    // Navigate to the StoryView screen using the defined navigation route
+                                    navController.navigate(
+                                        Screen.StoryView.createRoute(story.id)
+                                    )
                                 }
                             )
                         }
