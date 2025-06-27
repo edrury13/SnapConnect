@@ -32,7 +32,13 @@ class StoryPostViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(StoryPostUiState())
     val uiState: StateFlow<StoryPostUiState> = _uiState.asStateFlow()
     
-    fun postStory(mediaUri: Uri, isVideo: Boolean, caption: String?, filterId: String? = null) {
+    fun postStory(
+        mediaUri: Uri,
+        isVideo: Boolean,
+        caption: String?,
+        isPublic: Boolean = true,
+        filterId: String? = null
+    ) {
         viewModelScope.launch {
             _uiState.value = StoryPostUiState(isLoading = true)
             
@@ -49,7 +55,8 @@ class StoryPostViewModel @Inject constructor(
                     storyRepository.createStory(
                         mediaUrl = mediaUrl,
                         mediaType = if (isVideo) MediaType.VIDEO else MediaType.IMAGE,
-                        caption = caption?.takeIf { it.isNotBlank() }
+                        caption = caption?.takeIf { it.isNotBlank() },
+                        isPublic = isPublic
                     )
                         .onSuccess {
                             _uiState.value = StoryPostUiState(isSuccess = true)

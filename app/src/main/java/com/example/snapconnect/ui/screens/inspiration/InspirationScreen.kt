@@ -3,6 +3,7 @@ package com.example.snapconnect.ui.screens.inspiration
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -13,6 +14,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.snapconnect.ui.viewmodel.InspirationViewModel
+import com.example.snapconnect.navigation.Screen
+import com.example.snapconnect.ui.theme.SnapYellow
 
 @Composable
 fun InspirationScreen(
@@ -64,7 +67,24 @@ fun InspirationScreen(
                                     modifier = Modifier.size(64.dp)
                                 )
                                 Column(Modifier.padding(8.dp)) {
-                                    Text(text = item.style_tags.joinToString(), style = MaterialTheme.typography.labelMedium)
+                                    LazyRow(
+                                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                    ) {
+                                        items(item.style_tags) { styleTag ->
+                                            AssistChip(
+                                                onClick = {
+                                                    navController.navigate(
+                                                        Screen.StyleGallery.createRoute(styleTag)
+                                                    )
+                                                },
+                                                label = { Text(styleTag) },
+                                                colors = AssistChipDefaults.assistChipColors(
+                                                    containerColor = SnapYellow.copy(alpha = 0.2f),
+                                                    labelColor = MaterialTheme.colorScheme.onSurface
+                                                )
+                                            )
+                                        }
+                                    }
                                     Text(text = "Score: %.2f".format(item.score), style = MaterialTheme.typography.bodySmall)
                                 }
                             }

@@ -41,7 +41,7 @@ fun MessagesScreen(
             TopAppBar(
                 title = { Text("Messages") },
                 actions = {
-                    IconButton(onClick = { /* TODO: New chat */ }) {
+                    IconButton(onClick = { navController.navigate(Screen.CreateGroup.route) }) {
                         Icon(
                             imageVector = Icons.Default.Edit,
                             contentDescription = "New chat"
@@ -55,14 +55,14 @@ fun MessagesScreen(
         },
         floatingActionButton = {
             ExtendedFloatingActionButton(
-                onClick = { navController.navigate(Screen.Friends.route) },
+                onClick = { navController.navigate(Screen.CreateGroup.route) },
                 icon = {
                     Icon(
-                        imageVector = Icons.Default.Chat,
+                        imageVector = Icons.Default.GroupAdd,
                         contentDescription = null
                     )
                 },
-                text = { Text("New Chat") },
+                text = { Text("New Group") },
                 containerColor = SnapYellow,
                 contentColor = Color.Black
             )

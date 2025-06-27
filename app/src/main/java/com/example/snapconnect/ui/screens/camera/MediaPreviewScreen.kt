@@ -42,6 +42,7 @@ import com.example.snapconnect.R
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import androidx.compose.material3.SwitchDefaults
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -72,6 +73,9 @@ fun MediaPreviewScreen(
             }
         } else null
     }
+    
+    // Privacy toggle state
+    var isPublic by remember { mutableStateOf(true) }
     
     // If we have a groupId, we're sending to a specific chat
     val isChatMode = !groupId.isNullOrEmpty()
@@ -261,6 +265,36 @@ fun MediaPreviewScreen(
             
             Spacer(modifier = Modifier.height(16.dp))
             
+            if (!isChatMode) {
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Privacy toggle
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = if (isPublic) "Public Story" else "Friends Only",
+                        color = Color.White,
+                        fontSize = 14.sp
+                    )
+                    Switch(
+                        checked = isPublic,
+                        onCheckedChange = { isPublic = it },
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = SnapYellow,
+                            checkedTrackColor = SnapYellow.copy(alpha = 0.6f)
+                        ),
+                        enabled = !uiState.isLoading
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+            
             // Send options
             if (isChatMode && !groupId.isNullOrEmpty()) {
                 // In chat mode, show only send button
@@ -310,7 +344,7 @@ fun MediaPreviewScreen(
                         icon = Icons.Default.AddCircle,
                         label = "My Story",
                         onClick = { 
-                            viewModel.postStory(uri, isVideo, caption, filterId)
+                            viewModel.postStory(uri, isVideo, caption, isPublic, filterId)
                         },
                         enabled = !uiState.isLoading
                     )

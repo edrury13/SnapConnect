@@ -28,18 +28,21 @@ import kotlinx.coroutines.withContext
 import kotlinx.coroutines.Dispatchers
 import com.example.snapconnect.data.repository.EmbeddingRepository
 import com.example.snapconnect.data.repository.LangchainRepository
+import com.example.snapconnect.data.repository.VisionRepository
 
 @Singleton
 class StoryRepository @Inject constructor(
     private val supabase: SupabaseClient,
     private val embeddingRepo: EmbeddingRepository,
     private val langchainRepo: LangchainRepository,
+    private val visionRepo: VisionRepository,
 ) {
     
     suspend fun createStory(
         mediaUrl: String,
         mediaType: MediaType,
-        caption: String? = null
+        caption: String? = null,
+        isPublic: Boolean = true
     ): Result<Story> {
         return try {
             val userId = supabase.auth.currentUserOrNull()?.id 
@@ -50,6 +53,7 @@ class StoryRepository @Inject constructor(
                 put("media_url", mediaUrl)
                 put("media_type", mediaType.name)
                 caption?.let { put("caption", it) }
+                put("is_public", isPublic)
             }
             
             // Insert without immediately decoding the response
@@ -70,20 +74,28 @@ class StoryRepository @Inject constructor(
             
             if (stories.isNotEmpty()) {
                 val story = stories.first()
-                // If user provided caption, let backend handle embedding & style processing
-                if (!caption.isNullOrBlank()) {
-                    kotlin.runCatching {
+                
+                // Analyze image for tags if it's an image
+                val tags = if (mediaType == MediaType.IMAGE) {
+                    visionRepo.analyzeImage(mediaUrl).getOrDefault(listOf("image"))
+                } else {
+                    listOf("video")
+                }
+                
+                // Always process with vision-based tags
+                try {
+                    val response = 
                         langchainRepo.processPost(
                             userId = userId,
                             storyId = story.id,
-                            caption = caption,
-                            tags = listOf(mediaType.name.lowercase())
+                            caption = caption ?: "",
+                            tags = tags
                         )
-                    }
-                }
-                // Trigger AI auto-caption based on tags (using media type as simple tag)
-                kotlin.runCatching {
-                    langchainRepo.autoCaption(userId, mediaType.name.lowercase())
+                    // Log the response for debugging
+                    println("ProcessPost response - AI Caption: ${response.ai_caption}, Style: ${response.style}")
+                } catch (e: Exception) {
+                    // Log the error but don't fail story creation
+                    e.printStackTrace()
                 }
                 Result.success(story)
             } else {
@@ -97,8 +109,11 @@ class StoryRepository @Inject constructor(
                         mediaType = mediaType,
                         caption = caption,
                         viewerIds = emptyList(),
+                        styleTags = emptyList(),
+                        aiCaption = null,
                         createdAt = Clock.System.now(),
-                        expiresAt = Clock.System.now() + 24.hours
+                        expiresAt = Clock.System.now() + 24.hours,
+                        isPublic = isPublic
                     )
                 )
             }
@@ -122,6 +137,9 @@ class StoryRepository @Inject constructor(
                         "media_type",
                         "caption",
                         "viewer_ids",
+                        "style_tags",
+                        "ai_caption",
+                        "is_public",
                         "created_at",
                         "expires_at"
                     )
@@ -250,6 +268,24 @@ class StoryRepository @Inject constructor(
             supabase.postgrest.rpc("trigger_story_cleanup")
         } catch (e: Exception) {
             // Ignore errors, this is just a cleanup trigger
+        }
+    }
+    
+    suspend fun getStoriesByStyle(styleTag: String): Result<List<Story>> {
+        return try {
+            val stories = supabase.from("stories")
+                .select() {
+                    filter {
+                        contains("style_tags", listOf(styleTag))
+                        gt("expires_at", Clock.System.now().toString())
+                    }
+                    order("created_at", Order.DESCENDING)
+                }
+                .decodeList<Story>()
+            
+            Result.success(stories)
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
 } 

@@ -28,27 +28,33 @@ public final class StoryRepository_Factory implements Factory<StoryRepository> {
 
   private final Provider<LangchainRepository> langchainRepoProvider;
 
+  private final Provider<VisionRepository> visionRepoProvider;
+
   public StoryRepository_Factory(Provider<SupabaseClient> supabaseProvider,
       Provider<EmbeddingRepository> embeddingRepoProvider,
-      Provider<LangchainRepository> langchainRepoProvider) {
+      Provider<LangchainRepository> langchainRepoProvider,
+      Provider<VisionRepository> visionRepoProvider) {
     this.supabaseProvider = supabaseProvider;
     this.embeddingRepoProvider = embeddingRepoProvider;
     this.langchainRepoProvider = langchainRepoProvider;
+    this.visionRepoProvider = visionRepoProvider;
   }
 
   @Override
   public StoryRepository get() {
-    return newInstance(supabaseProvider.get(), embeddingRepoProvider.get(), langchainRepoProvider.get());
+    return newInstance(supabaseProvider.get(), embeddingRepoProvider.get(), langchainRepoProvider.get(), visionRepoProvider.get());
   }
 
   public static StoryRepository_Factory create(Provider<SupabaseClient> supabaseProvider,
       Provider<EmbeddingRepository> embeddingRepoProvider,
-      Provider<LangchainRepository> langchainRepoProvider) {
-    return new StoryRepository_Factory(supabaseProvider, embeddingRepoProvider, langchainRepoProvider);
+      Provider<LangchainRepository> langchainRepoProvider,
+      Provider<VisionRepository> visionRepoProvider) {
+    return new StoryRepository_Factory(supabaseProvider, embeddingRepoProvider, langchainRepoProvider, visionRepoProvider);
   }
 
   public static StoryRepository newInstance(SupabaseClient supabase,
-      EmbeddingRepository embeddingRepo, LangchainRepository langchainRepo) {
-    return new StoryRepository(supabase, embeddingRepo, langchainRepo);
+      EmbeddingRepository embeddingRepo, LangchainRepository langchainRepo,
+      VisionRepository visionRepo) {
+    return new StoryRepository(supabase, embeddingRepo, langchainRepo, visionRepo);
   }
 }

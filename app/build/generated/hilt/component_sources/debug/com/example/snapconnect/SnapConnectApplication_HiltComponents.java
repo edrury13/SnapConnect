@@ -8,6 +8,8 @@ import com.example.snapconnect.ui.screens.camera.StoryPostViewModel_HiltModules;
 import com.example.snapconnect.ui.screens.chat.ChatViewModel_HiltModules;
 import com.example.snapconnect.ui.screens.friends.FriendsViewModel_HiltModules;
 import com.example.snapconnect.ui.screens.home.HomeViewModel_HiltModules;
+import com.example.snapconnect.ui.screens.inspiration.StyleGalleryViewModel_HiltModules;
+import com.example.snapconnect.ui.screens.messages.CreateGroupViewModel_HiltModules;
 import com.example.snapconnect.ui.screens.messages.MessagesViewModel_HiltModules;
 import com.example.snapconnect.ui.screens.notifications.NotificationsViewModel_HiltModules;
 import com.example.snapconnect.ui.screens.profile.ProfileViewModel_HiltModules;
@@ -166,6 +168,7 @@ public final class SnapConnectApplication_HiltComponents {
           AuthViewModel_HiltModules.KeyModule.class,
           CameraViewModel_HiltModules.KeyModule.class,
           ChatViewModel_HiltModules.KeyModule.class,
+          CreateGroupViewModel_HiltModules.KeyModule.class,
           FriendsViewModel_HiltModules.KeyModule.class,
           HiltWrapper_ActivityRetainedComponentManager_LifecycleModule.class,
           HomeViewModel_HiltModules.KeyModule.class,
@@ -177,7 +180,8 @@ public final class SnapConnectApplication_HiltComponents {
           ActivityCBuilderModule.class,
           ViewModelCBuilderModule.class,
           StoryPostViewModel_HiltModules.KeyModule.class,
-          StoryViewViewModel_HiltModules.KeyModule.class
+          StoryViewViewModel_HiltModules.KeyModule.class,
+          StyleGalleryViewModel_HiltModules.KeyModule.class
       }
   )
   @ActivityRetainedScoped
@@ -216,6 +220,7 @@ public final class SnapConnectApplication_HiltComponents {
           AuthViewModel_HiltModules.BindsModule.class,
           CameraViewModel_HiltModules.BindsModule.class,
           ChatViewModel_HiltModules.BindsModule.class,
+          CreateGroupViewModel_HiltModules.BindsModule.class,
           FriendsViewModel_HiltModules.BindsModule.class,
           HiltWrapper_HiltViewModelFactory_ViewModelModule.class,
           HomeViewModel_HiltModules.BindsModule.class,
@@ -225,7 +230,8 @@ public final class SnapConnectApplication_HiltComponents {
           NotificationsViewModel_HiltModules.BindsModule.class,
           ProfileViewModel_HiltModules.BindsModule.class,
           StoryPostViewModel_HiltModules.BindsModule.class,
-          StoryViewViewModel_HiltModules.BindsModule.class
+          StoryViewViewModel_HiltModules.BindsModule.class,
+          StyleGalleryViewModel_HiltModules.BindsModule.class
       }
   )
   @ViewModelScoped

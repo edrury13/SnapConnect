@@ -24,6 +24,9 @@ import kotlinx.serialization.json.Json
 
 import com.example.snapconnect.data.remote.InspirationApi
 import com.example.snapconnect.data.repository.InspirationRepository
+import com.example.snapconnect.data.remote.LangchainApi
+import com.example.snapconnect.data.remote.VisionApi
+import com.example.snapconnect.data.repository.*
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -97,11 +100,26 @@ object AppModule {
     // Langchain
     @Provides
     @Singleton
-    fun provideLangchainApi(client: HttpClient): com.example.snapconnect.data.remote.LangchainApi =
-        com.example.snapconnect.data.remote.LangchainApi(client, BACKEND_BASE_URL, API_KEY)
+    fun provideLangchainApi(client: HttpClient): LangchainApi {
+        return LangchainApi(
+            client = client,
+            baseUrl = BACKEND_BASE_URL,
+            apiKey = API_KEY
+        )
+    }
 
     @Provides
     @Singleton
     fun provideLangchainRepository(api: com.example.snapconnect.data.remote.LangchainApi): com.example.snapconnect.data.repository.LangchainRepository =
         com.example.snapconnect.data.repository.LangchainRepository(api)
+
+    @Provides
+    @Singleton
+    fun provideVisionApi(client: HttpClient): VisionApi {
+        return VisionApi(
+            client = client,
+            baseUrl = BACKEND_BASE_URL,
+            apiKey = API_KEY
+        )
+    }
 } 

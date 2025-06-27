@@ -16,10 +16,16 @@ data class Story(
     val caption: String? = null,
     @SerialName("viewer_ids")
     val viewerIds: List<String> = emptyList(),
+    @SerialName("is_public")
+    val isPublic: Boolean = true,
     @SerialName("created_at")
     val createdAt: Instant,
     @SerialName("expires_at")
-    val expiresAt: Instant
+    val expiresAt: Instant,
+    @SerialName("style_tags")
+    val styleTags: List<String> = emptyList(),
+    @SerialName("ai_caption")
+    val aiCaption: String? = null
 )
 
 @Serializable

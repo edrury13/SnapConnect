@@ -53,6 +53,10 @@ sealed class Screen(val route: String) {
     }
     object Notifications : Screen("notifications")
     object Inspiration : Screen("inspiration")
+    object CreateGroup : Screen("create_group")
+    object StyleGallery : Screen("style_gallery/{styleTag}") {
+        fun createRoute(styleTag: String) = "style_gallery/$styleTag"
+    }
 }
 
 @Composable
@@ -101,12 +105,27 @@ fun SnapConnectNavigation(
             MessagesScreen(navController = navController)
         }
         
+        composable(Screen.CreateGroup.route) {
+            com.example.snapconnect.ui.screens.messages.CreateGroupScreen(navController = navController)
+        }
+        
         composable(Screen.Profile.route) {
             ProfileScreen(navController = navController)
         }
         
         composable(Screen.Inspiration.route) {
             com.example.snapconnect.ui.screens.inspiration.InspirationScreen(navController = navController)
+        }
+        
+        composable(
+            route = Screen.StyleGallery.route,
+            arguments = listOf(navArgument("styleTag") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val styleTag = backStackEntry.arguments?.getString("styleTag") ?: ""
+            com.example.snapconnect.ui.screens.inspiration.StyleGalleryScreen(
+                styleTag = styleTag,
+                navController = navController
+            )
         }
         
         composable(Screen.Notifications.route) {

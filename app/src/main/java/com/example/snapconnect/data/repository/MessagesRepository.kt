@@ -31,6 +31,37 @@ class MessagesRepository @Inject constructor(
     
     private val messagesCache = MutableStateFlow<Map<String, List<Message>>>(emptyMap())
     
+    /**
+     * Create a group chat with a custom name and member list (including the current user).
+     */
+    suspend fun createGroup(name: String, memberIds: List<String>, avatarUrl: String? = null): Result<Group> {
+        return try {
+            val currentUserId = supabase.auth.currentUserOrNull()?.id
+                ?: return Result.failure(Exception("User not authenticated"))
+
+            // Ensure current user is in the members list
+            val finalMembers = if (memberIds.contains(currentUserId)) memberIds else memberIds + currentUserId
+
+            // Create group
+            val group = supabase.from("groups")
+                .insert(
+                    buildJsonObject {
+                        put("name", name)
+                        put("creator_id", currentUserId)
+                        putJsonArray("member_ids") {
+                            finalMembers.forEach { add(it) }
+                        }
+                        avatarUrl?.let { put("avatar_url", it) }
+                    }
+                )
+                .decodeSingle<Group>()
+
+            Result.success(group)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+    
     suspend fun createDirectMessageGroup(friendId: String): Result<Group> {
         return try {
             val currentUserId = supabase.auth.currentUserOrNull()?.id 
