@@ -30,7 +30,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.snapconnect.navigation.Screen
-import com.example.snapconnect.ui.components.SnapConnectBottomBar
+import com.example.snapconnect.ui.components.SnapConnectBottomBarWithFAB
 import com.example.snapconnect.ui.screens.auth.AuthViewModel
 import com.example.snapconnect.ui.theme.SnapYellow
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -128,7 +128,7 @@ fun ProfileScreen(
             )
         },
         bottomBar = {
-            SnapConnectBottomBar(navController = navController)
+            SnapConnectBottomBarWithFAB(navController = navController)
         },
         snackbarHost = {
             SnackbarHost(

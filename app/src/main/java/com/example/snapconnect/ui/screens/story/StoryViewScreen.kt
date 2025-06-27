@@ -1,6 +1,8 @@
 package com.example.snapconnect.ui.screens.story
 
 import androidx.compose.animation.core.*
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -13,11 +15,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.ThumbDownOffAlt
+import androidx.compose.material.icons.outlined.ThumbUpOffAlt
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
@@ -30,6 +36,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.snapconnect.data.model.MediaType
+import com.example.snapconnect.data.model.ReactionType
 import com.example.snapconnect.ui.screens.home.getTimeAgo
 import com.example.snapconnect.ui.components.VideoPlayer
 import kotlinx.coroutines.delay
@@ -271,7 +278,7 @@ fun StoryViewScreen(
                         .fillMaxWidth()
                         .align(Alignment.BottomCenter)
                 ) {
-                    // Comments button
+                    // Reaction and Comment buttons
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -279,6 +286,139 @@ fun StoryViewScreen(
                         horizontalArrangement = Arrangement.End,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
+                        // Debug log reaction state
+                        LaunchedEffect(currentStory.userReaction) {
+                            println("DEBUG UI: Story ${currentStory.id} reaction changed to: ${currentStory.userReaction}")
+                        }
+                        
+                        // Like button
+                        val isLiked = remember(currentStory.userReaction) { 
+                            currentStory.userReaction == ReactionType.LIKE 
+                        }
+                        val likeScale by animateFloatAsState(
+                            targetValue = if (isLiked) 1.1f else 1f,
+                            animationSpec = spring(
+                                dampingRatio = Spring.DampingRatioMediumBouncy,
+                                stiffness = Spring.StiffnessLow
+                            ),
+                            label = "likeScale"
+                        )
+                        
+                        Box(
+                            modifier = Modifier
+                                .scale(likeScale)
+                                .clip(RoundedCornerShape(20.dp))
+                                .background(
+                                    if (isLiked)
+                                        MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+                                    else
+                                        Color.Black.copy(alpha = 0.5f)
+                                )
+                                .clickable(enabled = !uiState.isProcessingReaction) { 
+                                    viewModel.toggleReaction(ReactionType.LIKE) 
+                                }
+                                .padding(horizontal = 16.dp, vertical = 8.dp)
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                Icon(
+                                    imageVector = if (isLiked) 
+                                        Icons.Filled.ThumbUp 
+                                    else 
+                                        Icons.Outlined.ThumbUpOffAlt,
+                                    contentDescription = "Like",
+                                    modifier = Modifier.size(20.dp),
+                                    tint = if (isLiked)
+                                        MaterialTheme.colorScheme.primary
+                                    else
+                                        Color.White
+                                )
+                                if (currentStory.likesCount > 0) {
+                                    Spacer(modifier = Modifier.width(4.dp))
+                                    Text(
+                                        text = "${currentStory.likesCount}",
+                                        color = if (isLiked)
+                                            MaterialTheme.colorScheme.primary
+                                        else
+                                            Color.White,
+                                        fontSize = 14.sp,
+                                        fontWeight = if (isLiked)
+                                            FontWeight.Bold
+                                        else
+                                            FontWeight.Normal
+                                    )
+                                }
+                            }
+                        }
+                        
+                        Spacer(modifier = Modifier.width(8.dp))
+                        
+                        // Dislike button
+                        val isDisliked = remember(currentStory.userReaction) { 
+                            currentStory.userReaction == ReactionType.DISLIKE 
+                        }
+                        val dislikeScale by animateFloatAsState(
+                            targetValue = if (isDisliked) 1.1f else 1f,
+                            animationSpec = spring(
+                                dampingRatio = Spring.DampingRatioMediumBouncy,
+                                stiffness = Spring.StiffnessLow
+                            ),
+                            label = "dislikeScale"
+                        )
+                        
+                        Box(
+                            modifier = Modifier
+                                .scale(dislikeScale)
+                                .clip(RoundedCornerShape(20.dp))
+                                .background(
+                                    if (isDisliked)
+                                        MaterialTheme.colorScheme.error.copy(alpha = 0.2f)
+                                    else
+                                        Color.Black.copy(alpha = 0.5f)
+                                )
+                                .clickable(enabled = !uiState.isProcessingReaction) { 
+                                    viewModel.toggleReaction(ReactionType.DISLIKE) 
+                                }
+                                .padding(horizontal = 16.dp, vertical = 8.dp)
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                Icon(
+                                    imageVector = if (isDisliked) 
+                                        Icons.Filled.ThumbDown 
+                                    else 
+                                        Icons.Outlined.ThumbDownOffAlt,
+                                    contentDescription = "Dislike",
+                                    modifier = Modifier.size(20.dp),
+                                    tint = if (isDisliked)
+                                        MaterialTheme.colorScheme.error
+                                    else
+                                        Color.White
+                                )
+                                if (currentStory.dislikesCount > 0) {
+                                    Spacer(modifier = Modifier.width(4.dp))
+                                    Text(
+                                        text = "${currentStory.dislikesCount}",
+                                        color = if (isDisliked)
+                                            MaterialTheme.colorScheme.error
+                                        else
+                                            Color.White,
+                                        fontSize = 14.sp,
+                                        fontWeight = if (isDisliked)
+                                            FontWeight.Bold
+                                        else
+                                            FontWeight.Normal
+                                    )
+                                }
+                            }
+                        }
+                        
+                        Spacer(modifier = Modifier.width(8.dp))
+                        
                         // Comment button with count
                         Box(
                             modifier = Modifier

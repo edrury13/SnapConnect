@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.snapconnect.data.model.Comment
 import com.example.snapconnect.data.model.Story
 import com.example.snapconnect.data.model.User
+import com.example.snapconnect.data.model.ReactionType
 import com.example.snapconnect.data.repository.AuthRepository
 import com.example.snapconnect.data.repository.CommentsRepository
 import com.example.snapconnect.data.repository.StoryRepository
@@ -28,7 +29,8 @@ data class StoryViewUiState(
     val showComments: Boolean = false,
     val isAddingComment: Boolean = false,
     val commentInput: String = "",
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
+    val isProcessingReaction: Boolean = false
 )
 
 @HiltViewModel
@@ -49,6 +51,9 @@ class StoryViewViewModel @Inject constructor(
     
     init {
         loadStory()
+        viewModelScope.launch {
+            storyRepository.triggerStoryCleanup()
+        }
     }
     
     private fun loadStory() {
@@ -60,6 +65,9 @@ class StoryViewViewModel @Inject constructor(
                 .onSuccess { allStories ->
                     val currentStory = allStories.find { it.id == storyId }
                     if (currentStory != null) {
+                        // Debug log
+                        println("DEBUG: Loaded story ${currentStory.id} with reaction: ${currentStory.userReaction}, likes: ${currentStory.likesCount}, dislikes: ${currentStory.dislikesCount}")
+                        
                         // Get user info
                         userRepository.getUser(currentStory.userId)
                             .onSuccess { user ->
@@ -108,6 +116,7 @@ class StoryViewViewModel @Inject constructor(
         val nextIndex = currentState.currentIndex + 1
         
         if (nextIndex < currentState.allUserStories.size) {
+            // Use the story from current state which may have updated reactions
             val nextStory = currentState.allUserStories[nextIndex]
             _uiState.value = currentState.copy(
                 currentStory = nextStory,
@@ -128,6 +137,7 @@ class StoryViewViewModel @Inject constructor(
         val previousIndex = currentState.currentIndex - 1
         
         if (previousIndex >= 0) {
+            // Use the story from current state which may have updated reactions
             val previousStory = currentState.allUserStories[previousIndex]
             _uiState.value = currentState.copy(
                 currentStory = previousStory,
@@ -249,6 +259,70 @@ class StoryViewViewModel @Inject constructor(
                     _uiState.value = _uiState.value.copy(
                         errorMessage = error.message
                     )
+                }
+        }
+    }
+    
+    fun toggleReaction(reactionType: ReactionType) {
+        val currentStory = _uiState.value.currentStory ?: return
+        
+        // Calculate the new state
+        val oldReaction = currentStory.userReaction
+        val oldLikesCount = currentStory.likesCount
+        val oldDislikesCount = currentStory.dislikesCount
+        
+        val (newReaction, newLikesCount, newDislikesCount) = when {
+            // User is clicking the same reaction - remove it
+            oldReaction == reactionType -> {
+                Triple(
+                    null,
+                    if (reactionType == ReactionType.LIKE) oldLikesCount - 1 else oldLikesCount,
+                    if (reactionType == ReactionType.DISLIKE) oldDislikesCount - 1 else oldDislikesCount
+                )
+            }
+            // User had no reaction - add new one
+            oldReaction == null -> {
+                Triple(
+                    reactionType,
+                    if (reactionType == ReactionType.LIKE) oldLikesCount + 1 else oldLikesCount,
+                    if (reactionType == ReactionType.DISLIKE) oldDislikesCount + 1 else oldDislikesCount
+                )
+            }
+            // User is switching reactions
+            else -> {
+                Triple(
+                    reactionType,
+                    if (oldReaction == ReactionType.LIKE) oldLikesCount - 1 else if (reactionType == ReactionType.LIKE) oldLikesCount + 1 else oldLikesCount,
+                    if (oldReaction == ReactionType.DISLIKE) oldDislikesCount - 1 else if (reactionType == ReactionType.DISLIKE) oldDislikesCount + 1 else oldDislikesCount
+                )
+            }
+        }
+        
+        // Apply update immediately and DON'T CHANGE IT AGAIN
+        val updatedStory = currentStory.copy(
+            userReaction = newReaction,
+            likesCount = maxOf(0, newLikesCount),
+            dislikesCount = maxOf(0, newDislikesCount)
+        )
+        
+        val currentState = _uiState.value
+        val updatedStories = currentState.allUserStories.map { story ->
+            if (story.id == currentStory.id) updatedStory else story
+        }
+        
+        _uiState.value = currentState.copy(
+            currentStory = updatedStory,
+            allUserStories = updatedStories
+        )
+        
+        // Fire and forget the API call - we don't care about the response
+        viewModelScope.launch {
+            storyRepository.toggleReaction(currentStory.id, reactionType)
+                .onSuccess {
+                    println("DEBUG: Reaction saved")
+                }
+                .onFailure { error ->
+                    println("DEBUG: Reaction failed but we're keeping the UI state anyway - ${error.message}")
                 }
         }
     }

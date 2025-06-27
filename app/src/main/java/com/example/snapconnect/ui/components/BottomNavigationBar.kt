@@ -1,12 +1,17 @@
 package com.example.snapconnect.ui.components
 
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.snapconnect.navigation.Screen
@@ -15,9 +20,11 @@ data class BottomNavItem(
     val title: String,
     val selectedIcon: ImageVector,
     val unselectedIcon: ImageVector,
-    val route: String
+    val route: String,
+    val showLabel: Boolean = true
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SnapConnectBottomBar(
     navController: NavController
@@ -33,7 +40,8 @@ fun SnapConnectBottomBar(
             title = "Camera",
             selectedIcon = Icons.Filled.CameraAlt,
             unselectedIcon = Icons.Outlined.CameraAlt,
-            route = Screen.Camera.route
+            route = Screen.Camera.route,
+            showLabel = false // Camera icon is recognizable without label
         ),
         BottomNavItem(
             title = "Stories",
@@ -51,7 +59,8 @@ fun SnapConnectBottomBar(
             title = "Profile",
             selectedIcon = Icons.Filled.Person,
             unselectedIcon = Icons.Outlined.Person,
-            route = Screen.Profile.route
+            route = Screen.Profile.route,
+            showLabel = false // Profile icon is recognizable without label
         ),
         BottomNavItem(
             title = "Inspire",
@@ -65,18 +74,30 @@ fun SnapConnectBottomBar(
     val currentRoute = navBackStackEntry?.destination?.route
     
     NavigationBar(
+        modifier = Modifier.height(56.dp), // Fixed height to prevent jumping
         containerColor = MaterialTheme.colorScheme.surface,
-        contentColor = MaterialTheme.colorScheme.onSurface
+        contentColor = MaterialTheme.colorScheme.onSurface,
+        tonalElevation = 3.dp
     ) {
         bottomNavItems.forEach { item ->
             NavigationBarItem(
                 icon = {
                     Icon(
                         imageVector = if (currentRoute == item.route) item.selectedIcon else item.unselectedIcon,
-                        contentDescription = item.title
+                        contentDescription = item.title,
+                        modifier = Modifier.size(if (item.showLabel) 20.dp else 24.dp) // Larger icons for items without labels
                     )
                 },
-                label = { Text(item.title) },
+                label = if (item.showLabel) {
+                    {
+                        Text(
+                            text = item.title,
+                            fontSize = 10.sp, // Smaller font size
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                } else null,
                 selected = currentRoute == item.route,
                 onClick = {
                     if (currentRoute != item.route) {
@@ -93,7 +114,15 @@ fun SnapConnectBottomBar(
                             restoreState = true
                         }
                     }
-                }
+                },
+                alwaysShowLabel = false, // Only show label when selected for items with labels
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = MaterialTheme.colorScheme.primary,
+                    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    selectedTextColor = MaterialTheme.colorScheme.primary,
+                    unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    indicatorColor = MaterialTheme.colorScheme.primaryContainer
+                )
             )
         }
     }

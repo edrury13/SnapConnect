@@ -10,6 +10,6 @@ class LangchainRepository @Inject constructor(
 ) {
     suspend fun autoCaption(userId: String, tagsCsv: String) = api.autoCaption(userId, tagsCsv)
 
-    suspend fun processPost(userId: String, storyId: String, caption: String, tags: List<String>) =
-        api.processPost(userId, storyId, caption, tags)
+    suspend fun processPost(userId: String, storyId: String, caption: String, tags: List<String>, imageUrl: String? = null) =
+        api.processPost(userId, storyId, caption, tags, imageUrl)
 } 

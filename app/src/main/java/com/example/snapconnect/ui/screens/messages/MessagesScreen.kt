@@ -24,7 +24,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.snapconnect.data.model.User
 import com.example.snapconnect.navigation.Screen
-import com.example.snapconnect.ui.components.SnapConnectBottomBar
+import com.example.snapconnect.ui.components.SnapConnectBottomBarWithFAB
 import com.example.snapconnect.ui.screens.home.getTimeAgo
 import com.example.snapconnect.ui.theme.SnapYellow
 
@@ -51,7 +51,7 @@ fun MessagesScreen(
             )
         },
         bottomBar = {
-            SnapConnectBottomBar(navController = navController)
+            SnapConnectBottomBarWithFAB(navController = navController)
         },
         floatingActionButton = {
             ExtendedFloatingActionButton(

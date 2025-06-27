@@ -139,6 +139,55 @@ async def generate_caption_multistage(self, image_analysis: Dict) -> str:
 - Emotion-based caption variants
 - A/B testing different caption styles
 
+## Implemented Improvements (December 2024)
+
+### Factual Caption Generation
+Based on feedback that AI was hallucinating about image contents, we've shifted from artistic to factual descriptions:
+
+#### Key Changes:
+1. **Vision Analysis Prompt** - Now explicitly asks for literal, factual observations
+   - "red apple on wooden table" instead of "fruit still life"
+   - Only identifies styles when clearly evident
+   - Uses "none" or "unidentified" when unsure
+
+2. **Caption Generation** - Simplified, factual approach similar to generate_captions.py
+   - Builds description from components: subjects + style + colors
+   - Clear instructions: "Focus on what is literally visible. Avoid metaphors."
+   - Temperature reduced from 0.8 to 0.3 for consistency
+
+3. **Temperature Settings**:
+   - Vision API: 0.1 (very low for factual analysis)
+   - Caption generation: 0.3 (low for consistent descriptions)
+   - Style detection: Uses embeddings (deterministic)
+
+#### Example Improvements:
+
+**Before (Artistic/Hallucinating):**
+- "A dreamlike journey through ethereal realms of consciousness"
+- "Explosive symphony of colors dancing in harmonious chaos"
+- "Timeless elegance captured in a moment of serene contemplation"
+
+**After (Factual/Accurate):**
+- "Young woman in red sweater holding coffee cup at wooden table"
+- "Futuristic cityscape with neon signs in cyberpunk style"
+- "Water lilies on pond in impressionist style with soft greens"
+
+#### Implementation Details:
+```python
+# Vision prompt now includes:
+"IMPORTANT:
+- Be literal and factual, not interpretive
+- List what you actually see, not what it might represent
+- For subjects, be specific (e.g., 'red apple on wooden table' not 'fruit still life')"
+
+# Caption generation uses simple template:
+f"Given this image analysis: {description}. "
+f"Generate a concise, factual description in 20 words or fewer. "
+f"Focus on what is literally visible. Avoid metaphors or artistic interpretation."
+```
+
+This approach prioritizes accuracy for backend processing while maintaining style detection capabilities.
+
 ## Current Implementation Analysis (December 2024)
 
 ### Current State Overview
@@ -172,7 +221,7 @@ Currently, the system only matches against pre-existing styles. To implement aut
 Implementation approach:
 ```python
 # In style_from_text method
-if best_match_score < 0.7:  # Poor match threshold
+if best_match_score < 0.65:  # Poor match threshold
     new_style_name = await extract_style_name_from_description(ai_caption)
     if not await style_exists_in_taxonomy(new_style_name):
         style_embedding = await generate_embedding(ai_caption)

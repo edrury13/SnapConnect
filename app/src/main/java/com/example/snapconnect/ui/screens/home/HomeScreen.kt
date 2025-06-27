@@ -33,7 +33,7 @@ import com.example.snapconnect.data.model.MediaType
 import com.example.snapconnect.data.model.Story
 import com.example.snapconnect.data.model.User
 import com.example.snapconnect.navigation.Screen
-import com.example.snapconnect.ui.components.SnapConnectBottomBar
+import com.example.snapconnect.ui.components.SnapConnectBottomBarWithFAB
 import com.example.snapconnect.ui.theme.SnapBlue
 import com.example.snapconnect.ui.theme.SnapRed
 import com.example.snapconnect.ui.theme.SnapYellow
@@ -78,7 +78,7 @@ fun HomeScreen(
             )
         },
         bottomBar = {
-            SnapConnectBottomBar(navController = navController)
+            SnapConnectBottomBarWithFAB(navController = navController)
         }
     ) { paddingValues ->
         Box(
@@ -369,11 +369,63 @@ fun StoryCard(
                         overflow = TextOverflow.Ellipsis
                     )
                 }
-                Text(
-                    text = getTimeAgo(story.createdAt),
-                    fontSize = 12.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text(
+                        text = getTimeAgo(story.createdAt),
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    
+                    // Show reaction counts if any
+                    if (story.likesCount > 0 || story.dislikesCount > 0) {
+                        Text(
+                            text = "•",
+                            fontSize = 12.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        
+                        if (story.likesCount > 0) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(2.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.ThumbUp,
+                                    contentDescription = "Likes",
+                                    modifier = Modifier.size(12.dp),
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                                Text(
+                                    text = "${story.likesCount}",
+                                    fontSize = 12.sp,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
+                        
+                        if (story.dislikesCount > 0) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(2.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.ThumbDown,
+                                    contentDescription = "Dislikes",
+                                    modifier = Modifier.size(12.dp),
+                                    tint = MaterialTheme.colorScheme.error
+                                )
+                                Text(
+                                    text = "${story.dislikesCount}",
+                                    fontSize = 12.sp,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
+                    }
+                }
             }
             
             // Story type indicator

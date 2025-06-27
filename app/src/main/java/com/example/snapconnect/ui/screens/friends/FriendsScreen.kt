@@ -30,7 +30,7 @@ import coil.compose.AsyncImage
 import com.example.snapconnect.data.model.Friend
 import com.example.snapconnect.data.model.User
 import com.example.snapconnect.navigation.Screen
-import com.example.snapconnect.ui.components.SnapConnectBottomBar
+import com.example.snapconnect.ui.components.SnapConnectBottomBarWithFAB
 import com.example.snapconnect.ui.theme.SnapYellow
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -69,7 +69,7 @@ fun FriendsScreen(
             )
         },
         bottomBar = {
-            SnapConnectBottomBar(navController = navController)
+            SnapConnectBottomBarWithFAB(navController = navController)
         },
         snackbarHost = {
             SnackbarHost(
