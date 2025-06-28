@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
+import androidx.exifinterface.media.ExifInterface
 import android.net.Uri
 import android.util.Log
 import android.widget.Toast
@@ -23,6 +24,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.PhotoFilter
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -34,6 +36,8 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
@@ -44,6 +48,7 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.example.snapconnect.data.repository.FiltersRepository
 import com.example.snapconnect.data.model.ARFilter
+import com.example.snapconnect.data.model.FaceLandmarkType
 import com.example.snapconnect.navigation.Screen
 import com.example.snapconnect.ui.components.FilterOverlayView
 import com.example.snapconnect.ui.theme.SnapBlue
@@ -208,6 +213,57 @@ fun CameraScreen(
                 isFrontCamera = isFrontCamera,
                 modifier = Modifier.fillMaxSize()
             )
+            
+            // Color filter indicator - simplified without misleading preview
+            selectedFilter?.let { filter ->
+                if (filter.colorMatrix != null) {
+                    // Filter active indicator
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.TopCenter)
+                            .padding(top = 80.dp)
+                            .background(
+                                color = Color.Black.copy(alpha = 0.8f),
+                                shape = RoundedCornerShape(20.dp)
+                            )
+                            .border(
+                                width = 2.dp,
+                                color = when (filter.id) {
+                                    "black_white" -> Color.White
+                                    "vintage" -> Color(0xFFD2691E)
+                                    "posterize" -> Color.Magenta
+                                    else -> SnapBlue
+                                },
+                                shape = RoundedCornerShape(20.dp)
+                            )
+                            .padding(horizontal = 20.dp, vertical = 10.dp)
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.PhotoFilter,
+                                contentDescription = null,
+                                tint = when (filter.id) {
+                                    "black_white" -> Color.White
+                                    "vintage" -> Color(0xFFD2691E)
+                                    "posterize" -> Color.Magenta
+                                    else -> SnapBlue
+                                },
+                                modifier = Modifier.size(20.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = "${filter.name} Active",
+                                color = Color.White,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
+                    }
+                }
+            }
             
             // Top controls
             Row(
@@ -586,94 +642,96 @@ private fun capturePhotoWithFilter(
         object : ImageCapture.OnImageSavedCallback {
             override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                 scope.launch {
-                    val finalUri = if (selectedFilter != null && selectedFilter.overlays.isNotEmpty()) {
+                    val finalUri = if (selectedFilter != null && (selectedFilter.overlays.isNotEmpty() || selectedFilter.colorMatrix != null)) {
                         withContext(Dispatchers.IO) {
-                            // Load the captured image
-                            var bitmap = BitmapFactory.decodeFile(photoFile.absolutePath)
+                            // Load the captured image with proper orientation
+                            var bitmap = loadBitmapWithCorrectOrientation(photoFile.absolutePath)
                             
-                            // Rotate image if needed (front camera images often need rotation)
+                            // Handle front camera mirroring
                             if (isFrontCamera) {
                                 val matrix = Matrix().apply {
-                                    postRotate(-90f) // Rotate 90 degrees counter-clockwise
                                     postScale(-1f, 1f, bitmap.width / 2f, bitmap.height / 2f) // Mirror horizontally
                                 }
-                                val rotatedBitmap = Bitmap.createBitmap(
+                                val mirroredBitmap = Bitmap.createBitmap(
                                     bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true
                                 )
                                 bitmap.recycle()
-                                bitmap = rotatedBitmap
+                                bitmap = mirroredBitmap
                             }
                             
-                            // Detect faces in the captured image
-                            val detector = FaceDetection.getClient(
-                                FaceDetectorOptions.Builder()
-                                    .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_ACCURATE)
-                                    .setLandmarkMode(FaceDetectorOptions.LANDMARK_MODE_ALL)
-                                    .build()
+                            // Only detect faces if we have face-based overlays
+                            val facesToUse = if (selectedFilter.overlays.any { it.landmark != FaceLandmarkType.FULL_SCREEN }) {
+                                // Detect faces in the captured image
+                                val detector = FaceDetection.getClient(
+                                    FaceDetectorOptions.Builder()
+                                        .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_ACCURATE)
+                                        .setLandmarkMode(FaceDetectorOptions.LANDMARK_MODE_ALL)
+                                        .build()
+                                )
+                                
+                                val inputImage = InputImage.fromBitmap(bitmap, 0)
+                                
+                                try {
+                                    val detectedFaces = Tasks.await(detector.process(inputImage))
+                                    detector.close()
+                                    detectedFaces
+                                } catch (e: Exception) {
+                                    detector.close()
+                                    emptyList()
+                                }
+                            } else {
+                                emptyList()
+                            }
+                            
+                            // Apply filter (color matrix and/or overlays)
+                            val filteredBitmap = filterProcessor.applyFilterToImage(
+                                originalBitmap = bitmap,
+                                faces = facesToUse,
+                                filter = selectedFilter,
+                                isFrontCamera = false // Already handled rotation/mirroring
                             )
                             
-                            val inputImage = InputImage.fromBitmap(bitmap, 0)
+                            // Save filtered image
+                            val filteredFile = File(
+                                context.cacheDir,
+                                "filtered_${photoFile.name}"
+                            )
                             
-                            try {
-                                val detectedFaces = Tasks.await(detector.process(inputImage))
-                                
-                                // Apply filter with detected faces from the actual image
-                                val filteredBitmap = filterProcessor.applyFilterToImage(
-                                    originalBitmap = bitmap,
-                                    faces = detectedFaces,
-                                    filter = selectedFilter,
-                                    isFrontCamera = false // Already handled rotation/mirroring
-                                )
-                                
-                                // Save filtered image
-                                val filteredFile = File(
-                                    context.cacheDir,
-                                    "filtered_${photoFile.name}"
-                                )
-                                
-                                FileOutputStream(filteredFile).use { out ->
-                                    filteredBitmap.compress(Bitmap.CompressFormat.JPEG, 95, out)
-                                }
-                                
-                                // Clean up
-                                bitmap.recycle()
-                                filteredBitmap.recycle()
-                                photoFile.delete()
-                                detector.close()
-                                
-                                Uri.fromFile(filteredFile)
-                            } catch (e: Exception) {
-                                // If face detection fails, return original image
-                                detector.close()
-                                Uri.fromFile(photoFile)
+                            FileOutputStream(filteredFile).use { out ->
+                                filteredBitmap.compress(Bitmap.CompressFormat.JPEG, 95, out)
                             }
+                            
+                            // Clean up
+                            bitmap.recycle()
+                            filteredBitmap.recycle()
+                            photoFile.delete()
+                            
+                            Uri.fromFile(filteredFile)
                         }
                     } else {
-                        // Handle rotation for regular photos without filters
-                        if (isFrontCamera) {
-                            withContext(Dispatchers.IO) {
-                                // Load the captured image
-                                var bitmap = BitmapFactory.decodeFile(photoFile.absolutePath)
-                                
-                                // Rotate and mirror for front camera
+                        // Handle proper orientation for regular photos without filters
+                        withContext(Dispatchers.IO) {
+                            // Load the captured image with proper orientation
+                            var bitmap = loadBitmapWithCorrectOrientation(photoFile.absolutePath)
+                            
+                            // Mirror for front camera
+                            if (isFrontCamera) {
                                 val matrix = Matrix().apply {
-                                    postRotate(-90f) // Rotate 90 degrees counter-clockwise
                                     postScale(-1f, 1f, bitmap.width / 2f, bitmap.height / 2f) // Mirror horizontally
                                 }
-                                val rotatedBitmap = Bitmap.createBitmap(
+                                val mirroredBitmap = Bitmap.createBitmap(
                                     bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true
                                 )
                                 bitmap.recycle()
-                                
-                                // Save rotated image
-                                FileOutputStream(photoFile).use { out ->
-                                    rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 95, out)
-                                }
-                                rotatedBitmap.recycle()
-                                
-                                Uri.fromFile(photoFile)
+                                bitmap = mirroredBitmap
                             }
-                        } else {
+                            
+                            // Save the properly oriented image
+                            FileOutputStream(photoFile).use { out ->
+                                bitmap.compress(Bitmap.CompressFormat.JPEG, 95, out)
+                            }
+                            bitmap.recycle()
+                            
                             Uri.fromFile(photoFile)
                         }
                     }
@@ -758,6 +816,53 @@ private fun startVideoRecording(
 
 private fun stopRecording(recording: Recording?) {
     recording?.stop()
+}
+
+private fun loadBitmapWithCorrectOrientation(imagePath: String): Bitmap {
+    // First load the image
+    val bitmap = BitmapFactory.decodeFile(imagePath)
+    
+    // Read EXIF data to get orientation
+    val exif = ExifInterface(imagePath)
+    val orientation = exif.getAttributeInt(
+        ExifInterface.TAG_ORIENTATION,
+        ExifInterface.ORIENTATION_NORMAL
+    )
+    
+    // Apply rotation based on EXIF orientation
+    return when (orientation) {
+        ExifInterface.ORIENTATION_ROTATE_90 -> {
+            val matrix = Matrix().apply { postRotate(90f) }
+            Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true).also {
+                bitmap.recycle()
+            }
+        }
+        ExifInterface.ORIENTATION_ROTATE_180 -> {
+            val matrix = Matrix().apply { postRotate(180f) }
+            Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true).also {
+                bitmap.recycle()
+            }
+        }
+        ExifInterface.ORIENTATION_ROTATE_270 -> {
+            val matrix = Matrix().apply { postRotate(270f) }
+            Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true).also {
+                bitmap.recycle()
+            }
+        }
+        ExifInterface.ORIENTATION_FLIP_HORIZONTAL -> {
+            val matrix = Matrix().apply { postScale(-1f, 1f) }
+            Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true).also {
+                bitmap.recycle()
+            }
+        }
+        ExifInterface.ORIENTATION_FLIP_VERTICAL -> {
+            val matrix = Matrix().apply { postScale(1f, -1f) }
+            Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true).also {
+                bitmap.recycle()
+            }
+        }
+        else -> bitmap // No rotation needed
+    }
 }
 
 @HiltViewModel

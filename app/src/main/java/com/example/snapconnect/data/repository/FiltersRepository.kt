@@ -4,6 +4,7 @@ import com.example.snapconnect.R
 import com.example.snapconnect.data.model.ARFilter
 import com.example.snapconnect.data.model.FaceLandmarkType
 import com.example.snapconnect.data.model.FilterOverlay
+import com.example.snapconnect.utils.ColorFilters
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -16,6 +17,27 @@ class FiltersRepository @Inject constructor() {
             name = "No Filter",
             iconRes = R.drawable.ic_launcher,  // Will be replaced with actual icon
             overlays = emptyList()
+        ),
+        ARFilter(
+            id = "black_white",
+            name = "B&W",
+            iconRes = R.drawable.ic_launcher,  // TODO: Add B&W icon
+            overlays = emptyList(),
+            colorMatrix = ColorFilters.BLACK_AND_WHITE
+        ),
+        ARFilter(
+            id = "vintage",
+            name = "Vintage",
+            iconRes = R.drawable.ic_launcher,  // TODO: Add vintage icon
+            overlays = emptyList(),
+            colorMatrix = ColorFilters.VINTAGE
+        ),
+        ARFilter(
+            id = "posterize",
+            name = "Posterize",
+            iconRes = R.drawable.ic_launcher,  // TODO: Add posterize icon
+            overlays = emptyList(),
+            colorMatrix = ColorFilters.POSTERIZE_BASE
         ),
         ARFilter(
             id = "sunglasses",

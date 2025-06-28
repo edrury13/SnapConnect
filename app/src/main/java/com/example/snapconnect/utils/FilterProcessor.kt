@@ -24,23 +24,84 @@ class FilterProcessor @Inject constructor(
         filter: ARFilter,
         isFrontCamera: Boolean = false
     ): Bitmap {
-        // Create a mutable copy of the bitmap
-        val resultBitmap = originalBitmap.copy(Bitmap.Config.ARGB_8888, true)
-        val canvas = Canvas(resultBitmap)
+        // Start with a copy of the original bitmap
+        var resultBitmap = originalBitmap.copy(Bitmap.Config.ARGB_8888, true)
         
-        // First, apply full-screen overlays
-        filter.overlays
-            .filter { it.landmark == FaceLandmarkType.FULL_SCREEN }
-            .forEach { overlay ->
-                applyFullScreenOverlay(canvas, overlay, resultBitmap.width, resultBitmap.height)
+        // Apply color filter first if present
+        filter.colorMatrix?.let { matrix ->
+            resultBitmap = if (filter.id == "posterize") {
+                // Special handling for posterize effect
+                applyPosterizeEffect(resultBitmap)
+            } else {
+                // Apply standard color matrix
+                applyColorFilter(resultBitmap, matrix)
             }
+        }
         
-        // Then apply filter to each detected face
-        faces.forEach { face ->
-            applyFilterToFace(canvas, face, filter, isFrontCamera, resultBitmap.width, resultBitmap.height)
+        // Then apply overlays if any
+        if (filter.overlays.isNotEmpty()) {
+            val canvas = Canvas(resultBitmap)
+            
+            // First, apply full-screen overlays
+            filter.overlays
+                .filter { it.landmark == FaceLandmarkType.FULL_SCREEN }
+                .forEach { overlay ->
+                    applyFullScreenOverlay(canvas, overlay, resultBitmap.width, resultBitmap.height)
+                }
+            
+            // Then apply filter to each detected face
+            faces.forEach { face ->
+                applyFilterToFace(canvas, face, filter, isFrontCamera, resultBitmap.width, resultBitmap.height)
+            }
         }
         
         return resultBitmap
+    }
+    
+    private fun applyColorFilter(bitmap: Bitmap, colorMatrix: FloatArray): Bitmap {
+        val result = bitmap.copy(Bitmap.Config.ARGB_8888, true)
+        val canvas = Canvas(result)
+        val paint = Paint().apply {
+            isAntiAlias = true
+            isDither = true
+            colorFilter = ColorMatrixColorFilter(ColorMatrix(colorMatrix))
+        }
+        canvas.drawBitmap(bitmap, 0f, 0f, paint)
+        bitmap.recycle()
+        return result
+    }
+    
+    private fun applyPosterizeEffect(bitmap: Bitmap): Bitmap {
+        val result = bitmap.copy(Bitmap.Config.ARGB_8888, true)
+        
+        // Apply posterization by reducing color levels
+        val width = result.width
+        val height = result.height
+        val pixels = IntArray(width * height)
+        result.getPixels(pixels, 0, width, 0, 0, width, height)
+        
+        // Number of color levels (lower = more posterized)
+        val levels = 5
+        val factor = 255f / (levels - 1)
+        
+        for (i in pixels.indices) {
+            val pixel = pixels[i]
+            val a = (pixel shr 24) and 0xff
+            var r = (pixel shr 16) and 0xff
+            var g = (pixel shr 8) and 0xff
+            var b = pixel and 0xff
+            
+            // Reduce color levels
+            r = ((r / factor).toInt() * factor).toInt().coerceIn(0, 255)
+            g = ((g / factor).toInt() * factor).toInt().coerceIn(0, 255)
+            b = ((b / factor).toInt() * factor).toInt().coerceIn(0, 255)
+            
+            pixels[i] = (a shl 24) or (r shl 16) or (g shl 8) or b
+        }
+        
+        result.setPixels(pixels, 0, width, 0, 0, width, height)
+        bitmap.recycle()
+        return result
     }
     
     private fun applyFullScreenOverlay(
