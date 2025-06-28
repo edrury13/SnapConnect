@@ -2,6 +2,7 @@ package com.example.snapconnect.ui.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.*
@@ -10,6 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -59,10 +62,18 @@ fun SnapConnectBottomBarWithFAB(
     
     Box(modifier = modifier) {
         NavigationBar(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .clip(RoundedCornerShape(24.dp))
+                .shadow(
+                    elevation = 8.dp,
+                    shape = RoundedCornerShape(24.dp),
+                    spotColor = com.example.snapconnect.ui.theme.SnapBlack.copy(alpha = 0.15f)
+                ),
             containerColor = MaterialTheme.colorScheme.surface,
             contentColor = MaterialTheme.colorScheme.onSurface,
-            tonalElevation = 3.dp
+            tonalElevation = 0.dp  // Remove default elevation since we're using custom shadow
         ) {
             bottomNavItems.forEach { item ->
                 if (item != null) {
@@ -102,7 +113,18 @@ fun SnapConnectBottomBarWithFAB(
             }
         }
         
-        // Floating Action Button for Camera
+        // Floating Action Button for Camera with animation
+        val infiniteTransition = rememberInfiniteTransition(label = "camera_pulse")
+        val cameraScale by infiniteTransition.animateFloat(
+            initialValue = 1f,
+            targetValue = 1.02f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(2000),
+                repeatMode = RepeatMode.Reverse
+            ),
+            label = "cameraScale"
+        )
+        
         FloatingActionButton(
             onClick = {
                 navController.navigate(Screen.Camera.route) {
@@ -115,12 +137,18 @@ fun SnapConnectBottomBarWithFAB(
             },
             modifier = Modifier
                 .align(Alignment.TopCenter)
-                .offset(y = (-28).dp), // Half above the navigation bar
+                .offset(y = (-36).dp)  // Adjusted for rounded navigation bar
+                .scale(cameraScale)
+                .shadow(
+                    elevation = 12.dp,
+                    shape = CircleShape,
+                    spotColor = com.example.snapconnect.ui.theme.SnapYellow.copy(alpha = 0.25f)
+                ),
             shape = CircleShape,
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary,
+            containerColor = com.example.snapconnect.ui.theme.SnapYellow,
+            contentColor = com.example.snapconnect.ui.theme.SnapBlack,
             elevation = FloatingActionButtonDefaults.elevation(
-                defaultElevation = 6.dp
+                defaultElevation = 0.dp  // Using custom shadow instead
             )
         ) {
             Icon(
@@ -130,48 +158,59 @@ fun SnapConnectBottomBarWithFAB(
             )
         }
         
-        // Enhanced Inspiration FAB - Bottom right with animation
-        val infiniteTransition = rememberInfiniteTransition(label = "inspiration_pulse")
-        val scale by infiniteTransition.animateFloat(
-            initialValue = 1f,
-            targetValue = 1.05f,  // Reduced from 1.1f for subtler animation
-            animationSpec = infiniteRepeatable(
-                animation = tween(1000),
-                repeatMode = RepeatMode.Reverse
-            ),
-            label = "scale"
-        )
-        
-        ExtendedFloatingActionButton(
-            onClick = {
-                navController.navigate(Screen.Inspiration.route) {
-                    popUpTo(navController.graph.startDestinationId) {
-                        saveState = true
+        // Enhanced Inspiration FAB - Bottom right with animation (only on Stories page)
+        if (currentRoute == Screen.Home.route) {
+            val inspirationTransition = rememberInfiniteTransition(label = "inspiration_pulse")
+            val scale by inspirationTransition.animateFloat(
+                initialValue = 1f,
+                targetValue = 1.05f,  // Reduced from 1.1f for subtler animation
+                animationSpec = infiniteRepeatable(
+                    animation = tween(1500),
+                    repeatMode = RepeatMode.Reverse
+                ),
+                label = "scale"
+            )
+            
+            ExtendedFloatingActionButton(
+                onClick = {
+                    navController.navigate(Screen.Inspiration.route) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
                     }
-                    launchSingleTop = true
-                    restoreState = true
+                },
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .offset(x = (-16).dp, y = (-80).dp)  // Adjusted for rounded navigation bar
+                    .scale(scale)
+                    .shadow(
+                        elevation = 8.dp,
+                        shape = RoundedCornerShape(24.dp),
+                        spotColor = com.example.snapconnect.ui.theme.SnapRed.copy(alpha = 0.25f)
+                    ),
+                containerColor = com.example.snapconnect.ui.theme.SnapRed,
+                contentColor = MaterialTheme.colorScheme.onPrimary,
+                shape = RoundedCornerShape(24.dp),
+                elevation = FloatingActionButtonDefaults.elevation(
+                    defaultElevation = 0.dp  // Using custom shadow instead
+                ),
+                icon = {
+                    Icon(
+                        Icons.Filled.Lightbulb,
+                        contentDescription = "AI Inspiration",
+                        modifier = Modifier.size(20.dp)  // Reduced from 24.dp
+                    )
+                },
+                text = { 
+                    Text(
+                        "AI Inspire", 
+                        fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                        fontSize = 14.sp  // Explicitly set smaller font size
+                    ) 
                 }
-            },
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .offset(x = (-16).dp, y = (-70).dp)
-                .scale(scale),
-            containerColor = com.example.snapconnect.ui.theme.SnapRed,
-            contentColor = MaterialTheme.colorScheme.onPrimary,
-            icon = {
-                Icon(
-                    Icons.Filled.Lightbulb,
-                    contentDescription = "AI Inspiration",
-                    modifier = Modifier.size(20.dp)  // Reduced from 24.dp
-                )
-            },
-            text = { 
-                Text(
-                    "AI Inspire", 
-                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
-                    fontSize = 14.sp  // Explicitly set smaller font size
-                ) 
-            }
-        )
+            )
+        }
     }
 } 

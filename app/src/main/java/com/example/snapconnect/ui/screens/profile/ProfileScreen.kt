@@ -117,12 +117,6 @@ fun ProfileScreen(
                                 contentDescription = "Edit Profile"
                             )
                         }
-                        IconButton(onClick = { /* TODO: Settings */ }) {
-                            Icon(
-                                imageVector = Icons.Default.Settings,
-                                contentDescription = "Settings"
-                            )
-                        }
                     }
                 }
             )
@@ -285,28 +279,6 @@ fun ProfileScreen(
                         fontSize = 16.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-                    
-                    Spacer(modifier = Modifier.height(8.dp))
-                    
-                    // Snapcode button
-                    OutlinedButton(
-                        onClick = { /* TODO: Show snapcode */ },
-                        modifier = Modifier.padding(horizontal = 32.dp),
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            contentColor = SnapYellow
-                        ),
-                        border = ButtonDefaults.outlinedButtonBorder.copy(
-                            brush = androidx.compose.ui.graphics.SolidColor(SnapYellow)
-                        )
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.QrCode,
-                            contentDescription = null,
-                            modifier = Modifier.size(18.dp)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text("My Snapcode")
-                    }
                 }
             }
             
@@ -358,18 +330,6 @@ fun ProfileScreen(
                     icon = Icons.Default.Notifications,
                     title = "Notifications",
                     onClick = { navController.navigate(Screen.Notifications.route) }
-                )
-                
-                ProfileMenuItem(
-                    icon = Icons.Default.Lock,
-                    title = "Privacy",
-                    onClick = { /* TODO */ }
-                )
-                
-                ProfileMenuItem(
-                    icon = Icons.Default.Help,
-                    title = "Support",
-                    onClick = { /* TODO */ }
                 )
                 
                 ProfileMenuItem(

@@ -1,5 +1,6 @@
 package com.example.snapconnect.ui.screens.home
 
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.BorderStroke
@@ -15,9 +16,12 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -40,6 +44,14 @@ import com.example.snapconnect.ui.theme.SnapBlue
 import com.example.snapconnect.ui.theme.SnapRed
 import com.example.snapconnect.ui.theme.SnapYellow
 import com.example.snapconnect.ui.theme.SnapBlueAccent
+import com.example.snapconnect.ui.theme.SnapPurple
+import com.example.snapconnect.ui.theme.SnapPink
+import com.example.snapconnect.ui.theme.WarmGray400
+import com.example.snapconnect.ui.theme.StoryBorderGradient
+import com.example.snapconnect.ui.theme.SnapBlack
+import com.example.snapconnect.ui.theme.WarmGray300
+import com.example.snapconnect.ui.theme.GlassWhite
+import kotlinx.coroutines.delay
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.coroutines.flow.StateFlow
@@ -54,19 +66,24 @@ fun HomeScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     
+    // Refresh stories every time the screen is navigated to
+    LaunchedEffect(Unit) {
+        viewModel.loadStories()
+    }
+    
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Text(
                         text = "SnapConnect",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp
+                        style = MaterialTheme.typography.displaySmall,
+                        fontWeight = FontWeight.Bold
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = SnapYellow,
-                    titleContentColor = Color.Black
+                    titleContentColor = SnapBlack
                 ),
                 actions = {
                     IconButton(
@@ -76,7 +93,8 @@ fun HomeScreen(
                             Icon(
                                 imageVector = Icons.Default.Lightbulb,
                                 contentDescription = "AI Inspiration",
-                                tint = SnapRed
+                                tint = SnapRed,
+                                modifier = Modifier.size(28.dp)
                             )
                             // Small "AI" badge
                             Badge(
@@ -92,10 +110,15 @@ fun HomeScreen(
                         Icon(
                             imageVector = Icons.Default.Refresh,
                             contentDescription = "Refresh",
-                            tint = Color.Black
+                            tint = SnapBlack,
+                            modifier = Modifier.size(24.dp)
                         )
                     }
-                }
+                },
+                modifier = Modifier.shadow(
+                    elevation = 8.dp,
+                    spotColor = SnapYellow.copy(alpha = 0.25f)
+                )
             )
         },
         bottomBar = {
@@ -315,34 +338,53 @@ fun StoryCircle(
     hasUnseenStory: Boolean,
     onClick: () -> Unit
 ) {
+    // Scale animation on press
+    var isPressed by remember { mutableStateOf(false) }
+    val scale by animateFloatAsState(
+        targetValue = if (isPressed) 0.95f else 1f,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow
+        ),
+        label = "scale"
+    )
+    
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .width(72.dp)
-            .clickable { onClick() }
+            .scale(scale)
+            .clickable {
+                isPressed = true
+                onClick()
+            }
     ) {
         Box(
             modifier = Modifier
-                .size(64.dp)
+                .size(68.dp)
+                .padding(2.dp)
                 .then(
                     if (hasUnseenStory) {
                         Modifier.border(
-                            width = 2.dp,
-                            brush = Brush.linearGradient(
-                                colors = listOf(SnapBlue, SnapRed, SnapBlueAccent)
-                            ),
+                            width = 3.dp,
+                            brush = StoryBorderGradient,
                             shape = CircleShape
                         )
                     } else {
                         Modifier.border(
                             width = 2.dp,
-                            color = Color.Gray.copy(alpha = 0.5f),
+                            color = WarmGray400,
                             shape = CircleShape
                         )
                     }
                 )
-                .padding(3.dp)
+                .padding(4.dp)
                 .clip(CircleShape)
+                .shadow(
+                    elevation = if (hasUnseenStory) 4.dp else 0.dp,
+                    shape = CircleShape,
+                    spotColor = SnapPurple.copy(alpha = 0.25f)
+                )
         ) {
             if (user.avatarUrl != null) {
                 AsyncImage(
@@ -355,14 +397,18 @@ fun StoryCircle(
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(MaterialTheme.colorScheme.primaryContainer),
+                        .background(
+                            brush = Brush.linearGradient(
+                                colors = listOf(SnapPurple, SnapPink)
+                            )
+                        ),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
                         text = user.username.firstOrNull()?.uppercase() ?: "?",
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                        color = Color.White
                     )
                 }
             }
@@ -370,12 +416,20 @@ fun StoryCircle(
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = user.displayName ?: user.username,
-            fontSize = 12.sp,
+            style = MaterialTheme.typography.labelSmall,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
         )
+    }
+    
+    // Reset pressed state
+    LaunchedEffect(isPressed) {
+        if (isPressed) {
+            delay(100)
+            isPressed = false
+        }
     }
 }
 
@@ -386,23 +440,53 @@ fun StoryCard(
     story: Story,
     onStoryClick: () -> Unit
 ) {
+    var isPressed by remember { mutableStateOf(false) }
+    val cardScale by animateFloatAsState(
+        targetValue = if (isPressed) 0.98f else 1f,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow
+        ),
+        label = "cardScale"
+    )
+    
     Card(
-        onClick = onStoryClick,
+        onClick = {
+            isPressed = true
+            onStoryClick()
+        },
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            .padding(horizontal = 20.dp, vertical = 10.dp)
+            .scale(cardScale)
+            .shadow(
+                elevation = 6.dp,
+                shape = RoundedCornerShape(16.dp),
+                spotColor = SnapBlack.copy(alpha = 0.1f)
+            ),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        )
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp),
+                .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // User avatar
+            // User avatar with gradient border
             Box(
                 modifier = Modifier
-                    .size(48.dp)
+                    .size(52.dp)
+                    .border(
+                        width = 2.dp,
+                        brush = Brush.linearGradient(
+                            colors = listOf(SnapPurple, SnapPink)
+                        ),
+                        shape = CircleShape
+                    )
+                    .padding(3.dp)
                     .clip(CircleShape)
             ) {
                 if (user.avatarUrl != null) {
@@ -416,20 +500,24 @@ fun StoryCard(
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(MaterialTheme.colorScheme.primaryContainer),
+                            .background(
+                                brush = Brush.linearGradient(
+                                    colors = listOf(SnapPurple, SnapPink)
+                                )
+                            ),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
                             text = user.username.firstOrNull()?.uppercase() ?: "?",
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                            color = Color.White
                         )
                     }
                 }
             }
             
-            Spacer(modifier = Modifier.width(12.dp))
+            Spacer(modifier = Modifier.width(16.dp))
             
             // Story info
             Column(
@@ -437,15 +525,15 @@ fun StoryCard(
             ) {
                 Text(
                     text = user.displayName ?: user.username,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 16.sp
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold
                 )
                 
                 // Caption if available
                 if (!story.caption.isNullOrBlank()) {
                     Text(
                         text = story.caption,
-                        fontSize = 14.sp,
+                        style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
@@ -455,11 +543,11 @@ fun StoryCard(
                 
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     Text(
                         text = getTimeAgo(story.createdAt),
-                        fontSize = 12.sp,
+                        style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     
@@ -474,17 +562,17 @@ fun StoryCard(
                         if (story.likesCount > 0) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(2.dp)
+                                horizontalArrangement = Arrangement.spacedBy(4.dp)
                             ) {
                                 Icon(
                                     imageVector = Icons.Filled.ThumbUp,
                                     contentDescription = "Likes",
-                                    modifier = Modifier.size(12.dp),
-                                    tint = MaterialTheme.colorScheme.primary
+                                    modifier = Modifier.size(14.dp),
+                                    tint = SnapBlue
                                 )
                                 Text(
                                     text = "${story.likesCount}",
-                                    fontSize = 12.sp,
+                                    style = MaterialTheme.typography.labelSmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
@@ -493,17 +581,17 @@ fun StoryCard(
                         if (story.dislikesCount > 0) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(2.dp)
+                                horizontalArrangement = Arrangement.spacedBy(4.dp)
                             ) {
                                 Icon(
                                     imageVector = Icons.Filled.ThumbDown,
                                     contentDescription = "Dislikes",
-                                    modifier = Modifier.size(12.dp),
-                                    tint = MaterialTheme.colorScheme.error
+                                    modifier = Modifier.size(14.dp),
+                                    tint = SnapRed
                                 )
                                 Text(
                                     text = "${story.dislikesCount}",
-                                    fontSize = 12.sp,
+                                    style = MaterialTheme.typography.labelSmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
@@ -512,12 +600,12 @@ fun StoryCard(
                 }
             }
             
-            // Media preview
+            // Media preview with rounded corners
             Box(
                 modifier = Modifier
-                    .size(60.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .size(72.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(WarmGray300)
             ) {
                 AsyncImage(
                     model = story.mediaUrl,
@@ -526,23 +614,39 @@ fun StoryCard(
                     contentScale = ContentScale.Crop
                 )
                 
-                // Video indicator overlay
+                // Video indicator overlay with glass effect
                 if (story.mediaType == MediaType.VIDEO) {
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(Color.Black.copy(alpha = 0.3f)),
+                            .background(SnapBlack.copy(alpha = 0.3f)),
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.PlayArrow,
-                            contentDescription = "Video",
-                            tint = Color.White,
-                            modifier = Modifier.size(24.dp)
-                        )
+                        Box(
+                            modifier = Modifier
+                                .size(32.dp)
+                                .clip(CircleShape)
+                                .background(GlassWhite),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.PlayArrow,
+                                contentDescription = "Video",
+                                tint = Color.White,
+                                modifier = Modifier.size(20.dp)
+                            )
+                        }
                     }
                 }
             }
+        }
+    }
+    
+    // Reset pressed state
+    LaunchedEffect(isPressed) {
+        if (isPressed) {
+            delay(100)
+            isPressed = false
         }
     }
 }
