@@ -61,12 +61,6 @@ fun SnapConnectBottomBar(
             unselectedIcon = Icons.Outlined.Person,
             route = Screen.Profile.route,
             showLabel = false // Profile icon is recognizable without label
-        ),
-        BottomNavItem(
-            title = "Inspire",
-            selectedIcon = Icons.Filled.Lightbulb,
-            unselectedIcon = Icons.Outlined.Lightbulb,
-            route = Screen.Inspiration.route
         )
     )
     

@@ -1,5 +1,6 @@
 package com.example.snapconnect.data.repository
 
+import android.content.SharedPreferences
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.gotrue.providers.builtin.Email
@@ -13,8 +14,13 @@ import javax.inject.Singleton
 
 @Singleton
 class AuthRepository @Inject constructor(
-    private val supabase: SupabaseClient
+    private val supabase: SupabaseClient,
+    private val sharedPreferences: SharedPreferences
 ) {
+    
+    companion object {
+        private const val KEY_TUTORIAL_SEEN = "tutorial_seen"
+    }
     
     suspend fun signUp(email: String, password: String, username: String): Result<Unit> {
         return try {
@@ -46,6 +52,8 @@ class AuthRepository @Inject constructor(
     suspend fun signOut(): Result<Unit> {
         return try {
             supabase.auth.signOut()
+            // Clear tutorial status on logout
+            sharedPreferences.edit().remove(KEY_TUTORIAL_SEEN).apply()
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -57,6 +65,16 @@ class AuthRepository @Inject constructor(
     }
     
     fun getCurrentUser() = supabase.auth.currentUserOrNull()
+    
+    fun hasSeenTutorial(): Boolean {
+        val userId = getCurrentUser()?.id ?: return false
+        return sharedPreferences.getBoolean("${KEY_TUTORIAL_SEEN}_$userId", false)
+    }
+    
+    fun setTutorialSeen() {
+        val userId = getCurrentUser()?.id ?: return
+        sharedPreferences.edit().putBoolean("${KEY_TUTORIAL_SEEN}_$userId", true).apply()
+    }
     
     fun sessionFlow(): Flow<UserSession?> = flow {
         emit(supabase.auth.currentSessionOrNull())

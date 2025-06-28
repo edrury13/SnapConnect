@@ -96,45 +96,45 @@ class HomeViewModel @Inject constructor(
     }
     
     private suspend fun loadStoriesWithoutRecommendations() {
-        storyRepository.getFriendsStories()
-            .onSuccess { stories ->
-                // Group stories by user
-                val groupedStories = stories.groupBy { it.userId }
-                val userIds = groupedStories.keys.toList()
-                
-                // Fetch user information
-                userRepository.getUsersByIds(userIds)
-                    .onSuccess { users ->
-                        val userMap = users.associateBy { it.id }
-                        val userStories = mutableMapOf<User, List<Story>>()
-                        
-                        groupedStories.forEach { (userId, userStoryList) ->
-                            userMap[userId]?.let { user ->
-                                userStories[user] = userStoryList
+            storyRepository.getFriendsStories()
+                .onSuccess { stories ->
+                    // Group stories by user
+                    val groupedStories = stories.groupBy { it.userId }
+                    val userIds = groupedStories.keys.toList()
+                    
+                    // Fetch user information
+                    userRepository.getUsersByIds(userIds)
+                        .onSuccess { users ->
+                            val userMap = users.associateBy { it.id }
+                            val userStories = mutableMapOf<User, List<Story>>()
+                            
+                            groupedStories.forEach { (userId, userStoryList) ->
+                                userMap[userId]?.let { user ->
+                                    userStories[user] = userStoryList
+                                }
                             }
-                        }
-                        
+                            
                         // Put all stories in "other" category when recommendations are not available
-                        _uiState.value = HomeUiState(
-                            isLoading = false,
+                            _uiState.value = HomeUiState(
+                                isLoading = false,
                             recommendedStories = emptyMap(),
                             otherStories = userStories,
                             hasRecommendations = false
-                        )
-                    }
-                    .onFailure { error ->
-                        _uiState.value = HomeUiState(
-                            isLoading = false,
-                            errorMessage = error.message
-                        )
-                    }
-            }
-            .onFailure { error ->
-                _uiState.value = HomeUiState(
-                    isLoading = false,
-                    errorMessage = error.message
-                )
-            }
+                            )
+                        }
+                        .onFailure { error ->
+                            _uiState.value = HomeUiState(
+                                isLoading = false,
+                                errorMessage = error.message
+                            )
+                        }
+                }
+                .onFailure { error ->
+                    _uiState.value = HomeUiState(
+                        isLoading = false,
+                        errorMessage = error.message
+                    )
+        }
     }
     
     fun clearError() {

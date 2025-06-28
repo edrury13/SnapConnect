@@ -69,6 +69,25 @@ fun HomeScreen(
                     titleContentColor = Color.Black
                 ),
                 actions = {
+                    IconButton(
+                        onClick = { navController.navigate(Screen.Inspiration.route) }
+                    ) {
+                        Box {
+                            Icon(
+                                imageVector = Icons.Default.Lightbulb,
+                                contentDescription = "AI Inspiration",
+                                tint = SnapRed
+                            )
+                            // Small "AI" badge
+                            Badge(
+                                modifier = Modifier.align(Alignment.TopEnd),
+                                containerColor = SnapRed,
+                                contentColor = Color.White
+                            ) {
+                                Text("AI", fontSize = 8.sp)
+                            }
+                        }
+                    }
                     IconButton(onClick = { viewModel.loadStories() }) {
                         Icon(
                             imageVector = Icons.Default.Refresh,
@@ -422,6 +441,18 @@ fun StoryCard(
                     fontSize = 16.sp
                 )
                 
+                // Caption if available
+                if (!story.caption.isNullOrBlank()) {
+                    Text(
+                        text = story.caption,
+                        fontSize = 14.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.padding(vertical = 2.dp)
+                    )
+                }
+                
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -613,6 +644,18 @@ fun RecommendedStoryCard(
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 16.sp
                     )
+                    
+                    // Caption if available
+                    if (!story.caption.isNullOrBlank()) {
+                        Text(
+                            text = story.caption,
+                            fontSize = 14.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.padding(vertical = 2.dp)
+                        )
+                    }
                     
                     Row(
                         verticalAlignment = Alignment.CenterVertically,

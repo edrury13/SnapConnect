@@ -278,6 +278,96 @@ fun StoryViewScreen(
                         .fillMaxWidth()
                         .align(Alignment.BottomCenter)
                 ) {
+                    // Comments preview (show first 2-3 comments)
+                    if (uiState.comments.isNotEmpty()) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(
+                                    Color.Black.copy(alpha = 0.6f),
+                                    shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+                                )
+                                .padding(horizontal = 16.dp, vertical = 12.dp)
+                        ) {
+                            // Show up to 3 most recent comments
+                            val previewComments = uiState.comments.take(3)
+                            
+                            previewComments.forEach { (comment, user) ->
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 4.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    // Small user avatar
+                                    Box(
+                                        modifier = Modifier
+                                            .size(20.dp)
+                                            .clip(CircleShape)
+                                    ) {
+                                        if (user.avatarUrl != null) {
+                                            AsyncImage(
+                                                model = user.avatarUrl,
+                                                contentDescription = "${user.username}'s avatar",
+                                                modifier = Modifier.fillMaxSize(),
+                                                contentScale = ContentScale.Crop
+                                            )
+                                        } else {
+                                            Box(
+                                                modifier = Modifier
+                                                    .fillMaxSize()
+                                                    .background(MaterialTheme.colorScheme.primaryContainer),
+                                                contentAlignment = Alignment.Center
+                                            ) {
+                                                Text(
+                                                    text = user.username.firstOrNull()?.uppercase() ?: "?",
+                                                    fontSize = 8.sp,
+                                                    fontWeight = FontWeight.Bold,
+                                                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                                                )
+                                            }
+                                        }
+                                    }
+                                    
+                                    // Comment text
+                                    Row(
+                                        modifier = Modifier.weight(1f),
+                                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                    ) {
+                                        Text(
+                                            text = user.displayName ?: user.username,
+                                            color = Color.White,
+                                            fontSize = 12.sp,
+                                            fontWeight = FontWeight.SemiBold,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+                                        Text(
+                                            text = comment.text,
+                                            color = Color.White.copy(alpha = 0.9f),
+                                            fontSize = 12.sp,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+                                    }
+                                }
+                            }
+                            
+                            // Show "View all X comments" if there are more
+                            if (uiState.comments.size > 3) {
+                                Text(
+                                    text = "View all ${uiState.comments.size} comments",
+                                    color = Color.White.copy(alpha = 0.7f),
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    modifier = Modifier
+                                        .padding(top = 4.dp)
+                                        .clickable { viewModel.toggleComments() }
+                                )
+                            }
+                        }
+                    }
+                    
                     // Reaction and Comment buttons
                     Row(
                         modifier = Modifier

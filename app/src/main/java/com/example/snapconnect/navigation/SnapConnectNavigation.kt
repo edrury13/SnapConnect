@@ -18,6 +18,7 @@ import com.example.snapconnect.ui.screens.profile.ProfileScreen
 import com.example.snapconnect.ui.screens.story.StoryViewScreen
 import com.example.snapconnect.ui.screens.chat.ChatScreen
 import com.example.snapconnect.ui.screens.notifications.NotificationsScreen
+import com.example.snapconnect.ui.screens.tutorial.TutorialScreen
 
 sealed class Screen(val route: String) {
     object Login : Screen("login")
@@ -57,6 +58,7 @@ sealed class Screen(val route: String) {
     object StyleGallery : Screen("style_gallery/{styleTag}") {
         fun createRoute(styleTag: String) = "style_gallery/$styleTag"
     }
+    object Tutorial : Screen("tutorial")
 }
 
 @Composable
@@ -130,6 +132,16 @@ fun SnapConnectNavigation(
         
         composable(Screen.Notifications.route) {
             NotificationsScreen(navController = navController)
+        }
+        
+        composable(Screen.Tutorial.route) {
+            TutorialScreen(
+                onComplete = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.Tutorial.route) { inclusive = true }
+                    }
+                }
+            )
         }
         
         composable(

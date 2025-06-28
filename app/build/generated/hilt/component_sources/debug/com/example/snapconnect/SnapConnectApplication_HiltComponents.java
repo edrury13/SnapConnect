@@ -14,6 +14,7 @@ import com.example.snapconnect.ui.screens.messages.MessagesViewModel_HiltModules
 import com.example.snapconnect.ui.screens.notifications.NotificationsViewModel_HiltModules;
 import com.example.snapconnect.ui.screens.profile.ProfileViewModel_HiltModules;
 import com.example.snapconnect.ui.screens.story.StoryViewViewModel_HiltModules;
+import com.example.snapconnect.ui.screens.tutorial.TutorialViewModel_HiltModules;
 import com.example.snapconnect.ui.viewmodel.InspirationViewModel_HiltModules;
 import dagger.Binds;
 import dagger.Component;
@@ -181,7 +182,8 @@ public final class SnapConnectApplication_HiltComponents {
           ViewModelCBuilderModule.class,
           StoryPostViewModel_HiltModules.KeyModule.class,
           StoryViewViewModel_HiltModules.KeyModule.class,
-          StyleGalleryViewModel_HiltModules.KeyModule.class
+          StyleGalleryViewModel_HiltModules.KeyModule.class,
+          TutorialViewModel_HiltModules.KeyModule.class
       }
   )
   @ActivityRetainedScoped
@@ -231,7 +233,8 @@ public final class SnapConnectApplication_HiltComponents {
           ProfileViewModel_HiltModules.BindsModule.class,
           StoryPostViewModel_HiltModules.BindsModule.class,
           StoryViewViewModel_HiltModules.BindsModule.class,
-          StyleGalleryViewModel_HiltModules.BindsModule.class
+          StyleGalleryViewModel_HiltModules.BindsModule.class,
+          TutorialViewModel_HiltModules.BindsModule.class
       }
   )
   @ViewModelScoped

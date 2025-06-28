@@ -1,5 +1,6 @@
 package com.example.snapconnect.data.repository;
 
+import android.content.SharedPreferences;
 import dagger.internal.DaggerGenerated;
 import dagger.internal.Factory;
 import dagger.internal.QualifierMetadata;
@@ -24,20 +25,26 @@ import javax.inject.Provider;
 public final class AuthRepository_Factory implements Factory<AuthRepository> {
   private final Provider<SupabaseClient> supabaseProvider;
 
-  public AuthRepository_Factory(Provider<SupabaseClient> supabaseProvider) {
+  private final Provider<SharedPreferences> sharedPreferencesProvider;
+
+  public AuthRepository_Factory(Provider<SupabaseClient> supabaseProvider,
+      Provider<SharedPreferences> sharedPreferencesProvider) {
     this.supabaseProvider = supabaseProvider;
+    this.sharedPreferencesProvider = sharedPreferencesProvider;
   }
 
   @Override
   public AuthRepository get() {
-    return newInstance(supabaseProvider.get());
+    return newInstance(supabaseProvider.get(), sharedPreferencesProvider.get());
   }
 
-  public static AuthRepository_Factory create(Provider<SupabaseClient> supabaseProvider) {
-    return new AuthRepository_Factory(supabaseProvider);
+  public static AuthRepository_Factory create(Provider<SupabaseClient> supabaseProvider,
+      Provider<SharedPreferences> sharedPreferencesProvider) {
+    return new AuthRepository_Factory(supabaseProvider, sharedPreferencesProvider);
   }
 
-  public static AuthRepository newInstance(SupabaseClient supabase) {
-    return new AuthRepository(supabase);
+  public static AuthRepository newInstance(SupabaseClient supabase,
+      SharedPreferences sharedPreferences) {
+    return new AuthRepository(supabase, sharedPreferences);
   }
 }

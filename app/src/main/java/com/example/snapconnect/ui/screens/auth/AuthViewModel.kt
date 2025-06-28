@@ -13,7 +13,8 @@ import javax.inject.Inject
 data class AuthUiState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
-    val isLoggedIn: Boolean = false
+    val isLoggedIn: Boolean = false,
+    val hasSeenTutorial: Boolean = false
 )
 
 @HiltViewModel
@@ -30,7 +31,8 @@ class AuthViewModel @Inject constructor(
     
     private fun checkLoginStatus() {
         _uiState.value = _uiState.value.copy(
-            isLoggedIn = authRepository.isUserLoggedIn()
+            isLoggedIn = authRepository.isUserLoggedIn(),
+            hasSeenTutorial = authRepository.hasSeenTutorial()
         )
     }
     
@@ -42,7 +44,8 @@ class AuthViewModel @Inject constructor(
                 .onSuccess {
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
-                        isLoggedIn = true
+                        isLoggedIn = true,
+                        hasSeenTutorial = authRepository.hasSeenTutorial()
                     )
                 }
                 .onFailure { exception ->
@@ -62,7 +65,8 @@ class AuthViewModel @Inject constructor(
                 .onSuccess {
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
-                        isLoggedIn = true
+                        isLoggedIn = true,
+                        hasSeenTutorial = false // New users haven't seen tutorial
                     )
                 }
                 .onFailure { exception ->

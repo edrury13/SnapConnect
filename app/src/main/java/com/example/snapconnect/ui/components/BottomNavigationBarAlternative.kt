@@ -17,6 +17,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.snapconnect.navigation.Screen
+import androidx.compose.animation.core.*
+import androidx.compose.ui.draw.scale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -128,30 +130,48 @@ fun SnapConnectBottomBarWithFAB(
             )
         }
         
-        // Optional: Add Inspiration as a secondary FAB or menu item
-        if (currentRoute == Screen.Home.route || currentRoute == Screen.Friends.route) {
-            SmallFloatingActionButton(
-                onClick = {
-                    navController.navigate(Screen.Inspiration.route) {
-                        popUpTo(navController.graph.startDestinationId) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
+        // Enhanced Inspiration FAB - Bottom right with animation
+        val infiniteTransition = rememberInfiniteTransition(label = "inspiration_pulse")
+        val scale by infiniteTransition.animateFloat(
+            initialValue = 1f,
+            targetValue = 1.05f,  // Reduced from 1.1f for subtler animation
+            animationSpec = infiniteRepeatable(
+                animation = tween(1000),
+                repeatMode = RepeatMode.Reverse
+            ),
+            label = "scale"
+        )
+        
+        ExtendedFloatingActionButton(
+            onClick = {
+                navController.navigate(Screen.Inspiration.route) {
+                    popUpTo(navController.graph.startDestinationId) {
+                        saveState = true
                     }
-                },
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .offset(x = (-16).dp, y = (-60).dp),
-                containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                contentColor = MaterialTheme.colorScheme.onSecondaryContainer
-            ) {
+                    launchSingleTop = true
+                    restoreState = true
+                }
+            },
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .offset(x = (-16).dp, y = (-70).dp)
+                .scale(scale),
+            containerColor = com.example.snapconnect.ui.theme.SnapRed,
+            contentColor = MaterialTheme.colorScheme.onPrimary,
+            icon = {
                 Icon(
                     Icons.Filled.Lightbulb,
-                    contentDescription = "Inspiration",
-                    modifier = Modifier.size(20.dp)
+                    contentDescription = "AI Inspiration",
+                    modifier = Modifier.size(20.dp)  // Reduced from 24.dp
                 )
+            },
+            text = { 
+                Text(
+                    "AI Inspire", 
+                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                    fontSize = 14.sp  // Explicitly set smaller font size
+                ) 
             }
-        }
+        )
     }
 } 

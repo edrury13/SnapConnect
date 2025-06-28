@@ -372,6 +372,12 @@ fun ProfileScreen(
                     onClick = { /* TODO */ }
                 )
                 
+                ProfileMenuItem(
+                    icon = Icons.Default.School,
+                    title = "View Tutorial",
+                    onClick = { navController.navigate(Screen.Tutorial.route) }
+                )
+                
                 Spacer(modifier = Modifier.height(24.dp))
                 
                 // Logout Button

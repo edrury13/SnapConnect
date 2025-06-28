@@ -40,10 +40,16 @@ fun LoginScreen(
     
     val uiState by viewModel.uiState.collectAsState()
     
-    LaunchedEffect(uiState.isLoggedIn) {
+    LaunchedEffect(uiState.isLoggedIn, uiState.hasSeenTutorial) {
         if (uiState.isLoggedIn) {
-            navController.navigate(Screen.Home.route) {
-                popUpTo(Screen.Login.route) { inclusive = true }
+            if (uiState.hasSeenTutorial) {
+                navController.navigate(Screen.Home.route) {
+                    popUpTo(Screen.Login.route) { inclusive = true }
+                }
+            } else {
+                navController.navigate(Screen.Tutorial.route) {
+                    popUpTo(Screen.Login.route) { inclusive = true }
+                }
             }
         }
     }

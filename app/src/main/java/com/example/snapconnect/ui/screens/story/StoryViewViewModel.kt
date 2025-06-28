@@ -88,6 +88,9 @@ class StoryViewViewModel @Inject constructor(
                                 
                                 // Mark story as viewed
                                 markAsViewed(currentStory.id)
+                                
+                                // Load comments for the current story
+                                loadComments(currentStory.id)
                             }
                             .onFailure { error ->
                                 _uiState.value = StoryViewUiState(
@@ -126,9 +129,9 @@ class StoryViewViewModel @Inject constructor(
             )
             markAsViewed(nextStory.id)
             
-            // Cancel comments observation
+            // Cancel previous comments observation and load new ones
             commentsJob?.cancel()
-            commentsJob = null
+            loadComments(nextStory.id)
         }
     }
     
@@ -146,9 +149,9 @@ class StoryViewViewModel @Inject constructor(
                 showComments = false
             )
             
-            // Cancel comments observation
+            // Cancel previous comments observation and load new ones
             commentsJob?.cancel()
-            commentsJob = null
+            loadComments(previousStory.id)
         }
     }
     
