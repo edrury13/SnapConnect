@@ -32,6 +32,45 @@ import kotlinx.coroutines.Dispatchers
 import com.example.snapconnect.data.repository.EmbeddingRepository
 import com.example.snapconnect.data.repository.LangchainRepository
 import com.example.snapconnect.data.repository.VisionRepository
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.get
+import io.ktor.client.request.headers
+import io.ktor.http.HttpHeaders
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class RecommendationResponse(
+    val user_id: String,
+    val recommendations: List<RecommendedStory>,
+    val total_found: Int,
+    val recommendation_type: String
+)
+
+@Serializable
+data class RecommendedStory(
+    val id: String,
+    val user_id: String,
+    val media_url: String,
+    val media_type: String,
+    val caption: String? = null,
+    val viewer_ids: List<String> = emptyList(),
+    val is_public: Boolean = true,
+    val created_at: String,
+    val expires_at: String,
+    val style_tags: List<String> = emptyList(),
+    val ai_caption: String? = null,
+    val likes_count: Int = 0,
+    val dislikes_count: Int = 0,
+    val recommendation_score: Double,
+    val recommendation_reason: String
+)
+
+data class UserInteractionHistory(
+    val likedStoryIds: List<String>,
+    val postedStoryIds: List<String>,
+    val commentedStoryIds: List<String>
+)
 
 @Singleton
 class StoryRepository @Inject constructor(
@@ -39,6 +78,7 @@ class StoryRepository @Inject constructor(
     private val embeddingRepo: EmbeddingRepository,
     private val langchainRepo: LangchainRepository,
     private val visionRepo: VisionRepository,
+    private val httpClient: HttpClient
 ) {
     
     suspend fun createStory(
@@ -388,6 +428,138 @@ class StoryRepository @Inject constructor(
             )
             
             Result.success(storyWithReaction)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+    
+    suspend fun getRecommendedStories(limit: Int = 20): Result<List<Story>> {
+        return try {
+            val userId = supabase.auth.currentUserOrNull()?.id 
+                ?: return Result.failure(Exception("User not authenticated"))
+            
+            // Call the recommendation endpoint
+            val baseUrl = "https://snapconnect-backend.onrender.com" // Same as in AppModule
+            val apiKey = "RT5PrU6c8dnk5UUaP1dyDIqQjY6KuV2IXXKZvKvkMiz8N2AwrZhHJwYm8GZlCjQWPqaAB9UAMqwYkzPx67DQnx6muHfXscKpmmJVVVp9FWoyWIudwx35Qrv5H3TqwCnm" // Same as in AppModule
+            
+            val response = httpClient.get("$baseUrl/api/v1/recommend/$userId") {
+                headers {
+                    append("X-API-Key", apiKey)
+                    append(HttpHeaders.ContentType, "application/json")
+                }
+                url {
+                    parameters.append("limit", limit.toString())
+                }
+            }
+            
+            if (response.status.value in 200..299) {
+                val recommendationResponse = response.body<RecommendationResponse>()
+                
+                // Convert recommended stories to Story objects
+                val stories = recommendationResponse.recommendations.map { rec ->
+                    Story(
+                        id = rec.id,
+                        userId = rec.user_id,
+                        mediaUrl = rec.media_url,
+                        mediaType = MediaType.valueOf(rec.media_type),
+                        caption = rec.caption,
+                        viewerIds = rec.viewer_ids,
+                        isPublic = rec.is_public,
+                        createdAt = Instant.parse(rec.created_at),
+                        expiresAt = Instant.parse(rec.expires_at),
+                        styleTags = rec.style_tags,
+                        aiCaption = rec.ai_caption,
+                        likesCount = rec.likes_count,
+                        dislikesCount = rec.dislikes_count,
+                        userReaction = null
+                    )
+                }
+                
+                Result.success(stories)
+            } else {
+                // If recommendation service fails, fall back to regular stories
+                getFriendsStories()
+            }
+        } catch (e: Exception) {
+            // If recommendation service is not available, fall back to regular stories
+            getFriendsStories()
+        }
+    }
+    
+    suspend fun getStoriesWithRecommendations(): Result<Pair<List<Story>, List<Story>>> {
+        return try {
+            val userId = supabase.auth.currentUserOrNull()?.id 
+                ?: return Result.failure(Exception("User not authenticated"))
+            
+            // Get recommended stories
+            val recommendedStories = getRecommendedStories(20).getOrDefault(emptyList())
+            val recommendedIds = recommendedStories.map { it.id }.toSet()
+            
+            // Get all friend stories
+            val allStories = getFriendsStories().getOrDefault(emptyList())
+            
+            // Filter out recommended stories from the general feed
+            val nonRecommendedStories = allStories.filter { it.id !in recommendedIds }
+            
+            // Sort non-recommended stories:
+            // 1. Stories with style tags and AI captions first
+            // 2. Then stories without them
+            val sortedNonRecommended = nonRecommendedStories.sortedWith(
+                compareByDescending<Story> { 
+                    it.styleTags.isNotEmpty() && it.aiCaption != null 
+                }.thenByDescending { it.createdAt }
+            )
+            
+            Result.success(Pair(recommendedStories, sortedNonRecommended))
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+    
+    suspend fun getUserInteractionHistory(): Result<UserInteractionHistory> {
+        return try {
+            val userId = supabase.auth.currentUserOrNull()?.id 
+                ?: return Result.failure(Exception("User not authenticated"))
+            
+            // Get liked stories
+            val likedStories = supabase.from("story_reactions")
+                .select() {
+                    filter {
+                        eq("user_id", userId)
+                        eq("reaction_type", "LIKE")
+                    }
+                }
+                .decodeList<StoryReaction>()
+                .map { it.storyId }
+            
+            // Get posted stories
+            val postedStories = supabase.from("stories")
+                .select(columns = Columns.list("id")) {
+                    filter {
+                        eq("user_id", userId)
+                    }
+                }
+                .decodeList<JsonObject>()
+                .mapNotNull { it["id"]?.toString()?.trim('"') }
+            
+            // Get commented stories
+            val commentedStories = supabase.from("comments")
+                .select(columns = Columns.list("story_id")) {
+                    filter {
+                        eq("user_id", userId)
+                    }
+                }
+                .decodeList<JsonObject>()
+                .mapNotNull { it["story_id"]?.toString()?.trim('"') }
+                .distinct()
+            
+            Result.success(
+                UserInteractionHistory(
+                    likedStoryIds = likedStories,
+                    postedStoryIds = postedStories,
+                    commentedStoryIds = commentedStories
+                )
+            )
         } catch (e: Exception) {
             Result.failure(e)
         }

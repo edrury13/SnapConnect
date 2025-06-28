@@ -15,9 +15,15 @@ import javax.inject.Inject
 
 data class HomeUiState(
     val isLoading: Boolean = false,
-    val userStories: Map<User, List<Story>> = emptyMap(),
+    val recommendedStories: Map<User, List<Story>> = emptyMap(), // Stories similar to user's interests
+    val otherStories: Map<User, List<Story>> = emptyMap(), // All other stories
+    val hasRecommendations: Boolean = false,
     val errorMessage: String? = null
-)
+) {
+    // Convenience property to get all stories for backward compatibility
+    val userStories: Map<User, List<Story>> 
+        get() = recommendedStories + otherStories
+}
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -40,43 +46,95 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
             
-            storyRepository.getFriendsStories()
-                .onSuccess { stories ->
-                    // Group stories by user
-                    val groupedStories = stories.groupBy { it.userId }
-                    val userIds = groupedStories.keys.toList()
-                    
-                    // Fetch user information
-                    userRepository.getUsersByIds(userIds)
-                        .onSuccess { users ->
-                            val userMap = users.associateBy { it.id }
-                            val userStories = mutableMapOf<User, List<Story>>()
-                            
-                            groupedStories.forEach { (userId, userStoryList) ->
-                                userMap[userId]?.let { user ->
-                                    userStories[user] = userStoryList
-                                }
+            try {
+                // Fetch stories with recommendations
+                val (recommendedStories, otherStories) = storyRepository.getStoriesWithRecommendations()
+                    .getOrDefault(Pair(emptyList(), emptyList()))
+                
+                // Get unique user IDs from both lists
+                val allUserIds = (recommendedStories.map { it.userId } + otherStories.map { it.userId }).distinct()
+                
+                // Fetch user information
+                userRepository.getUsersByIds(allUserIds)
+                    .onSuccess { users ->
+                        val userMap = users.associateBy { it.id }
+                        
+                        // Group recommended stories by user
+                        val recommendedUserStories = mutableMapOf<User, List<Story>>()
+                        recommendedStories.groupBy { it.userId }.forEach { (userId, userStoryList) ->
+                            userMap[userId]?.let { user ->
+                                recommendedUserStories[user] = userStoryList
                             }
-                            
-                            _uiState.value = HomeUiState(
-                                isLoading = false,
-                                userStories = userStories
-                            )
                         }
-                        .onFailure { error ->
-                            _uiState.value = HomeUiState(
-                                isLoading = false,
-                                errorMessage = error.message
-                            )
+                        
+                        // Group other stories by user
+                        val otherUserStories = mutableMapOf<User, List<Story>>()
+                        otherStories.groupBy { it.userId }.forEach { (userId, userStoryList) ->
+                            userMap[userId]?.let { user ->
+                                otherUserStories[user] = userStoryList
+                            }
                         }
-                }
-                .onFailure { error ->
-                    _uiState.value = HomeUiState(
-                        isLoading = false,
-                        errorMessage = error.message
-                    )
-                }
+                        
+                        _uiState.value = HomeUiState(
+                            isLoading = false,
+                            recommendedStories = recommendedUserStories,
+                            otherStories = otherUserStories,
+                            hasRecommendations = recommendedUserStories.isNotEmpty()
+                        )
+                    }
+                    .onFailure { error ->
+                        _uiState.value = HomeUiState(
+                            isLoading = false,
+                            errorMessage = error.message
+                        )
+                    }
+            } catch (e: Exception) {
+                // Fallback to original implementation if recommendations fail
+                loadStoriesWithoutRecommendations()
+            }
         }
+    }
+    
+    private suspend fun loadStoriesWithoutRecommendations() {
+        storyRepository.getFriendsStories()
+            .onSuccess { stories ->
+                // Group stories by user
+                val groupedStories = stories.groupBy { it.userId }
+                val userIds = groupedStories.keys.toList()
+                
+                // Fetch user information
+                userRepository.getUsersByIds(userIds)
+                    .onSuccess { users ->
+                        val userMap = users.associateBy { it.id }
+                        val userStories = mutableMapOf<User, List<Story>>()
+                        
+                        groupedStories.forEach { (userId, userStoryList) ->
+                            userMap[userId]?.let { user ->
+                                userStories[user] = userStoryList
+                            }
+                        }
+                        
+                        // Put all stories in "other" category when recommendations are not available
+                        _uiState.value = HomeUiState(
+                            isLoading = false,
+                            recommendedStories = emptyMap(),
+                            otherStories = userStories,
+                            hasRecommendations = false
+                        )
+                    }
+                    .onFailure { error ->
+                        _uiState.value = HomeUiState(
+                            isLoading = false,
+                            errorMessage = error.message
+                        )
+                    }
+            }
+            .onFailure { error ->
+                _uiState.value = HomeUiState(
+                    isLoading = false,
+                    errorMessage = error.message
+                )
+            }
     }
     
     fun clearError() {

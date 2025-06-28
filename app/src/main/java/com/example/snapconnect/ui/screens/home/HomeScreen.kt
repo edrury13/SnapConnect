@@ -2,12 +2,14 @@ package com.example.snapconnect.ui.screens.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.*
@@ -125,7 +127,7 @@ fun StoriesContent(
         ) {
             CircularProgressIndicator(color = SnapYellow)
         }
-    } else if (uiState.userStories.isEmpty()) {
+    } else if (uiState.recommendedStories.isEmpty() && uiState.otherStories.isEmpty()) {
         EmptyStoriesState(
             onAddStory = { navController.navigate(Screen.Camera.route) }
         )
@@ -134,7 +136,7 @@ fun StoriesContent(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(vertical = 16.dp)
         ) {
-            // Story circles at the top
+            // Story circles at the top - combine both recommended and other stories
             item {
                 StoryCircles(
                     userStories = uiState.userStories,
@@ -148,27 +150,86 @@ fun StoriesContent(
                 )
             }
             
-            // Story feed
-            item {
-                Spacer(modifier = Modifier.height(24.dp))
-                Text(
-                    text = "Recent Stories",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                )
+            // Recommended Stories Section
+            if (uiState.hasRecommendations) {
+                item {
+                    Spacer(modifier = Modifier.height(24.dp))
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.AutoAwesome,
+                            contentDescription = "Recommended",
+                            tint = SnapYellow,
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = "Recommended for You",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                    Text(
+                        text = "Based on your interests",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
+                    )
+                }
+                
+                // Show recommended story cards
+                uiState.recommendedStories.forEach { (user, stories) ->
+                    items(stories) { story ->
+                        RecommendedStoryCard(
+                            user = user,
+                            story = story,
+                            onStoryClick = {
+                                navController.navigate(Screen.StoryView.createRoute(story.id))
+                            }
+                        )
+                    }
+                }
+                
+                // Divider between sections
+                if (uiState.otherStories.isNotEmpty()) {
+                    item {
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Divider(
+                            modifier = Modifier.padding(horizontal = 32.dp),
+                            thickness = 1.dp,
+                            color = MaterialTheme.colorScheme.surfaceVariant
+                        )
+                    }
+                }
             }
             
-            // Show individual story cards
-            uiState.userStories.forEach { (user, stories) ->
-                items(stories) { story ->
-                    StoryCard(
-                        user = user,
-                        story = story,
-                        onStoryClick = {
-                            navController.navigate(Screen.StoryView.createRoute(story.id))
-                        }
+            // Other Stories Section
+            if (uiState.otherStories.isNotEmpty()) {
+                item {
+                    Spacer(modifier = Modifier.height(24.dp))
+                    Text(
+                        text = if (uiState.hasRecommendations) "More Stories" else "Recent Stories",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                     )
+                }
+                
+                // Show other story cards
+                uiState.otherStories.forEach { (user, stories) ->
+                    items(stories) { story ->
+                        StoryCard(
+                            user = user,
+                            story = story,
+                            onStoryClick = {
+                                navController.navigate(Screen.StoryView.createRoute(story.id))
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -360,15 +421,7 @@ fun StoryCard(
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 16.sp
                 )
-                if (story.caption != null) {
-                    Text(
-                        text = story.caption,
-                        fontSize = 14.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
+                
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -428,13 +481,235 @@ fun StoryCard(
                 }
             }
             
-            // Story type indicator
-            Icon(
-                imageVector = if (story.mediaType.name == "VIDEO") Icons.Default.Videocam else Icons.Default.Photo,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.size(20.dp)
-            )
+            // Media preview
+            Box(
+                modifier = Modifier
+                    .size(60.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
+            ) {
+                AsyncImage(
+                    model = story.mediaUrl,
+                    contentDescription = "Story preview",
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
+                
+                // Video indicator overlay
+                if (story.mediaType == MediaType.VIDEO) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.Black.copy(alpha = 0.3f)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.PlayArrow,
+                            contentDescription = "Video",
+                            tint = Color.White,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun RecommendedStoryCard(
+    user: User,
+    story: Story,
+    onStoryClick: () -> Unit
+) {
+    Card(
+        onClick = onStoryClick,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+        ),
+        border = BorderStroke(
+            width = 1.dp,
+            color = SnapYellow.copy(alpha = 0.3f)
+        )
+    ) {
+        Column {
+            // Recommendation indicator
+            if (story.styleTags.isNotEmpty()) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(SnapYellow.copy(alpha = 0.1f))
+                        .padding(horizontal = 12.dp, vertical = 4.dp)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.LocalOffer,
+                            contentDescription = null,
+                            modifier = Modifier.size(12.dp),
+                            tint = SnapYellow
+                        )
+                        Text(
+                            text = story.styleTags.firstOrNull() ?: "Similar style",
+                            fontSize = 11.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
+                }
+            }
+            
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // User avatar
+                Box(
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(CircleShape)
+                ) {
+                    if (user.avatarUrl != null) {
+                        AsyncImage(
+                            model = user.avatarUrl,
+                            contentDescription = "${user.username}'s avatar",
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
+                        )
+                    } else {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(MaterialTheme.colorScheme.primaryContainer),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = user.username.firstOrNull()?.uppercase() ?: "?",
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                        }
+                    }
+                }
+                
+                Spacer(modifier = Modifier.width(12.dp))
+                
+                // Story info
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = user.displayName ?: user.username,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 16.sp
+                    )
+                    
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text(
+                            text = getTimeAgo(story.createdAt),
+                            fontSize = 12.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        
+                        // Show reaction counts if any
+                        if (story.likesCount > 0 || story.dislikesCount > 0) {
+                            Text(
+                                text = "•",
+                                fontSize = 12.sp,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            
+                            if (story.likesCount > 0) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(2.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.ThumbUp,
+                                        contentDescription = "Likes",
+                                        modifier = Modifier.size(12.dp),
+                                        tint = MaterialTheme.colorScheme.primary
+                                    )
+                                    Text(
+                                        text = "${story.likesCount}",
+                                        fontSize = 12.sp,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+                            }
+                            
+                            if (story.dislikesCount > 0) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(2.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.ThumbDown,
+                                        contentDescription = "Dislikes",
+                                        modifier = Modifier.size(12.dp),
+                                        tint = MaterialTheme.colorScheme.error
+                                    )
+                                    Text(
+                                        text = "${story.dislikesCount}",
+                                        fontSize = 12.sp,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                // Media preview with glow effect for recommended
+                Box(
+                    modifier = Modifier
+                        .size(64.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(MaterialTheme.colorScheme.surfaceVariant)
+                        .border(
+                            width = 2.dp,
+                            color = SnapYellow.copy(alpha = 0.5f),
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                ) {
+                    AsyncImage(
+                        model = story.mediaUrl,
+                        contentDescription = "Story preview",
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                    
+                    // Video indicator overlay
+                    if (story.mediaType == MediaType.VIDEO) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(Color.Black.copy(alpha = 0.3f)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.PlayArrow,
+                                contentDescription = "Video",
+                                tint = Color.White,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 }

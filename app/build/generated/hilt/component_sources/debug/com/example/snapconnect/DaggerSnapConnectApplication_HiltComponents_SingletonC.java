@@ -800,7 +800,7 @@ public final class DaggerSnapConnectApplication_HiltComponents_SingletonC {
           return (T) new FriendRepository(singletonCImpl.provideSupabaseClientProvider.get());
 
           case 9: // com.example.snapconnect.data.repository.StoryRepository 
-          return (T) new StoryRepository(singletonCImpl.provideSupabaseClientProvider.get(), singletonCImpl.provideEmbeddingRepositoryProvider.get(), singletonCImpl.provideLangchainRepositoryProvider.get(), singletonCImpl.visionRepositoryProvider.get());
+          return (T) new StoryRepository(singletonCImpl.provideSupabaseClientProvider.get(), singletonCImpl.provideEmbeddingRepositoryProvider.get(), singletonCImpl.provideLangchainRepositoryProvider.get(), singletonCImpl.visionRepositoryProvider.get(), singletonCImpl.provideHttpClientProvider.get());
 
           case 10: // com.example.snapconnect.data.repository.EmbeddingRepository 
           return (T) AppModule_ProvideEmbeddingRepositoryFactory.provideEmbeddingRepository(singletonCImpl.provideEmbeddingApiProvider.get());
