@@ -17,6 +17,7 @@ import com.example.snapconnect.services.NotificationService
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
+import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.*
 import io.ktor.serialization.kotlinx.json.json
@@ -43,6 +44,9 @@ object AppModule {
             supabaseUrl = SUPABASE_URL,
             supabaseKey = SUPABASE_ANON_KEY
         ) {
+            // Use OkHttp engine for WebSocket support on Android
+            httpEngine = OkHttp.create()
+
             install(Auth)
             install(Postgrest)
             install(Storage)
