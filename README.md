@@ -1,20 +1,42 @@
-# SnapConnect Android App
+# SplatChat Android App
 
-SnapConnect is a mobile social media application designed for users to share moments with friends through images and videos in real-time. The core concept revolves around ephemeral content, where shared media is automatically deleted after 24 hours.
+SplatChat (formerly SnapConnect) is a mobile social media application designed for users to share moments with friends through images and videos in real-time. The core concept revolves around ephemeral content, where shared media is automatically deleted after 24 hours.
 
 ## Features
 
+### Core Features
 - **User Authentication**: Sign up and login with email/password
 - **Friends Management**: Add friends, manage friend requests, view friends list
 - **Real-time Image and Video Sharing**: Share photos and videos with friends
 - **Ephemeral Content (Stories)**: Posts automatically delete after 24 hours
-- **Comments**: Comment on friends' stories
+- **Comments**: Comment on friends' stories with real-time updates
 - **Group Messaging**: Create group chats and share content
 - 📸 **Camera Integration** - Capture photos and videos with custom filters
 - 📱 **Stories** - Share ephemeral content that disappears after 24 hours
 - 💬 **Real-time Messaging** - Chat with friends using Supabase real-time subscriptions
 - 🎭 **AR Filters** - Apply face filters using ML Kit face detection
 - 🎨 **Material Design 3** - Modern UI with dynamic theming
+
+### Advanced Features
+- **Story Reactions**: Like and dislike stories with real-time counts
+- **User Score System**: Profile displays total score (likes minus dislikes across all stories)
+- **Story Auto-Advance**: Stories auto-advance after 8 seconds with toggle control
+- **Interactive Story Viewer**: Progress bars, manual navigation, pause functionality
+- **Tutorial System**: Guided onboarding for new users
+- **Privacy Controls**: Granular permission management for camera, notifications, storage
+- **AI-Powered Inspiration**: 
+  - AI-generated captions and mood boards
+  - Style analysis and tagging
+  - Style-based story discovery
+- **Media Preview**: Preview and edit content before posting
+- **Profile Management**: 
+  - Avatar upload and editing
+  - Profile stats (stories, friends, score)
+  - Display name and username customization
+- **Style Gallery**: Browse and discover stories by artistic style
+- **Notification Settings**: Customizable notification preferences
+- **Story Privacy**: Set stories as public or friends-only
+- **Enhanced Video Support**: Full video playback with auto-advance control
 
 ## Tech Stack
 
@@ -41,7 +63,10 @@ SnapConnect is a mobile social media application designed for users to share mom
 
 2. Get your Supabase URL and Anon Key from the project settings
 
-3. Update the Supabase configuration in `app/src/main/java/com/example/snapconnect/di/AppModule.kt`:
+3. Run the database setup script in your Supabase SQL editor:
+   - Execute the SQL in `supabase_setup.sql` to create tables and policies
+
+4. Update the Supabase configuration in `app/src/main/java/com/example/snapconnect/di/AppModule.kt`:
 
 ```kotlin
 // Replace with your Supabase project details
@@ -79,28 +104,40 @@ app/
 ✅ **Completed:**
 - Project setup with Jetpack Compose
 - Dependency injection with Hilt
-- Navigation structure
-- Authentication screens (Login/SignUp)
+- Complete navigation structure with all screens
+- Authentication system (Login/SignUp) with Supabase
 - Main app structure with bottom navigation
 - Data models for all features
-- Theme and styling
-- Basic screen placeholders
+- Theme and styling with SplatChat branding
+- **Camera functionality** with filters and AR effects
+- **Story system** with posting, viewing, and auto-advance
+- **Real-time messaging** and group chats
+- **Friends management** with requests and social features
+- **Story reactions** (likes/dislikes) with real-time updates
+- **User profiles** with stats, avatars, and editing
+- **Privacy controls** and permission management
+- **AI integration** for captions, style analysis, and inspiration
+- **Tutorial system** for onboarding
+- **Media storage** and retrieval via Supabase
+- **Story privacy** controls (public/friends-only)
+- **Notification system** and settings
 
-🚧 **To Be Implemented:**
-- Supabase backend integration
-- Camera functionality
-- Real-time messaging
-- Story posting and viewing
-- Friends management
-- Group chat functionality
-- Media storage and retrieval
+🚧 **Future Enhancements:**
+- Push notifications
+- Advanced AR filters
+- Story analytics
+- Content moderation
+- Performance optimizations
 
 ## Development Notes
 
-- The app uses Material 3 design system
-- All screens follow MVVM architecture pattern
-- Supabase handles authentication, database, and real-time features
-- Camera functionality will require device permissions
+- The app uses Material 3 design system with SplatChat branding
+- All screens follow MVVM architecture pattern with Hilt dependency injection
+- Supabase handles authentication, database, storage, and real-time features
+- Camera and microphone permissions required for full functionality
+- Story auto-advance timing: 8 seconds for images, video length for videos
+- AI features require OpenAI API key and Pinecone vector database
+- Row Level Security (RLS) policies enforce privacy controls
 
 ## License
 
@@ -122,11 +159,13 @@ See the backend README for setup, seed scripts, and deployment notes.
 
 ## Recent Updates
 
-### Privacy Controls for Stories
-- Stories can now be set as **Public** (viewable by anyone) or **Private** (friends only)
-- Toggle switch in the media preview screen before posting
-- Enforced via Row Level Security (RLS) policies in Supabase
-- Database schema includes `is_public` boolean column on stories table
+### Story Features
+- Stories can be set as **Public** (viewable by anyone) or **Private** (friends only)
+- **Story Reactions**: Users can like or dislike stories with real-time count updates
+- **Auto-advance**: Stories advance automatically after 8 seconds (toggleable)
+- **Interactive Viewer**: Progress bars, manual navigation (tap left/right), pause on hold
+- **Enhanced Media Support**: Full image and video support with optimized playback
+- Privacy controls enforced via Row Level Security (RLS) policies in Supabase
 
 ### Group Chat Support
 - Create group chats with multiple friends
@@ -164,13 +203,33 @@ SUPABASE_URL=your-supabase-url
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 ```
 
+### User Experience Features
+- **Tutorial System**: Interactive onboarding for new users
+- **Privacy Screen**: Comprehensive permission management for camera, notifications, storage
+- **Profile Management**: Avatar upload, profile editing, user statistics
+- **User Score**: Dynamic score calculation (total likes - total dislikes)
+- **Notification Settings**: Granular control over app notifications
+- **Style Discovery**: Browse stories by AI-detected artistic styles
+
 ### Database Schema Updates
 ```sql
--- Stories table additions
+-- Stories table with full feature set
 ALTER TABLE stories 
   ADD COLUMN is_public BOOLEAN DEFAULT true,
   ADD COLUMN style_tags TEXT[] DEFAULT '{}',
-  ADD COLUMN ai_caption TEXT;
+  ADD COLUMN ai_caption TEXT,
+  ADD COLUMN likes_count INTEGER DEFAULT 0,
+  ADD COLUMN dislikes_count INTEGER DEFAULT 0;
+
+-- Story reactions table
+CREATE TABLE story_reactions (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    story_id UUID REFERENCES stories(id) ON DELETE CASCADE,
+    user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+    reaction_type TEXT CHECK (reaction_type IN ('LIKE', 'DISLIKE')),
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(story_id, user_id)
+);
 
 -- Row Level Security for private stories
 CREATE POLICY select_stories_with_privacy

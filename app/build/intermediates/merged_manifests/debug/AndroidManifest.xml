@@ -39,7 +39,6 @@
         android:icon="@drawable/gauntlet_liquid_glass"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:testOnly="true"
         android:theme="@style/Theme.SnapConnect" >
         <activity
             android:name="com.example.snapconnect.MainActivity"

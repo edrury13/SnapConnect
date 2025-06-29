@@ -54,6 +54,7 @@ fun StoryViewScreen(
     var progress by remember { mutableStateOf(0f) }
     var isPaused by remember { mutableStateOf(false) }
     var isVideoPlaying by remember { mutableStateOf(true) }
+    var autoAdvanceEnabled by remember { mutableStateOf(true) }
     
     // Toggle for AI caption
     var showAiCaption by remember { mutableStateOf(false) }
@@ -62,19 +63,19 @@ fun StoryViewScreen(
     var showFriendDialog by remember { mutableStateOf(false) }
     
     // Handle story navigation
-    LaunchedEffect(uiState.currentStory) {
+    LaunchedEffect(uiState.currentStory, autoAdvanceEnabled) {
         val story = uiState.currentStory
-        if (story != null && !isPaused) {
+        if (story != null && !isPaused && autoAdvanceEnabled) {
             progress = 0f
             // For videos, we'll wait for the video to end instead of using a timer
             if (story.mediaType == MediaType.IMAGE) {
-                val duration = 5000L
+                val duration = 8000L // Increased from 5 seconds to 8 seconds
                 
-                while (progress < 1f && !isPaused) {
+                while (progress < 1f && !isPaused && autoAdvanceEnabled) {
                     delay(50)
                     progress += 50f / duration
                     
-                    if (progress >= 1f) {
+                    if (progress >= 1f && autoAdvanceEnabled) {
                         if (viewModel.hasNextStory()) {
                             viewModel.nextStory()
                         } else {
@@ -147,10 +148,12 @@ fun StoryViewScreen(
                         modifier = Modifier.fillMaxSize(),
                         shouldPlay = !isPaused && isVideoPlaying,
                         onVideoEnd = {
-                            if (viewModel.hasNextStory()) {
-                                viewModel.nextStory()
-                            } else {
-                                navController.navigateUp()
+                            if (autoAdvanceEnabled) {
+                                if (viewModel.hasNextStory()) {
+                                    viewModel.nextStory()
+                                } else {
+                                    navController.navigateUp()
+                                }
                             }
                         }
                     )
@@ -193,7 +196,7 @@ fun StoryViewScreen(
                                 index < uiState.currentIndex -> 1f
                                 index == uiState.currentIndex -> {
                                     // For videos, show a simple loading state instead of progress
-                                    if (story.mediaType == MediaType.VIDEO) {
+                                    if (story.mediaType == MediaType.VIDEO || !autoAdvanceEnabled) {
                                         0f
                                     } else {
                                         progress
@@ -272,6 +275,17 @@ fun StoryViewScreen(
                             text = getTimeAgo(currentStory.createdAt),
                             color = Color.White.copy(alpha = 0.7f),
                             fontSize = 12.sp
+                        )
+                    }
+                    
+                    // Auto-advance toggle
+                    IconButton(
+                        onClick = { autoAdvanceEnabled = !autoAdvanceEnabled }
+                    ) {
+                        Icon(
+                            imageVector = if (autoAdvanceEnabled) Icons.Default.PlayArrow else Icons.Default.Pause,
+                            contentDescription = if (autoAdvanceEnabled) "Auto-advance on" else "Auto-advance off",
+                            tint = if (autoAdvanceEnabled) Color.White else Color.White.copy(alpha = 0.6f)
                         )
                     }
                     
