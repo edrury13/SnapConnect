@@ -12,7 +12,7 @@ print(f"__file__ location: {__file__}")
 
 # Import routes - with better error handling
 try:
-    from app.api.routes import embed, search, recommend, inspiration
+    from app.api.routes import embed, search, recommend, inspiration, ai_images
     try:
         from app.api.routes import vision  # optional
     except ImportError:
@@ -26,7 +26,7 @@ except ImportError as e:
     print(f"Import error: {e}")
     # Try alternate import path
     try:
-        from api.routes import embed, search, recommend, inspiration
+        from api.routes import embed, search, recommend, inspiration, ai_images
         try:
             from api.routes import vision as vision
         except ImportError:
@@ -92,6 +92,9 @@ app.include_router(recommend.router, prefix="/api/v1/recommend", tags=["recommen
 
 # Inspiration (moodboard & style analysis)
 app.include_router(inspiration.router, prefix="/api/v1/inspiration", tags=["inspiration"])
+
+# AI image generation
+app.include_router(ai_images.router, prefix="/api/v1/ai", tags=["ai-images"])
 
 # Optionally mount vision / langchain if present
 if vision is not None:

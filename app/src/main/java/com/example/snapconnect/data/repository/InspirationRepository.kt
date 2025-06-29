@@ -15,6 +15,7 @@ import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.serialization.Serializable
 
 @Singleton
 class InspirationRepository @Inject constructor(
@@ -44,28 +45,18 @@ class InspirationRepository @Inject constructor(
     suspend fun generateAiImages(prompt: String, n: Int = 4): List<String> {
         if (prompt.isBlank()) return emptyList()
 
-        val bodyJson = buildJsonObject {
-            put("model", "dall-e-3")
-            put("prompt", prompt)
-            put("n", n)
-            put("size", "1024x1024")
-        }
-
-        val httpResponse: HttpResponse = httpClient.post("https://api.openai.com/v1/images/generations") {
-            setBody(bodyJson)
-            headers {
-                val key = System.getenv("OPENAI_KEY") ?: ""
-                append(HttpHeaders.Authorization, "Bearer $key")
-                append(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-            }
-        }
-
-        if (httpResponse.status.value in 200..299) {
-            val success = httpResponse.body<OpenAiImageResponse>()
-            return success.data.map { it.url }
-        } else {
-            val errorJson = httpResponse.bodyAsText()
-            throw Exception("OpenAI error: ${httpResponse.status.value} $errorJson")
-        }
+        val response: GenerateImagesBackendResponse = httpClient.post("$BACKEND_BASE_URL/api/v1/ai/generate") {
+            contentType(ContentType.Application.Json)
+            setBody(buildJsonObject {
+                put("prompt", prompt)
+                put("n", n)
+                put("size", "1024x1024")
+            })
+            headers { append("X-API-Key", API_KEY) }
+        }.body()
+        return response.urls
     }
+
+    @Serializable
+    private data class GenerateImagesBackendResponse(val urls: List<String>)
 } 
