@@ -85,7 +85,7 @@ fun SignUpScreen(
             // Logo
             Image(
                 painter = painterResource(id = R.drawable.gauntlet_liquid_glass),
-                contentDescription = "SnapConnect Logo",
+                contentDescription = "SplatChat Logo",
                 modifier = Modifier.size(100.dp)
             )
             

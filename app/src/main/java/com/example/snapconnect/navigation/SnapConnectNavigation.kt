@@ -19,6 +19,7 @@ import com.example.snapconnect.ui.screens.story.StoryViewScreen
 import com.example.snapconnect.ui.screens.chat.ChatScreen
 import com.example.snapconnect.ui.screens.notifications.NotificationsScreen
 import com.example.snapconnect.ui.screens.tutorial.TutorialScreen
+import com.example.snapconnect.ui.screens.privacy.PrivacyScreen
 
 sealed class Screen(val route: String) {
     object Login : Screen("login")
@@ -59,6 +60,7 @@ sealed class Screen(val route: String) {
         fun createRoute(styleTag: String) = "style_gallery/$styleTag"
     }
     object Tutorial : Screen("tutorial")
+    object Privacy : Screen("privacy")
 }
 
 @Composable
@@ -142,6 +144,10 @@ fun SnapConnectNavigation(
                     }
                 }
             )
+        }
+        
+        composable(Screen.Privacy.route) {
+            PrivacyScreen(navController = navController)
         }
         
         composable(

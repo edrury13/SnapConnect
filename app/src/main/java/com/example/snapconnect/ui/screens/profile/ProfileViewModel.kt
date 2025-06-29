@@ -66,6 +66,7 @@ class ProfileViewModel @Inject constructor(
                 // Load stats in parallel
                 launch { loadStoryCount() }
                 launch { loadFriendCount() }
+                launch { loadUserScore() }
                 
                 _uiState.value = _uiState.value.copy(isLoading = false)
             } else {
@@ -88,6 +89,13 @@ class ProfileViewModel @Inject constructor(
         friendRepository.getMyFriends()
             .onSuccess { friends ->
                 _uiState.value = _uiState.value.copy(friendCount = friends.size)
+            }
+    }
+    
+    private suspend fun loadUserScore() {
+        storyRepository.getMyScore()
+            .onSuccess { score ->
+                _uiState.value = _uiState.value.copy(snapCount = score)
             }
     }
     

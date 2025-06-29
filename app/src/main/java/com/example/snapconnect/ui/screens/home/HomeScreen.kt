@@ -76,7 +76,7 @@ fun HomeScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "SnapConnect",
+                        text = "SplatChat",
                         style = MaterialTheme.typography.displaySmall,
                         fontWeight = FontWeight.Bold
                     )

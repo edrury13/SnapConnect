@@ -593,7 +593,7 @@ public final class DaggerSnapConnectApplication_HiltComponents_SingletonC {
           return (T) new StoryPostViewModel(singletonCImpl.storyRepositoryProvider.get(), singletonCImpl.storageRepositoryProvider.get(), singletonCImpl.authRepositoryProvider.get(), singletonCImpl.messagesRepositoryProvider.get());
 
           case 12: // com.example.snapconnect.ui.screens.story.StoryViewViewModel 
-          return (T) new StoryViewViewModel(singletonCImpl.storyRepositoryProvider.get(), singletonCImpl.userRepositoryProvider.get(), singletonCImpl.authRepositoryProvider.get(), singletonCImpl.commentsRepositoryProvider.get(), viewModelCImpl.savedStateHandle);
+          return (T) new StoryViewViewModel(singletonCImpl.storyRepositoryProvider.get(), singletonCImpl.userRepositoryProvider.get(), singletonCImpl.authRepositoryProvider.get(), singletonCImpl.commentsRepositoryProvider.get(), singletonCImpl.friendRepositoryProvider.get(), viewModelCImpl.savedStateHandle);
 
           case 13: // com.example.snapconnect.ui.screens.inspiration.StyleGalleryViewModel 
           return (T) new StyleGalleryViewModel(singletonCImpl.storyRepositoryProvider.get());

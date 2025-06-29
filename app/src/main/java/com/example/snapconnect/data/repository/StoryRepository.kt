@@ -273,6 +273,28 @@ class StoryRepository @Inject constructor(
         }
     }
     
+    suspend fun getMyScore(): Result<Int> {
+        return try {
+            val userId = supabase.auth.currentUserOrNull()?.id
+                ?: return Result.failure(Exception("User not authenticated"))
+            
+            // Select all columns to properly decode as Story
+            val stories = supabase.from("stories")
+                .select() {
+                    filter {
+                        eq("user_id", userId)
+                        // Include all stories (both active and expired) for total score
+                    }
+                }
+                .decodeList<Story>()
+            
+            val totalScore = stories.sumOf { it.likesCount - it.dislikesCount }
+            Result.success(totalScore)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+    
     suspend fun markStoryAsViewed(storyId: String): Result<Unit> {
         return try {
             val userId = supabase.auth.currentUserOrNull()?.id 

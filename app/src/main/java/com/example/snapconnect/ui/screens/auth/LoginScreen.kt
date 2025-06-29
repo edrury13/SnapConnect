@@ -69,14 +69,14 @@ fun LoginScreen(
             // Logo
             Image(
                 painter = painterResource(id = R.drawable.gauntlet_liquid_glass),
-                contentDescription = "SnapConnect Logo",
+                contentDescription = "SplatChat Logo",
                 modifier = Modifier.size(120.dp)
             )
             
             Spacer(modifier = Modifier.height(32.dp))
             
             Text(
-                text = "SnapConnect",
+                text = "SplatChat",
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black

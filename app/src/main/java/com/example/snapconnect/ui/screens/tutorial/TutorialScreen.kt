@@ -58,7 +58,7 @@ fun TutorialScreen(
     val pages = remember {
         listOf(
             TutorialPage(
-                title = "Welcome to SnapConnect!",
+                title = "Welcome to SplatChat!",
                 description = "Share moments with friends through photos and videos that disappear after 24 hours.",
                 icon = Icons.Default.PhotoCamera,
                 iconTint = SnapYellow

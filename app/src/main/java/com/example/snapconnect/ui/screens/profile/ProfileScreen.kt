@@ -338,6 +338,12 @@ fun ProfileScreen(
                     onClick = { navController.navigate(Screen.Tutorial.route) }
                 )
                 
+                ProfileMenuItem(
+                    icon = Icons.Default.Security,
+                    title = "Privacy",
+                    onClick = { navController.navigate(Screen.Privacy.route) }
+                )
+                
                 Spacer(modifier = Modifier.height(24.dp))
                 
                 // Logout Button
