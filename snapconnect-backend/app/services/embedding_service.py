@@ -20,7 +20,6 @@ class EmbeddingService:
         
         # Use text-embedding-3-large for 1024 dimensions
         self.embedding_model = os.getenv("TEXT_EMBEDDING_MODEL", "text-embedding-3-large")
-        self.embedding_dimensions = 1024  # For text-embedding-3-large with custom dimensions
     
     async def generate_text_embedding(self, text: str) -> Optional[List[float]]:
         """Generate embedding for text using OpenAI"""
@@ -31,10 +30,16 @@ class EmbeddingService:
         try:
             response = self.client.embeddings.create(
                 model=self.embedding_model,
-                input=text,
-                dimensions=self.embedding_dimensions  # Specify dimensions for v3 models
+                input=text
             )
             embedding = response.data[0].embedding
+            # Ensure embedding dimension exactly 1024 for Pinecone index
+            target_dim = 1024
+            if len(embedding) > target_dim:
+                embedding = embedding[:target_dim]
+            elif len(embedding) < target_dim:
+                # Pad with zeros
+                embedding = embedding + [0.0] * (target_dim - len(embedding))
             return embedding
         except Exception as e:
             logger.error(f"Failed to generate text embedding: {e}")

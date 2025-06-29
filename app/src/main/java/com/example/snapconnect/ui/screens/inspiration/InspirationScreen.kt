@@ -16,6 +16,8 @@ import coil.compose.AsyncImage
 import com.example.snapconnect.ui.viewmodel.InspirationViewModel
 import com.example.snapconnect.navigation.Screen
 import com.example.snapconnect.ui.theme.SnapYellow
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.draw.clip
 
 @Composable
 fun InspirationScreen(
@@ -40,12 +42,27 @@ fun InspirationScreen(
                     .fillMaxWidth()
                     .padding(16.dp)
             )
-            Button(
-                onClick = { viewModel.generateMoodboard(prompt.text) },
-                modifier = Modifier.align(Alignment.End).padding(end = 16.dp)
-            ) { Text("Generate") }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(end = 16.dp),
+                horizontalArrangement = Arrangement.End
+            ) {
+                Button(
+                    onClick = { viewModel.generateMoodboard(prompt.text) },
+                    enabled = prompt.text.isNotBlank() && !state.loading,
+                ) { Text("Generate Stories") }
 
-            if (state.loading) {
+                Spacer(Modifier.width(8.dp))
+
+                Button(
+                    onClick = { viewModel.generateAiImages(prompt.text) },
+                    colors = ButtonDefaults.buttonColors(containerColor = SnapYellow),
+                    enabled = prompt.text.isNotBlank() && !state.loadingAi,
+                ) { Text("Generate AI Images") }
+            }
+
+            if (state.loading || state.loadingAi) {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator()
                 }
@@ -88,6 +105,30 @@ fun InspirationScreen(
                                     Text(text = "Score: %.2f".format(item.score), style = MaterialTheme.typography.bodySmall)
                                 }
                             }
+                        }
+                    }
+                }
+
+                // AI images section
+                if (state.aiImages.isNotEmpty()) {
+                    Text(
+                        "AI Images", 
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(start = 16.dp, top = 16.dp)
+                    )
+                    LazyRow(
+                        contentPadding = PaddingValues(16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        items(state.aiImages) { url ->
+                            AsyncImage(
+                                model = url,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(150.dp)
+                                    .clip(MaterialTheme.shapes.medium),
+                                contentScale = ContentScale.Crop
+                            )
                         }
                     }
                 }

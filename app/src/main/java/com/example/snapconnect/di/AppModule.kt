@@ -92,8 +92,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideInspirationRepository(api: InspirationApi): InspirationRepository =
-        InspirationRepository(api)
+    fun provideInspirationRepository(api: InspirationApi, client: HttpClient): InspirationRepository =
+        InspirationRepository(api, client)
 
     // ---------- Embedding / RAG ingest ----------
 

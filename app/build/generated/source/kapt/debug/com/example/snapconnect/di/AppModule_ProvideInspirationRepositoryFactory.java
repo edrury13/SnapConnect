@@ -7,6 +7,7 @@ import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import dagger.internal.QualifierMetadata;
 import dagger.internal.ScopeMetadata;
+import io.ktor.client.HttpClient;
 import javax.annotation.processing.Generated;
 import javax.inject.Provider;
 
@@ -26,21 +27,26 @@ import javax.inject.Provider;
 public final class AppModule_ProvideInspirationRepositoryFactory implements Factory<InspirationRepository> {
   private final Provider<InspirationApi> apiProvider;
 
-  public AppModule_ProvideInspirationRepositoryFactory(Provider<InspirationApi> apiProvider) {
+  private final Provider<HttpClient> clientProvider;
+
+  public AppModule_ProvideInspirationRepositoryFactory(Provider<InspirationApi> apiProvider,
+      Provider<HttpClient> clientProvider) {
     this.apiProvider = apiProvider;
+    this.clientProvider = clientProvider;
   }
 
   @Override
   public InspirationRepository get() {
-    return provideInspirationRepository(apiProvider.get());
+    return provideInspirationRepository(apiProvider.get(), clientProvider.get());
   }
 
   public static AppModule_ProvideInspirationRepositoryFactory create(
-      Provider<InspirationApi> apiProvider) {
-    return new AppModule_ProvideInspirationRepositoryFactory(apiProvider);
+      Provider<InspirationApi> apiProvider, Provider<HttpClient> clientProvider) {
+    return new AppModule_ProvideInspirationRepositoryFactory(apiProvider, clientProvider);
   }
 
-  public static InspirationRepository provideInspirationRepository(InspirationApi api) {
-    return Preconditions.checkNotNullFromProvides(AppModule.INSTANCE.provideInspirationRepository(api));
+  public static InspirationRepository provideInspirationRepository(InspirationApi api,
+      HttpClient client) {
+    return Preconditions.checkNotNullFromProvides(AppModule.INSTANCE.provideInspirationRepository(api, client));
   }
 }

@@ -19,6 +19,8 @@ class InspirationViewModel @Inject constructor(
     data class UiState(
         val loading: Boolean = false,
         val moodItems: List<MoodBoardItem> = emptyList(),
+        val aiImages: List<String> = emptyList(),
+        val loadingAi: Boolean = false,
         val error: String? = null,
     )
 
@@ -34,6 +36,19 @@ class InspirationViewModel @Inject constructor(
                 _state.update { it.copy(loading = false, moodItems = resp.items) }
             } catch (e: Exception) {
                 _state.update { it.copy(loading = false, error = e.message) }
+            }
+        }
+    }
+
+    fun generateAiImages(prompt: String) {
+        if (prompt.isBlank()) return
+        viewModelScope.launch {
+            _state.update { it.copy(loadingAi = true, error = null) }
+            try {
+                val urls = repo.generateAiImages(prompt)
+                _state.update { it.copy(loadingAi = false, aiImages = urls) }
+            } catch (e: Exception) {
+                _state.update { it.copy(loadingAi = false, error = e.message) }
             }
         }
     }

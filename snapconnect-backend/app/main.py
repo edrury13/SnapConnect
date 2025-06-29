@@ -12,13 +12,29 @@ print(f"__file__ location: {__file__}")
 
 # Import routes - with better error handling
 try:
-    from app.api.routes import embed, search, recommend
+    from app.api.routes import embed, search, recommend, inspiration
+    try:
+        from app.api.routes import vision  # optional
+    except ImportError:
+        vision = None
+    try:
+        from app.api.routes import langchain  # optional
+    except ImportError:
+        langchain = None
     print("Successfully imported routes")
 except ImportError as e:
     print(f"Import error: {e}")
     # Try alternate import path
     try:
-        from api.routes import embed, search, recommend
+        from api.routes import embed, search, recommend, inspiration
+        try:
+            from api.routes import vision as vision
+        except ImportError:
+            vision = None
+        try:
+            from api.routes import langchain as langchain
+        except ImportError:
+            langchain = None
         print("Successfully imported routes using alternate path")
     except ImportError as e2:
         print(f"Alternate import also failed: {e2}")
@@ -74,9 +90,14 @@ app.include_router(embed.router, prefix="/api/v1/embed", tags=["embeddings"])
 app.include_router(search.router, prefix="/api/v1/search", tags=["search"])
 app.include_router(recommend.router, prefix="/api/v1/recommend", tags=["recommendations"])
 
-# Note: LangChain routes are disabled until langchain is added back
-# from app.api.routes import langchain
-# app.include_router(langchain.router, prefix="/api/v1/langchain", tags=["langchain"])
+# Inspiration (moodboard & style analysis)
+app.include_router(inspiration.router, prefix="/api/v1/inspiration", tags=["inspiration"])
+
+# Optionally mount vision / langchain if present
+if vision is not None:
+    app.include_router(vision.router, prefix="/api/v1/vision", tags=["vision"])
+if langchain is not None:
+    app.include_router(langchain.router, prefix="/api/v1/langchain", tags=["langchain"])
 
 @app.get("/")
 async def root():
