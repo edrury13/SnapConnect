@@ -30,7 +30,7 @@ class InspirationViewModel @Inject constructor(
     fun generateMoodboard(prompt: String) {
         if (prompt.isBlank()) return
         viewModelScope.launch {
-            _state.update { it.copy(loading = true, error = null) }
+            _state.update { it.copy(loading = true, error = null, aiImages = emptyList()) }
             try {
                 val resp = repo.moodBoard(prompt)
                 _state.update { it.copy(loading = false, moodItems = resp.items) }
@@ -40,12 +40,12 @@ class InspirationViewModel @Inject constructor(
         }
     }
 
-    fun generateAiImages(prompt: String) {
+    fun generateAiImages(prompt: String, n: Int = 6) {
         if (prompt.isBlank()) return
         viewModelScope.launch {
-            _state.update { it.copy(loadingAi = true, error = null) }
+            _state.update { it.copy(loadingAi = true, error = null, moodItems = emptyList()) }
             try {
-                val urls = repo.generateAiImages(prompt)
+                val urls = repo.generateAiImages(prompt, n)
                 _state.update { it.copy(loadingAi = false, aiImages = urls) }
             } catch (e: Exception) {
                 _state.update { it.copy(loadingAi = false, error = e.message) }
@@ -62,6 +62,19 @@ class InspirationViewModel @Inject constructor(
                 _state.update { it.copy(loading = false, moodItems = resp.reference_items) }
             } catch (e: Exception) {
                 _state.update { it.copy(loading = false, error = e.message) }
+            }
+        }
+    }
+
+    fun generateMoreAiImages(prompt: String, n: Int = 6) {
+        if (prompt.isBlank()) return
+        viewModelScope.launch {
+            _state.update { it.copy(loadingAi = true, error = null) }
+            try {
+                val urls = repo.generateAiImages(prompt, n)
+                _state.update { it.copy(loadingAi = false, aiImages = it.aiImages + urls) }
+            } catch (e: Exception) {
+                _state.update { it.copy(loadingAi = false, error = e.message) }
             }
         }
     }

@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -18,6 +20,10 @@ import com.example.snapconnect.navigation.Screen
 import com.example.snapconnect.ui.theme.SnapYellow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.draw.clip
+import androidx.compose.foundation.clickable
+import androidx.compose.ui.window.Dialog
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 
 @Composable
 fun InspirationScreen(
@@ -26,6 +32,7 @@ fun InspirationScreen(
 ) {
     val state by viewModel.state.collectAsState()
     var prompt by remember { mutableStateOf(TextFieldValue("")) }
+    var fullScreenUrl by remember { mutableStateOf<String?>(null) }
 
     Scaffold { padding ->
         Column(
@@ -51,18 +58,36 @@ fun InspirationScreen(
                 Button(
                     onClick = { viewModel.generateMoodboard(prompt.text) },
                     enabled = prompt.text.isNotBlank() && !state.loading,
-                ) { Text("Generate Stories") }
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(64.dp)
+                ) {
+                    Text(
+                        "Get inspiration from users",
+                        maxLines = 2,
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                    )
+                }
 
                 Spacer(Modifier.width(8.dp))
 
                 Button(
-                    onClick = { viewModel.generateAiImages(prompt.text) },
+                    onClick = { viewModel.generateAiImages(prompt.text, 6) },
                     colors = ButtonDefaults.buttonColors(containerColor = SnapYellow),
                     enabled = prompt.text.isNotBlank() && !state.loadingAi,
-                ) { Text("Generate AI Images") }
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(64.dp)
+                ) {
+                    Text(
+                        "Get inspiration from AI",
+                        maxLines = 2,
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                    )
+                }
             }
 
-            if (state.loading || state.loadingAi) {
+            if (state.loading) {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator()
                 }
@@ -112,24 +137,80 @@ fun InspirationScreen(
                 // AI images section
                 if (state.aiImages.isNotEmpty()) {
                     Text(
-                        "AI Images", 
+                        "AI Images",
                         style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.padding(start = 16.dp, top = 16.dp)
                     )
-                    LazyRow(
-                        contentPadding = PaddingValues(16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        items(state.aiImages) { url ->
-                            AsyncImage(
-                                model = url,
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .size(150.dp)
-                                    .clip(MaterialTheme.shapes.medium),
-                                contentScale = ContentScale.Crop
-                            )
+
+                    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                        LazyVerticalGrid(
+                            columns = GridCells.Fixed(2),
+                            contentPadding = PaddingValues(16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            verticalArrangement = Arrangement.spacedBy(12.dp),
+                            modifier = Modifier.fillMaxWidth().heightIn(max = 600.dp)
+                        ) {
+                            items(state.aiImages.size) { index ->
+                                val url = state.aiImages[index]
+                                AsyncImage(
+                                    model = url,
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .aspectRatio(1f)
+                                        .clip(MaterialTheme.shapes.medium)
+                                        .clickable { fullScreenUrl = url },
+                                    contentScale = ContentScale.Crop
+                                )
+                            }
                         }
+
+                        // Inline loading indicator while fetching more images
+                        if (state.loadingAi) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 8.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                CircularProgressIndicator(
+                                    color = SnapYellow,
+                                    strokeWidth = 2.dp,
+                                    modifier = Modifier.size(24.dp)
+                                )
+                            }
+                        }
+
+                        Button(
+                            onClick = { viewModel.generateMoreAiImages(prompt.text, 6) },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = SnapYellow)
+                        ) {
+                            Text("Get more inspiration")
+                        }
+                    }
+                }
+
+                // Fullscreen dialog
+                if (fullScreenUrl != null) {
+                    Dialog(onDismissRequest = { fullScreenUrl = null }) {
+                        AsyncImage(
+                            model = fullScreenUrl,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .aspectRatio(1f)
+                                .clip(MaterialTheme.shapes.medium),
+                            contentScale = ContentScale.Fit
+                        )
+                    }
+                }
+
+                if (state.loadingAi) {
+                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator(color = SnapYellow)
                     }
                 }
             }

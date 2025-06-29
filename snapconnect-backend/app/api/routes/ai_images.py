@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from typing import List
-import os, logging, openai
+import os, logging
+from openai import AsyncOpenAI
 
 from app.core.security import verify_api_key
 
@@ -26,8 +27,8 @@ async def generate_images(
     if not key:
         raise HTTPException(status_code=500, detail="OpenAI key not configured")
     try:
-        client = openai.OpenAI(api_key=key)
-        resp = await client.images.generate_async(prompt=req.prompt, n=req.n, size=req.size)
+        client = AsyncOpenAI(api_key=key)
+        resp = await client.images.generate(prompt=req.prompt, n=req.n, size=req.size)
         urls = [d.url for d in resp.data]
         return GenerateImagesResponse(urls=urls)
     except Exception as e:

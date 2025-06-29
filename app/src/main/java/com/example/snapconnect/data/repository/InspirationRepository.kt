@@ -22,6 +22,9 @@ class InspirationRepository @Inject constructor(
     private val api: InspirationApi,
     private val httpClient: HttpClient
 ) {
+    private val BACKEND_BASE_URL = "https://snapconnect-backend.onrender.com"
+    private val API_KEY = "RT5PrU6c8dnk5UUaP1dyDIqQjY6KuV2IXXKZvKvkMiz8N2AwrZhHJwYm8GZlCjQWPqaAB9UAMqwYkzPx67DQnx6muHfXscKpmmJVVVp9FWoyWIudwx35Qrv5H3TqwCnm"
+
     suspend fun moodBoard(prompt: String, limit: Int = 8): MoodBoardResponse {
         if (prompt.isBlank()) {
             // Backend requires description; return empty response
@@ -46,13 +49,15 @@ class InspirationRepository @Inject constructor(
         if (prompt.isBlank()) return emptyList()
 
         val response: GenerateImagesBackendResponse = httpClient.post("$BACKEND_BASE_URL/api/v1/ai/generate") {
-            contentType(ContentType.Application.Json)
             setBody(buildJsonObject {
                 put("prompt", prompt)
                 put("n", n)
                 put("size", "1024x1024")
             })
-            headers { append("X-API-Key", API_KEY) }
+            headers {
+                append("X-API-Key", API_KEY)
+                append(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+            }
         }.body()
         return response.urls
     }
