@@ -85,7 +85,8 @@ class StoryRepository @Inject constructor(
         mediaUrl: String,
         mediaType: MediaType,
         caption: String? = null,
-        isPublic: Boolean = true
+        isPublic: Boolean = true,
+        keepForever: Boolean = false
     ): Result<Story> {
         return try {
             val userId = supabase.auth.currentUserOrNull()?.id 
@@ -97,6 +98,9 @@ class StoryRepository @Inject constructor(
                 put("media_type", mediaType.name)
                 caption?.let { put("caption", it) }
                 put("is_public", isPublic)
+                if (keepForever) {
+                    put("expires_at", "9999-12-31T23:59:59+00:00")
+                }
             }
             
             // Insert without immediately decoding the response
@@ -156,7 +160,7 @@ class StoryRepository @Inject constructor(
                         styleTags = emptyList(),
                         aiCaption = null,
                         createdAt = Clock.System.now(),
-                        expiresAt = Clock.System.now() + 24.hours,
+                        expiresAt = if (keepForever) Instant.parse("9999-12-31T23:59:59Z") else Clock.System.now() + 24.hours,
                         isPublic = isPublic,
                         likesCount = 0,
                         dislikesCount = 0,

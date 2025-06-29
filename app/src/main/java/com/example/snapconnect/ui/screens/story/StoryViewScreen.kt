@@ -55,6 +55,9 @@ fun StoryViewScreen(
     var isPaused by remember { mutableStateOf(false) }
     var isVideoPlaying by remember { mutableStateOf(true) }
     
+    // Toggle for AI caption
+    var showAiCaption by remember { mutableStateOf(false) }
+    
     // Handle story navigation
     LaunchedEffect(uiState.currentStory) {
         val story = uiState.currentStory
@@ -539,8 +542,14 @@ fun StoryViewScreen(
                         }
                     }
                     
-                    // Caption
-                    currentStory.caption?.let { caption ->
+                    // Caption (user or AI)
+                    val captionToShow = if (showAiCaption && currentStory.aiCaption != null) {
+                        currentStory.aiCaption
+                    } else {
+                        currentStory.caption
+                    }
+
+                    if (currentStory.caption != null || currentStory.aiCaption != null) {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -550,13 +559,29 @@ fun StoryViewScreen(
                                 )
                                 .padding(16.dp)
                         ) {
-                            Text(
-                                text = caption,
-                                color = Color.White,
-                                fontSize = 14.sp,
-                                maxLines = 3,
-                                overflow = TextOverflow.Ellipsis
-                            )
+                            if (captionToShow != null) {
+                                Text(
+                                    text = captionToShow,
+                                    color = Color.White,
+                                    fontSize = 14.sp,
+                                    maxLines = 3,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            }
+
+                            // Toggle button (if AI caption exists)
+                            if (currentStory.aiCaption != null) {
+                                IconButton(
+                                    onClick = { showAiCaption = !showAiCaption },
+                                    modifier = Modifier.align(Alignment.TopEnd)
+                                ) {
+                                    Icon(
+                                        imageVector = if (showAiCaption) Icons.Default.Translate else Icons.Default.GTranslate,
+                                        contentDescription = if (showAiCaption) "Show user caption" else "Show AI caption",
+                                        tint = Color.White
+                                    )
+                                }
+                            }
                         }
                     }
                 }

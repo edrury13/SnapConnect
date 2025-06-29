@@ -11,6 +11,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.camera.core.Camera
 import androidx.camera.video.*
 import androidx.camera.video.VideoCapture
 import androidx.camera.view.PreviewView
@@ -54,6 +55,8 @@ import com.example.snapconnect.ui.components.FilterOverlayView
 import com.example.snapconnect.ui.theme.SnapBlue
 import com.example.snapconnect.ui.theme.SnapYellow
 import com.example.snapconnect.utils.FilterProcessor
+import com.example.snapconnect.utils.VideoFilterProcessor
+import com.example.snapconnect.ui.components.VideoProcessingDialog
 import com.google.accompanist.permissions.*
 import com.google.mlkit.vision.face.Face
 import com.google.mlkit.vision.face.FaceDetection
@@ -107,6 +110,10 @@ fun CameraScreen(
     var selectedFilter by remember { mutableStateOf<ARFilter?>(null) }
     val availableFilters = viewModel.availableFilters
     
+    // Video processing state
+    var isProcessingVideo by remember { mutableStateOf(false) }
+    var processingProgress by remember { mutableStateOf(0f) }
+    
     // Set the default filter to "No Filter" (first in the list)
     LaunchedEffect(availableFilters) {
         if (selectedFilter == null && availableFilters.isNotEmpty()) {
@@ -147,8 +154,8 @@ fun CameraScreen(
         }
     }
     
-    LaunchedEffect(isFrontCamera) {
-        if (multiplePermissionsState.allPermissionsGranted) {
+    LaunchedEffect(isFrontCamera, selectedFilter) {
+        if (multiplePermissionsState.allPermissionsGranted && selectedFilter?.colorMatrix == null) {
             startCamera(
                 context = context,
                 lifecycleOwner = lifecycleOwner,
@@ -189,30 +196,52 @@ fun CameraScreen(
                     viewSize = size.toSize()
                 }
         ) {
-            // Camera preview
-            AndroidView(
-                factory = { 
-                    previewView.apply {
-                        scaleType = PreviewView.ScaleType.FILL_CENTER
-                        implementationMode = PreviewView.ImplementationMode.COMPATIBLE
+            // Camera preview - use filtered preview for color filters
+            if (selectedFilter?.colorMatrix != null) {
+                FilteredCameraPreview(
+                    modifier = Modifier.fillMaxSize(),
+                    isFrontCamera = isFrontCamera,
+                    selectedFilter = selectedFilter,
+                    onCameraReady = { cam: Camera, imgCapture: ImageCapture, vidCapture: VideoCapture<Recorder>, imgAnalysis: ImageAnalysis ->
+                        camera = cam
+                        imageCapture = imgCapture
+                        videoCapture = vidCapture
+                    },
+                    onFacesDetected = { faces ->
+                        detectedFaces = faces
+                    },
+                    onImageSizeChanged = { size ->
+                        imageSize = size
                     }
-                },
-                modifier = Modifier.fillMaxSize(),
-                update = { view ->
-                    // Log preview dimensions for debugging
-                    Log.d("CameraPreview", "Preview view size: ${view.width}x${view.height}")
-                }
-            )
+                )
+            } else {
+                // Regular preview
+                AndroidView(
+                    factory = { 
+                        previewView.apply {
+                            scaleType = PreviewView.ScaleType.FILL_CENTER
+                            implementationMode = PreviewView.ImplementationMode.COMPATIBLE
+                        }
+                    },
+                    modifier = Modifier.fillMaxSize(),
+                    update = { view ->
+                        // Log preview dimensions for debugging
+                        Log.d("CameraPreview", "Preview view size: ${view.width}x${view.height}")
+                    }
+                )
+            }
             
-            // Filter overlay
-            FilterOverlayView(
-                faces = detectedFaces,
-                selectedFilter = selectedFilter,
-                viewSize = viewSize,
-                imageSize = imageSize,
-                isFrontCamera = isFrontCamera,
-                modifier = Modifier.fillMaxSize()
-            )
+            // Filter overlay for AR effects
+            if (selectedFilter?.overlays?.isNotEmpty() == true) {
+                FilterOverlayView(
+                    faces = detectedFaces,
+                    selectedFilter = selectedFilter,
+                    viewSize = viewSize,
+                    imageSize = imageSize,
+                    isFrontCamera = isFrontCamera,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
             
             // Color filter indicator - simplified without misleading preview
             selectedFilter?.let { filter ->
@@ -427,6 +456,8 @@ fun CameraScreen(
                                             videoCapture = videoCapture,
                                             executor = executor,
                                             selectedFilter = selectedFilter,
+                                            videoFilterProcessor = viewModel.videoFilterProcessor,
+                                            scope = scope,
                                             onVideoSaved = { uri ->
                                                 val encodedUri = URLEncoder.encode(uri.toString(), StandardCharsets.UTF_8.toString())
                                                 val filterId = selectedFilter?.id
@@ -439,8 +470,19 @@ fun CameraScreen(
                                                     )
                                                 )
                                             },
-                                            onError = { recordEvent ->
-                                                Toast.makeText(context, "Recording failed", Toast.LENGTH_SHORT).show()
+                                            onError = { message ->
+                                                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                                            },
+                                            onProcessingStarted = {
+                                                isProcessingVideo = true
+                                                processingProgress = 0f
+                                            },
+                                            onProcessingProgress = { progress ->
+                                                processingProgress = progress
+                                            },
+                                            onProcessingComplete = {
+                                                isProcessingVideo = false
+                                                processingProgress = 0f
                                             }
                                         )
                                         isRecording = true
@@ -489,6 +531,13 @@ fun CameraScreen(
                 }
             }
         }
+        
+        // Video processing dialog
+        VideoProcessingDialog(
+            isVisible = isProcessingVideo,
+            progress = processingProgress,
+            onDismissRequest = { /* Don't allow dismissing while processing */ }
+        )
     }
 }
 
@@ -783,8 +832,13 @@ private fun startVideoRecording(
     videoCapture: VideoCapture<Recorder>?,
     executor: Executor,
     selectedFilter: ARFilter?,
+    videoFilterProcessor: VideoFilterProcessor,
+    scope: kotlinx.coroutines.CoroutineScope,
     onVideoSaved: (Uri) -> Unit,
-    onError: (VideoRecordEvent) -> Unit
+    onError: (String) -> Unit,
+    onProcessingStarted: () -> Unit,
+    onProcessingProgress: (Float) -> Unit,
+    onProcessingComplete: () -> Unit
 ): Recording? {
     val videoFile = File(
         context.cacheDir,
@@ -805,9 +859,42 @@ private fun startVideoRecording(
                 is VideoRecordEvent.Finalize -> {
                     if (!recordEvent.hasError()) {
                         val savedUri = Uri.fromFile(videoFile)
-                        onVideoSaved(savedUri)
+                        
+                        // Check if we need to process the video with filters
+                        if (selectedFilter?.colorMatrix != null) {
+                            // Process video with MediaCodec/OpenGL filter
+                            onProcessingStarted()
+                            
+                            scope.launch {
+                                val processedFile = File(
+                                    context.cacheDir,
+                                    "filtered_${videoFile.name}"
+                                )
+                                
+                                videoFilterProcessor.applyFilterToVideo(
+                                    inputVideoUri = savedUri,
+                                    outputFile = processedFile,
+                                    filter = selectedFilter,
+                                    onProgress = onProcessingProgress
+                                ).fold(
+                                    onSuccess = { processedUri ->
+                                        // Delete original file
+                                        videoFile.delete()
+                                        onProcessingComplete()
+                                        onVideoSaved(processedUri)
+                                    },
+                                    onFailure = { exception ->
+                                        onProcessingComplete()
+                                        onError("Failed to process video: ${exception.message}")
+                                    }
+                                )
+                            }
+                        } else {
+                            // No filter, use original video
+                            onVideoSaved(savedUri)
+                        }
                     } else {
-                        onError(recordEvent)
+                        onError("Recording failed")
                     }
                 }
             }
@@ -868,7 +955,8 @@ private fun loadBitmapWithCorrectOrientation(imagePath: String): Bitmap {
 @HiltViewModel
 class CameraViewModel @Inject constructor(
     private val filtersRepository: FiltersRepository,
-    val filterProcessor: FilterProcessor
+    val filterProcessor: FilterProcessor,
+    val videoFilterProcessor: VideoFilterProcessor
 ) : ViewModel() {
     
     val availableFilters = filtersRepository.getAvailableFilters()

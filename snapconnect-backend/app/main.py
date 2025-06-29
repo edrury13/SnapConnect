@@ -2,17 +2,38 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 import os
+import sys
 from dotenv import load_dotenv
 
-from app.api.routes import embed, search, recommend
+# Debug information
+print(f"Python path: {sys.path}")
+print(f"Current working directory: {os.getcwd()}")
+print(f"__file__ location: {__file__}")
+
+# Import routes - with better error handling
+try:
+    from app.api.routes import embed, search, recommend
+    print("Successfully imported routes")
+except ImportError as e:
+    print(f"Import error: {e}")
+    # Try alternate import path
+    try:
+        from api.routes import embed, search, recommend
+        print("Successfully imported routes using alternate path")
+    except ImportError as e2:
+        print(f"Alternate import also failed: {e2}")
+        raise
+
 from app.services.pinecone_service import PineconeService
 from app.services.embedding_service import EmbeddingService
 from app.core.config import settings
+from app.dependencies import get_pinecone_service, get_embedding_service
 
 load_dotenv()
 
-# Initialize services
-embedding_service = EmbeddingService()
+# Initialize services through dependency injection
+# These will be created on first use
+embedding_service = get_embedding_service()
 
 # Lifecycle management
 @asynccontextmanager
@@ -20,7 +41,12 @@ async def lifespan(app: FastAPI):
     # Startup
     print("Initializing services...")
     try:
-        PineconeService.initialize()
+        # Initialize Pinecone service (creates instance if needed)
+        pinecone_service = get_pinecone_service()
+        if pinecone_service.index is None:
+            print("Warning: Pinecone index not available")
+        else:
+            print("Pinecone service initialized successfully")
     except Exception as e:
         print(f"Warning: Pinecone initialization failed: {e}")
         print("Running without Pinecone support")
@@ -66,13 +92,14 @@ async def health_check():
 @app.get("/status")
 async def status():
     """Detailed status endpoint for debugging"""
+    pinecone_service = get_pinecone_service()
     return {
         "status": "operational",
         "version": "1.0.0",
         "environment": os.getenv("ENVIRONMENT", "development"),
         "services": {
             "openai": bool(settings.OPENAI_API_KEY) and hasattr(embedding_service, 'client') and embedding_service.client is not None,
-            "pinecone": PineconeService.index is not None
+            "pinecone": pinecone_service.index is not None
         },
         "endpoints": [
             "/health",

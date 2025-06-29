@@ -353,7 +353,9 @@ fun MediaPreviewScreen(
                     SendOptionButton(
                         icon = Icons.Default.BookmarkBorder,
                         label = "Memories",
-                        onClick = { /* TODO: Save to memories */ },
+                        onClick = {
+                            viewModel.saveMemory(uri, isVideo, caption, filterId)
+                        },
                         enabled = !uiState.isLoading
                     )
                 }

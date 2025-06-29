@@ -112,6 +112,43 @@ class StoryPostViewModel @Inject constructor(
         }
     }
     
+    fun saveMemory(
+        mediaUri: Uri,
+        isVideo: Boolean,
+        caption: String?,
+        filterId: String? = null
+    ) {
+        viewModelScope.launch {
+            _uiState.value = StoryPostUiState(isLoading = true)
+
+            val userId = authRepository.getCurrentUser()?.id
+            if (userId == null) {
+                _uiState.value = StoryPostUiState(errorMessage = "User not authenticated")
+                return@launch
+            }
+
+            storageRepository.uploadStoryMedia(mediaUri, userId, isVideo)
+                .onSuccess { mediaUrl ->
+                    storyRepository.createStory(
+                        mediaUrl = mediaUrl,
+                        mediaType = if (isVideo) MediaType.VIDEO else MediaType.IMAGE,
+                        caption = caption?.takeIf { it.isNotBlank() },
+                        isPublic = false,
+                        keepForever = true
+                    )
+                        .onSuccess {
+                            _uiState.value = StoryPostUiState(isSuccess = true)
+                        }
+                        .onFailure { error ->
+                            _uiState.value = StoryPostUiState(errorMessage = error.message ?: "Failed to save memory")
+                        }
+                }
+                .onFailure { error ->
+                    _uiState.value = StoryPostUiState(errorMessage = error.message ?: "Failed to upload media")
+                }
+        }
+    }
+    
     fun clearState() {
         _uiState.value = StoryPostUiState()
     }

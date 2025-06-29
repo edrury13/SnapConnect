@@ -1,8 +1,27 @@
 from typing import Optional, List, Dict, Any
 import os
-import pinecone
-from pinecone import Pinecone
 import logging
+
+# For pinecone-client 2.2.4, the import is different
+try:
+    # Try new import style first
+    from pinecone import Pinecone
+except ImportError:
+    # Fall back to old import style for 2.2.4
+    import pinecone
+    # Create a wrapper class for compatibility
+    class Pinecone:
+        def __init__(self, api_key=None, environment=None):
+            pinecone.init(api_key=api_key, environment=environment or os.getenv("PINECONE_ENVIRONMENT", "us-east-1"))
+            
+        def list_indexes(self):
+            class IndexList:
+                def __init__(self):
+                    self.names = pinecone.list_indexes()
+            return IndexList()
+            
+        def Index(self, name):
+            return pinecone.Index(name)
 
 logger = logging.getLogger(__name__)
 
