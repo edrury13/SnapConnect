@@ -122,12 +122,6 @@ app/
 - **Story privacy** controls (public/friends-only)
 - **Notification system** and settings
 
-🚧 **Future Enhancements:**
-- Push notifications
-- Advanced AR filters
-- Story analytics
-- Content moderation
-- Performance optimizations
 
 ## Development Notes
 
