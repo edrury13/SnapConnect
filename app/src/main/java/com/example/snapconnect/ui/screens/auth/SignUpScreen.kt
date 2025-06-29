@@ -14,6 +14,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import kotlinx.coroutines.delay
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -43,14 +44,15 @@ fun SignUpScreen(
     var confirmPasswordVisible by remember { mutableStateOf(false) }
     
     val uiState by viewModel.uiState.collectAsState()
-    var hasSignedUp by remember { mutableStateOf(false) }
+    var showSuccessMessage by remember { mutableStateOf(false) }
     
-    // Only navigate after successful sign up
-    LaunchedEffect(uiState.isLoggedIn) {
-        if (uiState.isLoggedIn && hasSignedUp) {
-            navController.navigate(Screen.Home.route) {
-                popUpTo(Screen.SignUp.route) { inclusive = true }
-            }
+    // Show success message then navigate back to login
+    LaunchedEffect(uiState.signUpSuccess) {
+        if (uiState.signUpSuccess) {
+            showSuccessMessage = true
+            // Wait a moment to show the success message
+            kotlinx.coroutines.delay(2000)
+            navController.navigateUp() // Go back to login screen
         }
     }
     
@@ -211,7 +213,6 @@ fun SignUpScreen(
             Button(
                 onClick = { 
                     if (password == confirmPassword) {
-                        hasSignedUp = true
                         viewModel.signUp(email, password, username)
                     }
                 },
@@ -259,6 +260,25 @@ fun SignUpScreen(
                         navController.navigateUp()
                     }
                 )
+            }
+            
+            // Success message
+            if (showSuccessMessage) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color(0xFF4CAF50) // Green color
+                    ),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text(
+                        text = "Account created successfully! Please check your email to verify your account.",
+                        color = Color.White,
+                        modifier = Modifier.padding(12.dp),
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
             
             // Error message

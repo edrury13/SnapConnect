@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.merge
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import kotlinx.serialization.json.putJsonArray
@@ -53,7 +54,9 @@ class MessagesRepository @Inject constructor(
                         }
                         avatarUrl?.let { put("avatar_url", it) }
                     }
-                )
+                ) {
+                    select()
+                }
                 .decodeSingle<Group>()
 
             Result.success(group)
@@ -279,17 +282,18 @@ class MessagesRepository @Inject constructor(
                 val changeFlow = channel.postgresChangeFlow<PostgresAction>(schema = "public") {
                     table = "messages"
                 }
+
+                val groupFlow = channel.postgresChangeFlow<PostgresAction>(schema = "public") {
+                    table = "groups"
+                }
                 
                 // Subscribe to the channel
                 channel.subscribe()
                 
                 // Listen for changes
-                changeFlow.collect {
-                    // Refresh groups list when any message is inserted
+                merge(changeFlow, groupFlow).collect {
                     val groups = getMyGroups()
-                    if (groups.isSuccess) {
-                        emit(groups.getOrDefault(emptyList()))
-                    }
+                    if (groups.isSuccess) emit(groups.getOrDefault(emptyList()))
                 }
             } finally {
                 // Unsubscribe from channel when flow is cancelled
@@ -302,5 +306,33 @@ class MessagesRepository @Inject constructor(
     suspend fun markMessagesAsRead(groupId: String) {
         // This could be implemented with a read receipts table if needed
         // For now, we'll just track locally
+    }
+
+    suspend fun updateGroupAvatar(groupId: String, avatarUrl: String): Result<Group> {
+        return try {
+            val group = supabase.from("groups")
+                .select() {
+                    filter {
+                        eq("id", groupId)
+                    }
+                }
+                .decodeSingle<Group>()
+
+            val updatedGroup = supabase.from("groups")
+                .update(
+                    buildJsonObject {
+                        put("avatar_url", avatarUrl)
+                    }
+                ) {
+                    filter {
+                        eq("id", groupId)
+                    }
+                }
+                .decodeSingle<Group>()
+
+            Result.success(updatedGroup)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 } 

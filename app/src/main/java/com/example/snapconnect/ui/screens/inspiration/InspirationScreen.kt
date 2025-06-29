@@ -127,7 +127,7 @@ fun InspirationScreen(
                                             )
                                         }
                                     }
-                                    Text(text = "Score: %.2f".format(item.score), style = MaterialTheme.typography.bodySmall)
+                                    // Score is used for ordering but no longer shown in UI
                                 }
                             }
                         }

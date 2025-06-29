@@ -14,7 +14,8 @@ data class AuthUiState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
     val isLoggedIn: Boolean = false,
-    val hasSeenTutorial: Boolean = false
+    val hasSeenTutorial: Boolean = false,
+    val signUpSuccess: Boolean = false
 )
 
 @HiltViewModel
@@ -65,8 +66,9 @@ class AuthViewModel @Inject constructor(
                 .onSuccess {
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
-                        isLoggedIn = true,
-                        hasSeenTutorial = false // New users haven't seen tutorial
+                        isLoggedIn = false, // Don't log them in automatically
+                        hasSeenTutorial = false,
+                        signUpSuccess = true // Add a flag to indicate successful signup
                     )
                 }
                 .onFailure { exception ->

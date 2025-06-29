@@ -8,6 +8,7 @@ import com.example.snapconnect.data.model.Message
 import com.example.snapconnect.data.model.User
 import com.example.snapconnect.data.repository.AuthRepository
 import com.example.snapconnect.data.repository.MessagesRepository
+import com.example.snapconnect.data.repository.StorageRepository
 import com.example.snapconnect.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,6 +36,7 @@ class ChatViewModel @Inject constructor(
     private val messagesRepository: MessagesRepository,
     private val userRepository: UserRepository,
     private val authRepository: AuthRepository,
+    private val storageRepository: StorageRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     
@@ -188,5 +190,17 @@ class ChatViewModel @Inject constructor(
     
     fun clearError() {
         _uiState.value = _uiState.value.copy(errorMessage = null)
+    }
+
+    fun setGroupAvatar(uri: android.net.Uri) {
+        val group = _uiState.value.group ?: return
+        viewModelScope.launch {
+            val userId = authRepository.getCurrentUser()?.id ?: return@launch
+            val uploadResult = storageRepository.uploadAvatar(uri, userId)
+            if (uploadResult.isSuccess) {
+                val url = uploadResult.getOrNull() ?: return@launch
+                messagesRepository.updateGroupAvatar(group.id, url)
+            }
+        }
     }
 } 

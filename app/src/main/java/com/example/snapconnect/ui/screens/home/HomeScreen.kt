@@ -134,7 +134,8 @@ fun HomeScreen(
             StoriesContent(
                 navController = navController,
                 uiState = uiState,
-                onRefresh = { viewModel.loadStories() }
+                onRefresh = { viewModel.loadStories() },
+                onFilterChange = { viewModel.setStyleFilter(it) }
             )
             
             // Error handling
@@ -160,7 +161,8 @@ fun HomeScreen(
 fun StoriesContent(
     navController: NavController,
     uiState: HomeUiState,
-    onRefresh: () -> Unit
+    onRefresh: () -> Unit,
+    onFilterChange: (String?) -> Unit = {}
 ) {
     if (uiState.isLoading) {
         Box(
@@ -178,10 +180,44 @@ fun StoriesContent(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(vertical = 16.dp)
         ) {
+            // Style filter chips row
+            if (uiState.availableStyleTags.isNotEmpty()) {
+                item {
+                    LazyRow(
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        item {
+                            val selected = uiState.styleFilter == null
+                            AssistChip(
+                                onClick = { onFilterChange(null) },
+                                label = { Text("All") },
+                                colors = AssistChipDefaults.assistChipColors(
+                                    containerColor = if (selected) SnapYellow else MaterialTheme.colorScheme.surfaceVariant
+                                )
+                            )
+                        }
+                        items(uiState.availableStyleTags) { tag ->
+                            val selected = uiState.styleFilter == tag
+                            AssistChip(
+                                onClick = { onFilterChange(tag) },
+                                label = { Text(tag) },
+                                colors = AssistChipDefaults.assistChipColors(
+                                    containerColor = if (selected) SnapYellow else MaterialTheme.colorScheme.surfaceVariant
+                                )
+                            )
+                        }
+                    }
+                }
+            }
+            
             // Story circles at the top - combine both recommended and other stories
+            val circleMap = uiState.userStories.filterKeys { u ->
+                uiState.currentUserId?.let { it == u.id } == true || uiState.friendIds.contains(u.id)
+            }
             item {
                 StoryCircles(
-                    userStories = uiState.userStories,
+                    userStories = circleMap,
                     onStoryClick = { user, stories ->
                         // Navigate to story viewer with the first story
                         stories.firstOrNull()?.let { story ->
@@ -191,6 +227,10 @@ fun StoriesContent(
                     onAddStory = { navController.navigate(Screen.Camera.route) }
                 )
             }
+            
+            // Prepare filtered maps
+            val recommendedFiltered = if (uiState.styleFilter == null) uiState.recommendedStories else uiState.recommendedStories.mapValues { list -> list.value.filter { it.styleTags.contains(uiState.styleFilter) } }.filter { it.value.isNotEmpty() }
+            val otherFiltered = if (uiState.styleFilter == null) uiState.otherStories else uiState.otherStories.mapValues { list -> list.value.filter { it.styleTags.contains(uiState.styleFilter) } }.filter { it.value.isNotEmpty() }
             
             // Recommended Stories Section
             if (uiState.hasRecommendations) {
@@ -224,7 +264,7 @@ fun StoriesContent(
                 }
                 
                 // Show recommended story cards
-                uiState.recommendedStories.forEach { (user, stories) ->
+                recommendedFiltered.forEach { (user, stories) ->
                     items(stories) { story ->
                         RecommendedStoryCard(
                             user = user,
@@ -237,7 +277,7 @@ fun StoriesContent(
                 }
                 
                 // Divider between sections
-                if (uiState.otherStories.isNotEmpty()) {
+                if (otherFiltered.isNotEmpty()) {
                     item {
                         Spacer(modifier = Modifier.height(16.dp))
                         Divider(
@@ -250,7 +290,7 @@ fun StoriesContent(
             }
             
             // Other Stories Section
-            if (uiState.otherStories.isNotEmpty()) {
+            if (otherFiltered.isNotEmpty()) {
                 item {
                     Spacer(modifier = Modifier.height(24.dp))
                     Text(
@@ -262,7 +302,7 @@ fun StoriesContent(
                 }
                 
                 // Show other story cards
-                uiState.otherStories.forEach { (user, stories) ->
+                otherFiltered.forEach { (user, stories) ->
                     items(stories) { story ->
                         StoryCard(
                             user = user,

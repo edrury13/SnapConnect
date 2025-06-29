@@ -1,5 +1,7 @@
 package com.example.snapconnect.ui.screens.home;
 
+import com.example.snapconnect.data.repository.AuthRepository;
+import com.example.snapconnect.data.repository.FriendRepository;
 import com.example.snapconnect.data.repository.StoryRepository;
 import com.example.snapconnect.data.repository.UserRepository;
 import dagger.internal.DaggerGenerated;
@@ -27,24 +29,35 @@ public final class HomeViewModel_Factory implements Factory<HomeViewModel> {
 
   private final Provider<UserRepository> userRepositoryProvider;
 
+  private final Provider<FriendRepository> friendRepositoryProvider;
+
+  private final Provider<AuthRepository> authRepositoryProvider;
+
   public HomeViewModel_Factory(Provider<StoryRepository> storyRepositoryProvider,
-      Provider<UserRepository> userRepositoryProvider) {
+      Provider<UserRepository> userRepositoryProvider,
+      Provider<FriendRepository> friendRepositoryProvider,
+      Provider<AuthRepository> authRepositoryProvider) {
     this.storyRepositoryProvider = storyRepositoryProvider;
     this.userRepositoryProvider = userRepositoryProvider;
+    this.friendRepositoryProvider = friendRepositoryProvider;
+    this.authRepositoryProvider = authRepositoryProvider;
   }
 
   @Override
   public HomeViewModel get() {
-    return newInstance(storyRepositoryProvider.get(), userRepositoryProvider.get());
+    return newInstance(storyRepositoryProvider.get(), userRepositoryProvider.get(), friendRepositoryProvider.get(), authRepositoryProvider.get());
   }
 
   public static HomeViewModel_Factory create(Provider<StoryRepository> storyRepositoryProvider,
-      Provider<UserRepository> userRepositoryProvider) {
-    return new HomeViewModel_Factory(storyRepositoryProvider, userRepositoryProvider);
+      Provider<UserRepository> userRepositoryProvider,
+      Provider<FriendRepository> friendRepositoryProvider,
+      Provider<AuthRepository> authRepositoryProvider) {
+    return new HomeViewModel_Factory(storyRepositoryProvider, userRepositoryProvider, friendRepositoryProvider, authRepositoryProvider);
   }
 
   public static HomeViewModel newInstance(StoryRepository storyRepository,
-      UserRepository userRepository) {
-    return new HomeViewModel(storyRepository, userRepository);
+      UserRepository userRepository, FriendRepository friendRepository,
+      AuthRepository authRepository) {
+    return new HomeViewModel(storyRepository, userRepository, friendRepository, authRepository);
   }
 }

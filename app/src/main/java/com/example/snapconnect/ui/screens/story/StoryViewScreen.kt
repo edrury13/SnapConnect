@@ -58,6 +58,9 @@ fun StoryViewScreen(
     // Toggle for AI caption
     var showAiCaption by remember { mutableStateOf(false) }
     
+    // Friend dialog state
+    var showFriendDialog by remember { mutableStateOf(false) }
+    
     // Handle story navigation
     LaunchedEffect(uiState.currentStory) {
         val story = uiState.currentStory
@@ -216,11 +219,20 @@ fun StoryViewScreen(
                         .align(Alignment.TopCenter),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // User avatar
+                    // User avatar (clickable for friend request)
                     Box(
                         modifier = Modifier
                             .size(40.dp)
                             .clip(CircleShape)
+                            .then(
+                                if (currentStory.userId != viewModel.getCurrentUserId()) {
+                                    Modifier
+                                        .border(2.dp, Color.White, CircleShape)
+                                        .clickable { showFriendDialog = true }
+                                } else {
+                                    Modifier
+                                }
+                            )
                     ) {
                         if (currentUser.avatarUrl != null) {
                             AsyncImage(
@@ -534,6 +546,40 @@ fun StoryViewScreen(
                                     Spacer(modifier = Modifier.width(8.dp))
                                     Text(
                                         text = "${uiState.comments.size}",
+                                        color = Color.White,
+                                        fontSize = 14.sp
+                                    )
+                                }
+                            }
+                        }
+                        
+                        // See similar art button (only if story has style tags)
+                        if (currentStory.styleTags.isNotEmpty()) {
+                            Spacer(modifier = Modifier.width(8.dp))
+                            
+                            Box(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(20.dp))
+                                    .background(Color.Black.copy(alpha = 0.5f))
+                                    .clickable { 
+                                        // Navigate to style gallery with the first style tag
+                                        navController.navigate("style_gallery/${currentStory.styleTags.first()}")
+                                    }
+                                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.Center
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Palette,
+                                        contentDescription = "See similar art",
+                                        modifier = Modifier.size(20.dp),
+                                        tint = Color.White
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(
+                                        text = "Similar",
                                         color = Color.White,
                                         fontSize = 14.sp
                                     )
@@ -884,6 +930,42 @@ fun StoryViewScreen(
                             }
                         }
                     }
+                }
+                
+                // Friend Request Dialog
+                if (showFriendDialog) {
+                    AlertDialog(
+                        onDismissRequest = { showFriendDialog = false },
+                        title = { 
+                            Text(
+                                text = "Add Friend",
+                                style = MaterialTheme.typography.headlineSmall
+                            )
+                        },
+                        text = { 
+                            Text(
+                                text = "Send friend request to ${currentUser.displayName ?: currentUser.username}?",
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                        },
+                        confirmButton = {
+                            TextButton(
+                                onClick = {
+                                    viewModel.sendFriendRequest(currentStory.userId)
+                                    showFriendDialog = false
+                                }
+                            ) {
+                                Text("Send Request")
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(
+                                onClick = { showFriendDialog = false }
+                            ) {
+                                Text("Cancel")
+                            }
+                        }
+                    )
                 }
             }
         } else if (uiState.errorMessage != null) {

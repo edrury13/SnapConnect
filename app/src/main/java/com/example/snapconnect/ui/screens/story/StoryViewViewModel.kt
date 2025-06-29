@@ -11,6 +11,7 @@ import com.example.snapconnect.data.repository.AuthRepository
 import com.example.snapconnect.data.repository.CommentsRepository
 import com.example.snapconnect.data.repository.StoryRepository
 import com.example.snapconnect.data.repository.UserRepository
+import com.example.snapconnect.data.repository.FriendRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,6 +40,7 @@ class StoryViewViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val authRepository: AuthRepository,
     private val commentsRepository: CommentsRepository,
+    private val friendRepository: FriendRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     
@@ -326,6 +328,21 @@ class StoryViewViewModel @Inject constructor(
                 }
                 .onFailure { error ->
                     println("DEBUG: Reaction failed but we're keeping the UI state anyway - ${error.message}")
+                }
+        }
+    }
+    
+    fun sendFriendRequest(userId: String) {
+        viewModelScope.launch {
+            friendRepository.sendFriendRequest(userId)
+                .onSuccess {
+                    // Optionally show a success message
+                    println("Friend request sent successfully")
+                }
+                .onFailure { error ->
+                    _uiState.value = _uiState.value.copy(
+                        errorMessage = error.message ?: "Failed to send friend request"
+                    )
                 }
         }
     }

@@ -1,1 +1,0 @@
-# SnapConnect RAG Backend 

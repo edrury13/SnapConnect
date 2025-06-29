@@ -39,6 +39,12 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import java.text.SimpleDateFormat
 import java.util.Locale
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import android.net.Uri
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetState
+import androidx.compose.material3.rememberModalBottomSheetState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -65,6 +71,17 @@ fun ChatScreen(
         }
     }
     
+    // Launcher for picking image
+    val pickImageLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let { viewModel.setGroupAvatar(it) }
+    }
+
+    var showMembers by remember { mutableStateOf(false) }
+
+    val sheetState: SheetState = rememberModalBottomSheetState()
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -73,26 +90,30 @@ fun ChatScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         // Avatar
+                        val avatarModifier = Modifier
+                            .size(40.dp)
+                            .clip(CircleShape)
+                            .clickable(enabled = members.size > 2) {
+                                pickImageLauncher.launch("image/*")
+                            }
+
                         when {
                             otherUser != null -> {
-                                UserAvatar(user = otherUser, size = 40.dp)
+                                Box(avatarModifier) {
+                                    UserAvatar(user = otherUser, size = 40.dp)
+                                }
                             }
                             group?.avatarUrl != null -> {
                                 AsyncImage(
                                     model = group.avatarUrl,
                                     contentDescription = "Group avatar",
-                                    modifier = Modifier
-                                        .size(40.dp)
-                                        .clip(CircleShape),
+                                    modifier = avatarModifier,
                                     contentScale = ContentScale.Crop
                                 )
                             }
                             else -> {
                                 Box(
-                                    modifier = Modifier
-                                        .size(40.dp)
-                                        .clip(CircleShape)
-                                        .background(MaterialTheme.colorScheme.primaryContainer),
+                                    modifier = avatarModifier.background(MaterialTheme.colorScheme.primaryContainer),
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Icon(
@@ -108,7 +129,9 @@ fun ChatScreen(
                         Spacer(modifier = Modifier.width(12.dp))
                         
                         // Name
-                        Column {
+                        Column(
+                            modifier = Modifier.clickable(enabled = members.size > 2) { showMembers = true }
+                        ) {
                             Text(
                                 text = when {
                                     otherUser != null -> {
@@ -218,6 +241,20 @@ fun ChatScreen(
                     }
                 ) {
                     Text(error)
+                }
+            }
+        }
+    }
+
+    if (showMembers) {
+        ModalBottomSheet(sheetState = sheetState, onDismissRequest = { showMembers = false }) {
+            Column(Modifier.fillMaxWidth().padding(16.dp)) {
+                members.forEach { user ->
+                    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
+                        UserAvatar(user = user, size = 36.dp)
+                        Spacer(Modifier.width(12.dp))
+                        Text(user.displayName ?: user.username)
+                    }
                 }
             }
         }

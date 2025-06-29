@@ -65,13 +65,13 @@ fun TutorialScreen(
             ),
             TutorialPage(
                 title = "Capture & Share",
-                description = "Use the camera to capture photos and videos. Add captions and filters before sharing with friends.",
+                description = "Snap a photo or video and let our AI write the perfect description for you. Add filters, then share for 24 hours!",
                 icon = Icons.Default.CameraAlt,
                 iconTint = SnapBlue
             ),
             TutorialPage(
                 title = "AI-Powered Inspiration",
-                description = "Get creative inspiration from our AI! Find style references, generate mood boards, and discover new artistic styles.",
+                description = "Need ideas? Use the Inspiration tab to see styles from other users or let the AI generate fresh concepts and mood-boards.",
                 icon = Icons.Default.Lightbulb,
                 iconTint = SnapRed,
                 highlightText = "✨ Try the Inspiration tab for AI-powered creativity!"

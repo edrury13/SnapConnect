@@ -17,6 +17,8 @@ import io.github.jan.supabase.realtime.postgresChangeFlow
 import io.github.jan.supabase.realtime.realtime
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.serialization.json.JsonObject
@@ -122,29 +124,39 @@ class StoryRepository @Inject constructor(
             if (stories.isNotEmpty()) {
                 val story = stories.first()
                 
-                // Analyze image for tags if it's an image
-                val tags = if (mediaType == MediaType.IMAGE) {
-                    visionRepo.analyzeImage(mediaUrl).getOrDefault(listOf("image"))
-                } else {
-                    listOf("video")
-                }
-                
-                // Always process with vision-based tags
-                try {
-                    val response = 
-                        langchainRepo.processPost(
+                // Launch AI processing in background - fire and forget
+                // Using GlobalScope is acceptable here as we want this to continue
+                // even if the user navigates away
+                kotlinx.coroutines.GlobalScope.launch(Dispatchers.IO) {
+                    try {
+                        // Analyze image for tags if it's an image
+                        val tags = if (mediaType == MediaType.IMAGE) {
+                            visionRepo.analyzeImage(mediaUrl).getOrDefault(listOf("image"))
+                        } else {
+                            listOf("video")
+                        }
+                        
+                        // Process with vision-based tags
+                        val response = langchainRepo.processPost(
                             userId = userId,
                             storyId = story.id,
                             caption = caption ?: "",
                             tags = tags,
                             imageUrl = mediaUrl
                         )
-                    // Log the response for debugging
-                    println("ProcessPost response - AI Caption: ${response.ai_caption}, Style: ${response.style}")
-                } catch (e: Exception) {
-                    // Log the error but don't fail story creation
-                    e.printStackTrace()
+                        
+                        // Log the response for debugging
+                        println("ProcessPost response - AI Caption: ${response.ai_caption}, Style: ${response.style}")
+                        
+                        // The backend will update Supabase, and real-time listeners will pick up the changes
+                    } catch (e: Exception) {
+                        // Log the error but don't fail story creation
+                        println("Background AI processing failed: ${e.message}")
+                        e.printStackTrace()
+                    }
                 }
+                
+                // Return immediately without waiting for AI processing
                 Result.success(story)
             } else {
                 // No story returned; skip embedding because ID is unknown

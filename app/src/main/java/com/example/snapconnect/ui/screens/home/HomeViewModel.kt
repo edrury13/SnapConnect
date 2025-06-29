@@ -6,6 +6,8 @@ import com.example.snapconnect.data.model.Story
 import com.example.snapconnect.data.model.User
 import com.example.snapconnect.data.repository.StoryRepository
 import com.example.snapconnect.data.repository.UserRepository
+import com.example.snapconnect.data.repository.FriendRepository
+import com.example.snapconnect.data.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,7 +20,11 @@ data class HomeUiState(
     val recommendedStories: Map<User, List<Story>> = emptyMap(), // Stories similar to user's interests
     val otherStories: Map<User, List<Story>> = emptyMap(), // All other stories
     val hasRecommendations: Boolean = false,
-    val errorMessage: String? = null
+    val styleFilter: String? = null,
+    val availableStyleTags: List<String> = emptyList(),
+    val errorMessage: String? = null,
+    val friendIds: Set<String> = emptySet(),
+    val currentUserId: String? = null
 ) {
     // Convenience property to get all stories for backward compatibility
     val userStories: Map<User, List<Story>> 
@@ -28,11 +34,15 @@ data class HomeUiState(
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val storyRepository: StoryRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val friendRepository: FriendRepository,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
     
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
+    
+    private var friendIds: Set<String> = emptySet()
     
     init {
         loadStories()
@@ -50,6 +60,9 @@ class HomeViewModel @Inject constructor(
                 // Fetch stories with recommendations
                 val (recommendedStories, otherStories) = storyRepository.getStoriesWithRecommendations()
                     .getOrDefault(Pair(emptyList(), emptyList()))
+                
+                // Fetch friend IDs
+                friendIds = friendRepository.getMyFriends().getOrDefault(emptyList()).map { it.second.id }.toSet()
                 
                 // Get unique user IDs from both lists
                 val allUserIds = (recommendedStories.map { it.userId } + otherStories.map { it.userId }).distinct()
@@ -75,11 +88,17 @@ class HomeViewModel @Inject constructor(
                             }
                         }
                         
+                        val allStories = recommendedStories + otherStories
+                        val styleTags = allStories.flatMap { it.styleTags }.distinct()
+                        val currentUid = authRepository.getCurrentUser()?.id
                         _uiState.value = HomeUiState(
                             isLoading = false,
                             recommendedStories = recommendedUserStories,
                             otherStories = otherUserStories,
-                            hasRecommendations = recommendedUserStories.isNotEmpty()
+                            hasRecommendations = recommendedUserStories.isNotEmpty(),
+                            availableStyleTags = styleTags,
+                            friendIds = friendIds,
+                            currentUserId = currentUid
                         )
                     }
                     .onFailure { error ->
@@ -115,11 +134,17 @@ class HomeViewModel @Inject constructor(
                             }
                             
                         // Put all stories in "other" category when recommendations are not available
+                            val allStories = userStories.values.flatten()
+                            val styleTags = allStories.flatMap { it.styleTags }.distinct()
+                            val currentUid = authRepository.getCurrentUser()?.id
                             _uiState.value = HomeUiState(
                                 isLoading = false,
-                            recommendedStories = emptyMap(),
-                            otherStories = userStories,
-                            hasRecommendations = false
+                                recommendedStories = emptyMap(),
+                                otherStories = userStories,
+                                hasRecommendations = false,
+                                availableStyleTags = styleTags,
+                                friendIds = friendIds,
+                                currentUserId = currentUid
                             )
                         }
                         .onFailure { error ->
@@ -139,5 +164,9 @@ class HomeViewModel @Inject constructor(
     
     fun clearError() {
         _uiState.value = _uiState.value.copy(errorMessage = null)
+    }
+
+    fun setStyleFilter(style: String?) {
+        _uiState.value = _uiState.value.copy(styleFilter = style)
     }
 } 

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.snapconnect.data.remote.MoodBoardItem
 import com.example.snapconnect.data.repository.InspirationRepository
+import com.example.snapconnect.data.repository.StoryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,6 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class InspirationViewModel @Inject constructor(
     private val repo: InspirationRepository,
+    private val storyRepository: StoryRepository,
 ) : ViewModel() {
 
     data class UiState(
@@ -33,7 +35,32 @@ class InspirationViewModel @Inject constructor(
             _state.update { it.copy(loading = true, error = null, aiImages = emptyList()) }
             try {
                 val resp = repo.moodBoard(prompt)
-                _state.update { it.copy(loading = false, moodItems = resp.items) }
+                // Deduplicate so we show only one item per primary style tag (first tag in list)
+                var deduped = resp.items
+                    .groupBy { it.style_tags.firstOrNull() ?: it.content_id }
+                    .values
+                    .map { group ->
+                        val withUrl = group.filter { it.content_url.isNotBlank() }
+                        (withUrl.maxByOrNull { it.score } ?: withUrl.firstOrNull()) ?: group.first()
+                    }
+
+                // If any item lacks image, fetch from stories bucket
+                val enriched = mutableListOf<MoodBoardItem>()
+                for (item in deduped) {
+                    if (item.content_url.isNotBlank()) {
+                        enriched.add(item)
+                        continue
+                    }
+                    val style = item.style_tags.firstOrNull()
+                    if (style == null) {
+                        enriched.add(item)
+                        continue
+                    }
+                    val url = storyRepository.getStoriesByStyle(style).getOrNull()?.firstOrNull()?.mediaUrl ?: ""
+                    enriched.add(if (url.isBlank()) item else item.copy(content_url = url))
+                }
+                deduped = enriched
+                _state.update { it.copy(loading = false, moodItems = deduped) }
             } catch (e: Exception) {
                 _state.update { it.copy(loading = false, error = e.message) }
             }
